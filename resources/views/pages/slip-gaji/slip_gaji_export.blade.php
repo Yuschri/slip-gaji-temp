@@ -101,23 +101,37 @@
 
 <body>
 
+    @php
+        $klinikName = strtoupper($slip->klinik);
+        $kopFile = 'ho.png'; // Default
+
+        if (str_contains($klinikName, 'KAV') || str_contains($klinikName, 'DPR')) {
+            $kopFile = 'kav_dpr.png';
+        } elseif (str_contains($klinikName, 'KUTAI')) {
+            $kopFile = 'kutai.png';
+        } elseif (str_contains($klinikName, 'KUTISARI')) {
+            $kopFile = 'kutisari.png';
+        } elseif (str_contains($klinikName, 'MADIUN')) {
+            $kopFile = 'madiun.png';
+        } elseif (str_contains($klinikName, 'MOJOKERTO')) {
+            $kopFile = 'mojokerto.png';
+        } elseif (str_contains($klinikName, 'TAMAN PARIS')) {
+            $kopFile = 'taman_paris.png';
+        } elseif (str_contains($klinikName, 'HO') || str_contains($klinikName, 'HEAD OFFICE')) {
+            $kopFile = 'ho.png';
+        }
+
+        $kopPath = public_path('assets/images/kop/' . $kopFile);
+        $kopBase64 = file_exists($kopPath) ? base64_encode(file_get_contents($kopPath)) : null;
+    @endphp
+
     <div class="container">
-        <div class="header">
-            <table style="width: 100%; border: none; border-collapse: collapse;">
-                <tr>
-                    <td style="width: 80px; padding: 0; vertical-align: middle; border: none;">
-                        @if(file_exists(public_path('kop.jpg')))
-                            <img src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path('kop.jpg'))) }}"
-                                style="width: 70px; height: auto;">
-                        @endif
-                    </td>
-                    <td style="text-align: left; padding-left: 10px; vertical-align: middle; border: none;">
-                        <h2 style="margin: 0; font-size: 16px;">PT. DOA NIAT YAKIN {{ strtoupper($slip->klinik) }}</h2>
-                        <div style="font-size: 10px;">Empunala No. 10, {{ $slip->klinik }}</div>
-                        <div style="font-size: 10px;">No. Telp (0321) 5219 721</div>
-                    </td>
-                </tr>
-            </table>
+        <div class="header" style="border-bottom: none; margin-bottom: 5px;">
+            @if($kopBase64)
+                <img src="data:image/png;base64,{{ $kopBase64 }}" style="width: 100%; height: auto;">
+            @else
+                <h2 style="text-align: center;">PT. DOA NIAT YAKIN {{ $klinikName }}</h2>
+            @endif
         </div>
 
         <table>
@@ -221,8 +235,8 @@
         </div>
 
         <div class="signature">
-            Mojokerto, {{ date('d F Y') }}<br><br><br><br>
-            ( ____________________ )
+            Sidoarjo, {{ date('d F Y') }}<br><br><br><br>
+            ({{ strtoupper($slip->nama_karyawan) }})
         </div>
 
         <hr>
