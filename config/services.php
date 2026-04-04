@@ -34,5 +34,10 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'qontak' => [
+        'token' => env('QONTAK_TOKEN'),
+        'template_id' => env('QONTAK_TEMPLATE_ID'),
+        'channel_id' => env('QONTAK_CHANNEL_ID'),
+    ],
 
 ];

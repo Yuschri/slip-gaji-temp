@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('nama_karyawan');
             $table->date('tanggal_masuk')->nullable();
             $table->string('divisi');
+            $table->string('klinik')->nullable();
             $table->string('no_wa');
             $table->string('nomor_rekening');
             $table->decimal('thp', 15, 2)->default(0);
