@@ -1,7 +1,7 @@
 @extends('layouts.bare')
 
 @section('content')
-<!--begin::Root-->
+    <!--begin::Root-->
     <div class="d-flex flex-column flex-root">
         <!--begin::Authentication - Sign-in -->
         <div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed"
@@ -16,19 +16,26 @@
                 <!--begin::Wrapper-->
                 <div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
                     <!--begin::Form-->
-                    <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form"
-                        data-kt-redirect-url="" action="#">
+                    <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" method="POST"
+                        action="{{ route('login') }}">
+                        @csrf
 
                         <div class="text-center mb-5">
                             <h1 class="text-dark mb-3">Masuk Sistem</h1>
                         </div>
 
+                        @if ($errors->has('login'))
+                            <div class="alert alert-danger">
+                                {{ $errors->first('login') }}
+                            </div>
+                        @endif
+
                         <div class="fv-row mb-5">
 
                             <label class="form-label fs-6 fw-bolder text-dark">Username</label>
 
-                            <input class="form-control form-control-lg form-control-solid" type="text"
-                                name="username" autocomplete="off" />
+                            <input class="form-control form-control-lg form-control-solid" type="text" name="username"
+                                autocomplete="off" />
 
                         </div>
 
@@ -40,8 +47,8 @@
 
                             </div>
 
-                            <input class="form-control form-control-lg form-control-solid" type="password"
-                                name="password" autocomplete="off" />
+                            <input class="form-control form-control-lg form-control-solid" type="password" name="password"
+                                autocomplete="off" />
                             <div class="d-flex flex-stack mb-2 justify-content-end" style="margin-top: 10px">
                                 <a href="javascript:void(0)" onclick="beforeTambah()"
                                     class="link-primary fs-6 fw-bolder">Lupa
@@ -75,12 +82,12 @@
                         <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
                             <span class="svg-icon svg-icon-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none">
                                     <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
                                         transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                                    <rect x="7.41422" y="6" width="16" height="2" rx="1"
-                                        transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)"
+                                        fill="currentColor" />
                                 </svg>
                             </span>
                             <!--end::Svg Icon-->
@@ -111,9 +118,8 @@
                                             title="Username"></i>
                                     </label>
                                     <!--end::Label-->
-                                    <input type="text" class="form-control form-control-solid fs-6"
-                                        placeholder="........." name="username" id="username" value=""
-                                        required autocomplete="off" />
+                                    <input type="text" class="form-control form-control-solid fs-6" placeholder="........."
+                                        name="username" id="username" value="" required autocomplete="off" />
                                 </div>
                             </div>
 
@@ -158,4 +164,4 @@
 
     </div>
     <!--end::Root-->
-    @endsection
+@endsection

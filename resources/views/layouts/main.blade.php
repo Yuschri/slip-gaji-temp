@@ -96,8 +96,9 @@
                 </li> --}}
                 <!-- Dropdown -->
                 <li class="ms-3 dropdown">
-                        <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ asset('assets/images/avatar/blank.png') }}" alt="" class="avatar avatar-sm rounded-circle" />
+                    <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ asset('assets/images/avatar/blank.png') }}" alt=""
+                            class="avatar avatar-sm rounded-circle" />
                     </a>
                     <div class="dropdown-menu dropdown-menu-end p-0" style="min-width: 200px;">
                         <div>
@@ -105,15 +106,20 @@
                                 <img src="{{ asset('assets/images/avatar/blank.png') }}" alt=""
                                     class="avatar avatar-md rounded-circle" />
                                 <div>
-                                    <h4 class="mb-0 small">Nama Pengguna</h4>
-                                    <p class="mb-0  small">pengguna</p>
+                                    <h4 class="mb-0 small">{{ Auth::user()->USER_NAME }}</h4>
+                                    <p class="mb-0  small">{{ Auth::user()->roles[0]->nama_role }}
+                                    </p>
                                 </div>
                             </div>
                             <div class="p-3 d-flex flex-column gap-1 small lh-lg">
-                                <a href="#!" class="">
-
-                                    <span>Home</span>
+                                <a href="{{ route('logout') }}" 
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                   class="">
+                                    <span><i class="ti ti-logout"></i> Logout</span>
                                 </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
                                 <a href="#!" class="">
 
                                     <span> Inbox</span>
@@ -143,8 +149,10 @@
     <!-- SIDEBAR -->
     <aside id="sidebar" class="sidebar">
         <div class="logo-area" style="align-items: center">
-            <a href="{{ route('slip-gaji.index') }}" class="d-inline-flex"><img src="{{ asset('assets/images/Logo 50kb.jpg') }}" alt="" width="40%" >
-                {{-- <span class="logo-text ms-2"> <img src="{{ asset('assets/images/Logo 50kb.jpg') }}" alt=""></span> --}}
+            <a href="{{ route('slip-gaji.index') }}" class="d-inline-flex"><img
+                    src="{{ asset('assets/images/Logo 50kb.jpg') }}" alt="" width="40%">
+                {{-- <span class="logo-text ms-2"> <img src="{{ asset('assets/images/Logo 50kb.jpg') }}" alt=""></span>
+                --}}
             </a>
         </div>
         <ul class="nav flex-column">
@@ -162,7 +170,8 @@
                     href="{{ route('slip-gaji.index') }}"><i class="ti ti-file-description"></i><span
                         class="nav-text">Slip Gaji</span></a>
             </li>
-            {{-- <li><a class="nav-link" href="404-error.html"><i class="ti ti-alert-circle"></i><span class="nav-text">404
+            {{-- <li><a class="nav-link" href="404-error.html"><i class="ti ti-alert-circle"></i><span
+                        class="nav-text">404
                         Error</span></a>
             </li>
             <li><a class="nav-link" href="docs.html"><i class="ti ti-file-text"></i><span
