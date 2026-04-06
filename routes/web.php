@@ -9,9 +9,7 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('pages.list');
-    });
+    Route::get('/', [SlipGajiController::class, 'index']);
 
     Route::group(['prefix' => 'slip-gaji', 'as' => 'slip-gaji.'], function () {
         Route::get('/', [SlipGajiController::class, 'index'])->name('index');

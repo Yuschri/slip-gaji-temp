@@ -119,6 +119,8 @@
             $kopFile = 'taman_paris.png';
         } elseif (str_contains($klinikName, 'HO') || str_contains($klinikName, 'HEAD OFFICE')) {
             $kopFile = 'ho.png';
+        } elseif (str_contains($klinikName, 'MULYOSARI')) {
+            $kopFile = 'mulyosari.png';
         }
 
         $kopPath = public_path('assets/images/kop/' . $kopFile);
