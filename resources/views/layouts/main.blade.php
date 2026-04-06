@@ -5,9 +5,9 @@
     <meta charset="UTF-8" />
     <title>DNY - Slip Gaji</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/favicon_io/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/images/favicon_io/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicon_io/favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/favicon_io/LOGORED.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/images/favicon_io/LOGORED.ico') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicon_io/LOGORED.ico') }}">
     {{--
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -36,7 +36,7 @@
                 <!-- Pages link -->
 
                 <!-- Bell icon -->
-                <li>
+                {{-- <li>
                     <a class="position-relative btn-icon btn-sm btn-light btn rounded-circle" data-bs-toggle="dropdown"
                         aria-expanded="false" href="#" role="button">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -93,20 +93,20 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> --}}
                 <!-- Dropdown -->
                 <li class="ms-3 dropdown">
-                    <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="./assets/images/avatar/avatar-1.jpg" alt="" class="avatar avatar-sm rounded-circle" />
+                        <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{ asset('assets/images/avatar/blank.png') }}" alt="" class="avatar avatar-sm rounded-circle" />
                     </a>
                     <div class="dropdown-menu dropdown-menu-end p-0" style="min-width: 200px;">
                         <div>
                             <div class="d-flex gap-3 align-items-center border-dashed border-bottom px-3 py-3">
-                                <img src="./assets/images/avatar/avatar-1.jpg" alt=""
+                                <img src="{{ asset('assets/images/avatar/blank.png') }}" alt=""
                                     class="avatar avatar-md rounded-circle" />
                                 <div>
-                                    <h4 class="mb-0 small">Shrina Tesla</h4>
-                                    <p class="mb-0  small">@imshrina</p>
+                                    <h4 class="mb-0 small">Nama Pengguna</h4>
+                                    <p class="mb-0  small">pengguna</p>
                                 </div>
                             </div>
                             <div class="p-3 d-flex flex-column gap-1 small lh-lg">
@@ -142,14 +142,14 @@
 
     <!-- SIDEBAR -->
     <aside id="sidebar" class="sidebar">
-        <div class="logo-area">
-            <a href="index.html" class="d-inline-flex"><img src="./assets/images/logo-icon.svg" alt="" width="24">
-                <span class="logo-text ms-2"> <img src="./assets/images/logo.svg" alt=""></span>
+        <div class="logo-area" style="align-items: center">
+            <a href="{{ route('slip-gaji.index') }}" class="d-inline-flex"><img src="{{ asset('assets/images/Logo 50kb.jpg') }}" alt="" width="40%" >
+                {{-- <span class="logo-text ms-2"> <img src="{{ asset('assets/images/Logo 50kb.jpg') }}" alt=""></span> --}}
             </a>
         </div>
         <ul class="nav flex-column">
             <li class="px-4 py-2"><small class="nav-text">Main</small></li>
-            <li><a class="nav-link active" href="index.html"><i class="ti ti-home"></i><span
+            {{-- <li><a class="nav-link active" href="index.html"><i class="ti ti-home"></i><span
                         class="nav-text">Dashboard</span></a></li>
             <li><a class="nav-link" href="inventory.html"><i class="ti ti-box-seam"></i><span
                         class="nav-text">Inventory</span></a></li>
@@ -157,24 +157,24 @@
                         Product</span></a></li>
             <li><a class="nav-link" href="reports.html"><i class="ti ti-receipt"></i><span
                         class="nav-text">Reports</span></a>
-            </li>
+            </li> --}}
             <li><a class="nav-link {{ request()->routeIs('slip-gaji.*') ? 'active' : '' }}"
                     href="{{ route('slip-gaji.index') }}"><i class="ti ti-file-description"></i><span
                         class="nav-text">Slip Gaji</span></a>
             </li>
-            <li><a class="nav-link" href="404-error.html"><i class="ti ti-alert-circle"></i><span class="nav-text">404
+            {{-- <li><a class="nav-link" href="404-error.html"><i class="ti ti-alert-circle"></i><span class="nav-text">404
                         Error</span></a>
             </li>
             <li><a class="nav-link" href="docs.html"><i class="ti ti-file-text"></i><span
-                        class="nav-text">Docs</span></a></li>
+                        class="nav-text">Docs</span></a></li> --}}
 
 
-            <li class="px-4 pt-4 pb-2"><small class="nav-text">Account</small></li>
+            {{-- <li class="px-4 pt-4 pb-2"><small class="nav-text">Account</small></li>
             <li><a class="nav-link" href="signin.html"><i class="ti ti-logout"></i><span class="nav-text">Log
                         in</span></a>
             </li>
             <li><a class="nav-link" href="signup.html"><i class="ti ti-user-plus"></i><span class="nav-text">Sign
-                        up</span></a></li>
+                        up</span></a></li> --}}
         </ul>
 
     </aside>
