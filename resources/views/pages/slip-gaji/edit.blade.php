@@ -35,7 +35,7 @@
                 <div class="row g-3 mb-4">
                     <div class="col-md-4">
                         <label class="form-label font-weight-bold">Nama Karyawan <span class="text-danger">*</span></label>
-                        <select name="id_karyawan" id="id_karyawan" class="form-select" required>
+                        <select name="id_karyawan" id="id_karyawan" class="form-select bg-light" required style="pointer-events: none; ">
                             <option value="">-- select employee --</option>
                             @foreach ($karyawans as $emp)
                                 <option value="{{ $emp->id_karyawan }}" {{ old('id_karyawan', $slip->id_karyawan) == $emp->id_karyawan ? 'selected' : '' }}>
@@ -46,7 +46,7 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Bulan <span class="text-danger">*</span></label>
-                        <select name="bulan" id="bulan" class="form-select" required>
+                        <select name="bulan" id="bulan" class="form-select bg-light" required style="pointer-events: none;">
                             @for ($i = 1; $i <= 12; $i++)
                                 <option value="{{ $i }}" {{ old('bulan', $slip->bulan) == $i ? 'selected' : '' }}>
                                     {{ date('F', mktime(0, 0, 0, $i, 10)) }}
@@ -56,7 +56,7 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Tahun <span class="text-danger">*</span></label>
-                        <input type="number" name="tahun" id="tahun" class="form-control" required
+                        <input type="number" name="tahun" id="tahun" class="form-control bg-light" required readonly
                             value="{{ old('tahun', $slip->tahun) }}">
                     </div>
                 </div>
@@ -329,8 +329,8 @@
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Terlambat (Kali)</label>
-                        <input type="number" name="terlambat_kali" id="terlambat_kali" class="form-control"
-                            value="{{ old('terlambat_kali', $slip->kehadiran->terlambat) }}">
+                        <input type="number" name="terlambat" id="terlambat" class="form-control"
+                            value="{{ old('terlambat', $slip->kehadiran->terlambat) }}">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Terlambat (Menit)</label>
@@ -510,7 +510,9 @@
                         if (data.kehadiran) {
                             $('#cuti').val(data.kehadiran.cuti || 0);
                             $('#lembur_kali').val(data.kehadiran.lembur || 0);
+                            $('#lembur_menit').val(data.kehadiran.lembur_menit || 0);
                             $('#terlambat').val(data.kehadiran.terlambat || 0);
+                            $('#terlambat_menit').val(data.kehadiran.terlambat_menit || 0);
                             $('#ijin_pulang_cepat').val(data.kehadiran.ijin_pulang_cepat || 0);
                             $('#ijin_tidak_masuk').val(data.kehadiran.ijin_tidak_masuk || 0);
                             $('#no_check_in_or_out').val(data.kehadiran.no_check_in_or_out || 0);
@@ -570,7 +572,7 @@
                 var fee_beautician = getRawValue('#fee_beautician');
                 var lembur = getRawValue('#nominal_lembur');
 
-                var subtotalReceipts = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja + t_hari_raya + operasional + fee_beautician + lembur;
+                var subtotalReceipts = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja + t_hari_raya + t_operasional + fee_beautician + lembur;
 
                 var percentage = parseFloat($('#prosentase_gaji').val());
                 if (isNaN(percentage) || percentage <= 0) {

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\SlipGaji;
+use Illuminate\Support\Facades\DB;
 
 class SlipGajiRepository
 {
@@ -46,8 +47,17 @@ class SlipGajiRepository
      */
     public function delete(int $id)
     {
-        $slip = $this->find($id);
-        return $slip->delete();
+        return DB::transaction(function () use ($id) {
+            $slip = $this->find($id);
+
+            if ($slip->id_kehadiran) {
+                $slip->kehadiran()->delete();
+
+                return true;
+            }
+
+            return $slip->delete();
+        });
     }
 
     /**

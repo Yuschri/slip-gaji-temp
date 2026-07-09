@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Repositories\SlipGajiRepository;
-use App\Models\SlipGaji;
 use App\Models\Kehadiran;
 use App\Imports\SlipGajiImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -69,7 +68,7 @@ class SlipGajiService
             $data['bpjs_tk'] = $data['bpjstk'] ?? 0;
             $data['nominal_lembur'] = $data['lembur'] ?? 0;
 
-            $data['t_operasional'] = $data['t__operasional'] ?? 0;
+            $data['t_operasional'] = $data['t_operasional'] ?? $data['t__operasional'] ?? $data['t_ operasional'] ?? 0;
 
             // 3. Store the slip gaji
             return $this->slipGajiRepository->create($data);
@@ -91,7 +90,9 @@ class SlipGajiService
                 [
                     'cuti' => $data['cuti'] ?? 0,
                     'lembur' => $data['lembur_kali'] ?? 0,
+                    'lembur_menit' => $data['lembur_menit'] ?? 0,
                     'terlambat' => $data['terlambat'] ?? 0,
+                    'terlambat_menit' => $data['terlambat_menit'] ?? 0,
                     'ijin_pulang_cepat' => $data['ijin_pulang_cepat'] ?? 0,
                     'ijin_tidak_masuk' => $data['ijin_tidak_masuk'] ?? 0,
                     'no_check_in_or_out' => $data['no_check_in_or_out'] ?? 0,
@@ -105,6 +106,8 @@ class SlipGajiService
             // map bpjstk to bpjs_tk and lembur to nominal_lembur
             $data['bpjs_tk'] = $data['bpjstk'] ?? 0;
             $data['nominal_lembur'] = $data['lembur'] ?? 0;
+
+            $data['t_operasional'] = $data['t_operasional'] ?? $data['t__operasional'] ?? $data['t_ operasional'] ?? 0;
 
             // 3. Update the slip gaji
             return $this->slipGajiRepository->update($id, $data);

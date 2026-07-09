@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Services\SlipGajiService;
-use App\Http\Resources\SlipGajiResource;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 
 class SlipGajiController extends Controller
@@ -35,11 +35,20 @@ class SlipGajiController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id_karyawan' => 'required|exists:tb_karyawan,id_karyawan',
             'bulan' => 'required|integer|between:1,12',
             'tahun' => 'required|integer',
             'gaji_pokok' => 'required|numeric|min:0',
             'nominal_transfer' => 'required|numeric',
+            'id_karyawan' => [
+                'required',
+                'exists:tb_karyawan,id_karyawan',
+                Rule::unique('tb_slip_gaji')->where(function ($query) use ($request) {
+                    return $query->where('bulan', $request->bulan)
+                        ->where('tahun', $request->tahun);
+                }),
+            ],
+        ], [
+            'id_karyawan.unique' => 'Slip gaji untuk pegawai, bulan, dan tahun yang dipilih sudah ada.',
         ]);
 
         if ($validator->fails()) {
@@ -61,11 +70,22 @@ class SlipGajiController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'id_karyawan' => 'required|exists:tb_karyawan,id_karyawan',
+            'id_karyawan' => [
+                'required',
+                'exists:tb_karyawan,id_karyawan',
+                Rule::unique('tb_slip_gaji')
+                    ->ignore($id, 'id_slip')
+                    ->where(function ($query) use ($request) {
+                        return $query->where('bulan', $request->bulan)
+                            ->where('tahun', $request->tahun);
+                    }),
+            ],
             'bulan' => 'required|integer|between:1,12',
             'tahun' => 'required|integer',
             'gaji_pokok' => 'required|numeric|min:0',
             'nominal_transfer' => 'required|numeric',
+        ], [
+            'id_karyawan.unique' => 'Slip gaji untuk pegawai, bulan, dan tahun yang dipilih sudah ada.',
         ]);
 
         if ($validator->fails()) {
@@ -123,7 +143,9 @@ class SlipGajiController extends Controller
                 'id_kehadiran' => $kehadiran->id_kehadiran,
                 'cuti' => $kehadiran->cuti,
                 'lembur' => $kehadiran->lembur,
+                'lembur_menit' => $kehadiran->lembur_menit,
                 'terlambat' => $kehadiran->terlambat,
+                'terlambat_menit' => $kehadiran->terlambat_menit,
                 'ijin_pulang_cepat' => $kehadiran->ijin_pulang_cepat,
                 'ijin_tidak_masuk' => $kehadiran->ijin_tidak_masuk,
                 'no_check_in_or_out' => $kehadiran->no_check_in_or_out,

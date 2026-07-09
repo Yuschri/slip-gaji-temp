@@ -185,7 +185,7 @@
             <tr class="dotted">
                 <td>NOMINAL LEMBUR</td>
                 <td></td>
-                <td class="right">{{ number_format($slip->lembur, 0, ',', '.') }}</td>
+                <td class="right">{{ number_format($slip->nominal_lembur, 0, ',', '.') }}</td>
             </tr>
 
             <tr>
@@ -200,17 +200,17 @@
             <tr class="dotted">
                 <td>(BPJS TK)</td>
                 <td></td>
-                <td class="right">{{ number_format($slip->bpjstk, 0, ',', '.') }}</td>
+                <td class="right">{{ number_format($slip->potongan_bpjs_tk, 0, ',', '.') }}</td>
             </tr>
             <tr class="dotted">
                 <td>(BPJS KESEHATAN)</td>
                 <td></td>
-                <td class="right">{{ number_format($slip->bpjs_kesehatan, 0, ',', '.') }}</td>
+                <td class="right">{{ number_format($slip->potongan_bpjs_kesehatan, 0, ',', '.') }}</td>
             </tr>
             <tr class="dotted">
                 <td>(PPH 21)</td>
                 <td></td>
-                <td class="right">{{ number_format($slip->pph_21, 0, ',', '.') }}</td>
+                <td class="right">{{ number_format($slip->potongan_pph_21, 0, ',', '.') }}</td>
             </tr>
             <tr class="dotted">
                 <td>SEDEKAH ROMBONGAN</td>
@@ -220,7 +220,7 @@
             <tr class="dotted">
                 <td>LAIN-LAIN</td>
                 <td></td>
-                <td class="right">{{ number_format($slip->lain_lain, 0, ',', '.') }}</td>
+                <td class="right">{{ number_format($slip->potongan_lainnya, 0, ',', '.') }}</td>
             </tr>
 
             <tr class="total">
@@ -246,27 +246,27 @@
         <table style="width: 50%; font-size: 10px;">
             <tr>
                 <td>CUTI</td>
-                <td>: {{ $slip->cuti }}</td>
+                <td>: {{ $slip->kehadiran->cuti }}</td>
             </tr>
             <tr>
                 <td>TERLAMBAT</td>
-                <td>: {{ $slip->terlambat }}</td>
+                <td>: {{ $slip->kehadiran->terlambat }}</td>
             </tr>
             <tr>
                 <td>IJIN PULANG AWAL</td>
-                <td>: {{ $slip->ijin_pulang_cepat }}</td>
+                <td>: {{ $slip->kehadiran->ijin_pulang_cepat }}</td>
             </tr>
             <tr>
                 <td>IJIN TIDAK MASUK</td>
-                <td>: {{ $slip->ijin_tidak_masuk }}</td>
+                <td>: {{ $slip->kehadiran->ijin_tidak_masuk }}</td>
             </tr>
             <tr>
                 <td>NO CHECK IN/ CHECK OUT</td>
-                <td>: {{ $slip->no_check_in_or_out }}</td>
+                <td>: {{ $slip->kehadiran->no_check_in_or_out }}</td>
             </tr>
             <tr>
                 <td>NO CHECK IN & CHECK OUT</td>
-                <td>: {{ $slip->no_check_in_and_out }}</td>
+                <td>: {{ $slip->kehadiran->no_check_in_and_out }}</td>
             </tr>
         </table>
 
