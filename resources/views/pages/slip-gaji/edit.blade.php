@@ -59,7 +59,9 @@
                         <input type="number" name="tahun" id="tahun" class="form-control" required
                             value="{{ old('tahun', $slip->tahun) }}">
                     </div>
+                </div>
 
+                <div class="row g-3 mb-4">
                     <!-- Readonly Karyawan Info -->
                     <div class="col-md-4">
                         <label class="form-label text-muted">Tanggal Masuk</label>
@@ -67,21 +69,29 @@
                             placeholder="-" value="{{ $slip->tanggal_masuk ? $slip->tanggal_masuk->format('Y-m-d') : '' }}">
                     </div>
                     <div class="col-md-4">
+                        <label class="form-label text-muted">NIP</label>
+                        <input type="text" id="karyawan_nip" class="form-control bg-light" readonly placeholder="-"
+                            value="{{ old('karyawan_nip', optional($slip->karyawan)->nip ?? ($slip->nip ?? '-')) }}">
+                    </div>
+                    <div class="col-md-4">
                         <label class="form-label text-muted">Divisi</label>
                         <input type="text" id="karyawan_divisi" class="form-control bg-light" readonly placeholder="-"
                             value="{{ $slip->divisi }}">
                     </div>
+                </div>
+
+                <div class="row g-3 mb-4">
                     <div class="col-md-4">
                         <label class="form-label text-muted">Klinik / Cabang</label>
                         <input type="text" id="karyawan_klinik" class="form-control bg-light" readonly placeholder="-"
                             value="{{ $slip->klinik }}">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label text-muted">WhatsApp</label>
                         <input type="text" id="karyawan_no_wa" class="form-control bg-light" readonly placeholder="-"
                             value="{{ $slip->no_wa }}">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label text-muted">Nomor Rekening</label>
                         <input type="text" id="karyawan_nomor_rekening" class="form-control bg-light" readonly
                             placeholder="-" value="{{ $slip->nomor_rekening }}">
@@ -92,7 +102,7 @@
 
                 <h5 class="mb-3 text-success"><i class="ti ti-cash me-2"></i> 2. Pendapatan & Tunjangan</h5>
                 <div class="row g-3 mb-4">
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <label class="form-label">Gaji Pokok <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
@@ -101,8 +111,11 @@
                                 value="{{ old('gaji_pokok', $slip->gaji_pokok) }}">
                         </div>
                     </div>
+                </div>
+
+                <div class="row g-3 mb-4">
                     <div class="col-md-3">
-                        <label class="form-label">T. Pengalaman Kerja</label>
+                        <label class="form-label">Tunjangan Pengalaman Kerja</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="t_pengalaman_kerja" id="t_pengalaman_kerja"
@@ -111,7 +124,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">T. Jabatan</label>
+                        <label class="form-label">Tunjangan Jabatan</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="t_jabatan" id="t_jabatan"
@@ -120,7 +133,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">T. Profesi</label>
+                        <label class="form-label">Tunjangan Profesi</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="t_profesi" id="t_profesi"
@@ -129,7 +142,16 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">T. Kehadiran</label>
+                        <label class="form-label">Tunjangan Operasional</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Rp</span>
+                            <input type="text" name="t_operasional" id="t_operasional"
+                                class="form-control entry-calc entry-calc-rupiah"
+                                value="{{ old('t_operasional', $slip->t_operasional) }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Tunjangan Kehadiran</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="t_kehadiran" id="t_kehadiran"
@@ -138,7 +160,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">T. Kinerja</label>
+                        <label class="form-label">Tunjangan Kinerja</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="t_kinerja" id="t_kinerja"
@@ -147,7 +169,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">T. Hari Raya</label>
+                        <label class="form-label">Tunjangan Hari Raya</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="t_hari_raya" id="t_hari_raya"
@@ -155,15 +177,9 @@
                                 value="{{ old('t_hari_raya', $slip->t_hari_raya) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Operasional</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Rp</span>
-                            <input type="text" name="operasional" id="operasional"
-                                class="form-control entry-calc entry-calc-rupiah"
-                                value="{{ old('operasional', $slip->operasional) }}">
-                        </div>
-                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
                     <div class="col-md-3">
                         <label class="form-label">Fee Beautician</label>
                         <div class="input-group">
@@ -183,6 +199,18 @@
                         </div>
                     </div>
                     <div class="col-md-3">
+                        <label class="form-label">Lain - lain</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Rp</span>
+                            <input type="text" name="lain_lain" id="lain_lain"
+                                class="form-control entry-calc entry-calc-rupiah"
+                                value="{{ old('lain_lain', $slip->lain_lain) }}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
                         <label class="form-label">Prosentase Gaji (%)</label>
                         <input type="number" step="0.01" name="prosentase_gaji" id="prosentase_gaji"
                             class="form-control entry-calc" value="{{ old('prosentase_gaji', $slip->prosentase_gaji) }}">
@@ -198,25 +226,16 @@
 
                 <h5 class="mb-3 text-danger"><i class="ti ti-scissors me-2"></i> 3. Potongan & Pengurangan</h5>
                 <div class="row g-3 mb-4">
-                    <div class="col-md-3">
-                        <label class="form-label">Punishment</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Rp</span>
-                            <input type="text" name="punishment" id="punishment"
-                                class="form-control entry-calc entry-calc-rupiah"
-                                value="{{ old('punishment', $slip->punishment) }}">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">BPJS TK (Tunjangan)</label>
+                    <div class="col-md-4">
+                        <label class="form-label">BPJS Ketenagakerjaan</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="bpjstk" id="bpjstk" class="form-control entry-calc entry-calc-rupiah"
                                 value="{{ old('bpjstk', $slip->bpjstk) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label">BPJS Kesehatan (Tunj.)</label>
+                    <div class="col-md-4">
+                        <label class="form-label">BPJS Kesehatan</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="bpjs_kesehatan" id="bpjs_kesehatan"
@@ -224,16 +243,19 @@
                                 value="{{ old('bpjs_kesehatan', $slip->bpjs_kesehatan) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label">PPh 21 (Tunjangan)</label>
+                    <div class="col-md-4">
+                        <label class="form-label">PPh 21</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="pph_21" id="pph_21" class="form-control entry-calc entry-calc-rupiah"
                                 value="{{ old('pph_21', $slip->pph_21) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Potongan BPJS TK</label>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Potongan BPJS Ketenagakerjaan</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="potongan_bpjs_tk" id="potongan_bpjs_tk"
@@ -241,8 +263,8 @@
                                 value="{{ old('potongan_bpjs_tk', $slip->potongan_bpjs_tk) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Potongan BPJS Kes.</label>
+                    <div class="col-md-4">
+                        <label class="form-label">Potongan BPJS Kesehatan</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="potongan_bpjs_kesehatan" id="potongan_bpjs_kesehatan"
@@ -250,7 +272,7 @@
                                 value="{{ old('potongan_bpjs_kesehatan', $slip->potongan_bpjs_kesehatan) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label class="form-label">Potongan PPh 21</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
@@ -259,7 +281,19 @@
                                 value="{{ old('potongan_pph_21', $slip->potongan_pph_21) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Punishment</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Rp</span>
+                            <input type="text" name="punishment" id="punishment"
+                                class="form-control entry-calc entry-calc-rupiah"
+                                value="{{ old('punishment', $slip->punishment) }}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
                         <label class="form-label">Sedekah Rombongan</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
@@ -268,16 +302,7 @@
                                 value="{{ old('sedekah_rombongan', $slip->sedekah_rombongan) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Lain-lain</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Rp</span>
-                            <input type="text" name="lain_lain" id="lain_lain"
-                                class="form-control entry-calc entry-calc-rupiah"
-                                value="{{ old('lain_lain', $slip->lain_lain) }}">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label class="form-label">Potongan Lainnya</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
@@ -440,6 +465,7 @@
 
                 if (!empId) {
                     $('#karyawan_tanggal_masuk').val('');
+                        $('#karyawan_nip').val('');
                     $('#karyawan_divisi').val('');
                     $('#karyawan_klinik').val('');
                     $('#karyawan_no_wa').val('');
@@ -456,12 +482,13 @@
                     },
                     success: function (data) {
                         $('#karyawan_tanggal_masuk').val(data.karyawan.tanggal_masuk || '-');
+                        $('#karyawan_nip').val(data.karyawan.nip || '-');
                         $('#karyawan_divisi').val(data.karyawan.divisi);
                         $('#karyawan_klinik').val(data.karyawan.cabang);
                         $('#karyawan_no_wa').val(data.karyawan.no_wa);
                         $('#karyawan_nomor_rekening').val(data.karyawan.nomor_rekening);
 
-                        // We do not overwrite current form field values when editing existing slip 
+                        // We do not overwrite current form field values when editing existing slip
                         // UNLESS we just selected a different employee or the ajax returns fresh presence
                         if (data.kehadiran) {
                             $('#cuti').val(data.kehadiran.cuti || 0);
@@ -522,7 +549,7 @@
                 var t_hadir = getRawValue('#t_kehadiran');
                 var t_kinerja = getRawValue('#t_kinerja');
                 var t_hari_raya = getRawValue('#t_hari_raya');
-                var operasional = getRawValue('#operasional');
+                var t_operasional = getRawValue('#t_operasional');
                 var fee_beautician = getRawValue('#fee_beautician');
                 var lembur = getRawValue('#nominal_lembur');
 
