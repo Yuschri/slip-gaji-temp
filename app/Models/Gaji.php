@@ -20,6 +20,7 @@ class Gaji extends Model
         't_profesi',
         't_kehadiran',
         't_kinerja',
+        't_operasional',
     ];
 
     protected $casts = [
@@ -29,6 +30,7 @@ class Gaji extends Model
         't_profesi' => 'decimal:2',
         't_kehadiran' => 'decimal:2',
         't_kinerja' => 'decimal:2',
+        't_operasional' => 'decimal:2',
     ];
 
     public function karyawan()

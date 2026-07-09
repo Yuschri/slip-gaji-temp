@@ -199,13 +199,25 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <label class="form-label text-muted">Tunjangan Kinerja</label>
                                     <div class="input-group">
                                         <span class="input-group-text">Rp</span>
                                         <input type="text" min="0" name="t_kinerja"
                                             class="form-control text-end rupiah-mask" placeholder="0"
                                             value="{{ old('t_kinerja', $karyawan->gaji ? (int) $karyawan->gaji->t_kinerja : '0') }}">
+                                    </div>
+                                    @error('t_kinerja')
+                                        <span class="text-danger small">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted">Tunjangan Operasional</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" min="0" name="t_operasional"
+                                            class="form-control text-end rupiah-mask" placeholder="0"
+                                            value="{{ old('t_operasional', $karyawan->gaji ? (int) $karyawan->gaji->t_operasional : '0') }}">
                                     </div>
                                     @error('t_kinerja')
                                         <span class="text-danger small">{{ $message }}</span>
@@ -266,10 +278,10 @@
 
                     </div>
                     <div class="mt-2 pt-3">
-                            <button type="submit" class="btn btn-primary btn-lg w-100">
-                                <i class="ti ti-device-floppy me-1"></i> Simpan Data Gaji & Potongan
-                            </button>
-                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="ti ti-device-floppy me-1"></i> Simpan Data Gaji & Potongan
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -278,7 +290,7 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             function formatRupiah(value) {
                 if (value === undefined || value === null || value === '') return '0';
                 var str = value.toString().trim();
@@ -302,7 +314,7 @@
             }
 
             // Format on keyup
-            $(document).on('input', '.rupiah-mask', function() {
+            $(document).on('input', '.rupiah-mask', function () {
                 var el = this;
                 var rawVal = el.value.replace(/\./g, '').replace(/[^0-9]/g, '');
                 var formatted = rawVal === '' ? '0' : parseInt(rawVal, 10).toString().replace(
@@ -315,13 +327,13 @@
             });
 
             // Format existing values on load
-            $('.rupiah-mask').each(function() {
+            $('.rupiah-mask').each(function () {
                 $(this).val(formatRupiah($(this).val()));
             });
 
             // Strip formatting before submit
-            $('form').on('submit', function() {
-                $(this).find('.rupiah-mask').each(function() {
+            $('form').on('submit', function () {
+                $(this).find('.rupiah-mask').each(function () {
                     $(this).val($(this).val().replace(/\./g, ''));
                 });
             });

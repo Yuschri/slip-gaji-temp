@@ -114,6 +114,7 @@ class SlipGajiController extends Controller
                 't_profesi' => $karyawan->gaji->t_profesi,
                 't_kehadiran' => $karyawan->gaji->t_kehadiran,
                 't_kinerja' => $karyawan->gaji->t_kinerja,
+                't_operasional' => $karyawan->gaji->t_operasional,
             ] : null,
             'potongan' => $karyawan->potongan ? [
                 'potongan_sedekah_rombongan' => $karyawan->potongan->potongan_sedekah_rombongan,

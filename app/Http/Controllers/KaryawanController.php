@@ -135,6 +135,7 @@ class KaryawanController extends Controller
             't_profesi' => 'nullable|numeric|min:0',
             't_kehadiran' => 'nullable|numeric|min:0',
             't_kinerja' => 'nullable|numeric|min:0',
+            't_operasional' => 'nullable|numeric|min:0',
             'potongan_sedekah_rombongan' => 'required|numeric|min:0',
         ]);
 
@@ -152,6 +153,7 @@ class KaryawanController extends Controller
             't_profesi' => $request->t_profesi ?? 0,
             't_kehadiran' => $request->t_kehadiran ?? 0,
             't_kinerja' => $request->t_kinerja ?? 0,
+            't_operasional' => $request->t_operasional ?? 0,
         ];
 
         $potonganData = [

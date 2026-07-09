@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->decimal('t_profesi', 15, 2)->default(0);
             $table->decimal('t_kehadiran', 15, 2)->default(0);
             $table->decimal('t_kinerja', 15, 2)->default(0);
+            $table->decimal('t_operasional', 15, 2)->default(0);
             $table->timestamps();
         });
     }

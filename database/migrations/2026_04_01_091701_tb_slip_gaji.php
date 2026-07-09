@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->decimal('t_pengalaman_kerja', 15, 2)->default(0);
             $table->decimal('t_jabatan', 15, 2)->default(0);
             $table->decimal('t_profesi', 15, 2)->default(0);
-            $table->decimal('operasional', 15, 2)->default(0);
+            $table->decimal('t_operasional', 15, 2)->default(0);
             $table->decimal('t_kehadiran', 15, 2)->default(0);
             $table->decimal('t_kinerja', 15, 2)->default(0);
             $table->decimal('t_hari_raya', 15, 2)->default(0);
