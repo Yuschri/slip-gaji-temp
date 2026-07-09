@@ -20,7 +20,7 @@ class SlipGajiRepository
      */
     public function find(int $id)
     {
-        return SlipGaji::with('karyawan')->findOrFail($id);
+        return SlipGaji::with('karyawan', 'kehadiran')->findOrFail($id);
     }
 
     /**

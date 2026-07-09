@@ -195,7 +195,7 @@
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="lembur" id="nominal_lembur"
                                 class="form-control entry-calc entry-calc-rupiah"
-                                value="{{ old('lembur', $slip->lembur) }}">
+                                value="{{ old('lembur', $slip->nominal_lembur) }}">
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -231,7 +231,7 @@
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="bpjstk" id="bpjstk" class="form-control entry-calc entry-calc-rupiah"
-                                value="{{ old('bpjstk', $slip->bpjstk) }}">
+                                value="{{ old('bpjstk', $slip->bpjs_tk) }}">
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -317,47 +317,64 @@
 
                 <h5 class="mb-3 text-info"><i class="ti ti-calendar-stats me-2"></i> 4. Kehadiran & Status</h5>
                 <div class="row g-3 mb-4">
-                    <div class="col-md-2">
-                        <label class="form-label">Cuti (Hari)</label>
-                        <input type="number" name="cuti" id="cuti" class="form-control"
-                            value="{{ old('cuti', $slip->cuti) }}">
-                    </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="form-label">Lembur (Kali)</label>
                         <input type="number" name="lembur_kali" id="lembur_kali" class="form-control"
-                            value="{{ old('lembur_kali', $slip->kehadiran ? $slip->kehadiran->lembur : 0) }}">
+                            value="{{ old('lembur_kali', $slip->kehadiran->lembur) }}">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
+                        <label class="form-label">Lembur (Menit)</label>
+                        <input type="number" name="lembur_menit" id="lembur_menit" class="form-control"
+                            value="{{ old('lembur_menit', $slip->kehadiran->lembur_menit) }}">
+                    </div>
+                    <div class="col-md-3">
                         <label class="form-label">Terlambat (Kali)</label>
-                        <input type="number" name="terlambat" id="terlambat" class="form-control"
-                            value="{{ old('terlambat', $slip->terlambat) }}">
+                        <input type="number" name="terlambat_kali" id="terlambat_kali" class="form-control"
+                            value="{{ old('terlambat_kali', $slip->kehadiran->terlambat) }}">
                     </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Ijin Pulang Cepat</label>
-                        <input type="number" name="ijin_pulang_cepat" id="ijin_pulang_cepat" class="form-control"
-                            value="{{ old('ijin_pulang_cepat', $slip->ijin_pulang_cepat) }}">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Ijin Tdk Masuk</label>
-                        <input type="number" name="ijin_tidak_masuk" id="ijin_tidak_masuk" class="form-control"
-                            value="{{ old('ijin_tidak_masuk', $slip->ijin_tidak_masuk) }}">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">No Check In/Out</label>
-                        <input type="number" name="no_check_in_or_out" id="no_check_in_or_out" class="form-control"
-                            value="{{ old('no_check_in_or_out', $slip->no_check_in_or_out) }}">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">No Check In & Out</label>
-                        <input type="number" name="no_check_in_and_out" id="no_check_in_and_out" class="form-control"
-                            value="{{ old('no_check_in_and_out', $slip->no_check_in_and_out) }}">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Kehadiran Lainnya</label>
-                        <input type="number" name="kehadiran_lainnya" id="kehadiran_lainnya" class="form-control"
-                            value="{{ old('kehadiran_lainnya', $slip->kehadiran_lainnya ?? 0) }}">
+                    <div class="col-md-3">
+                        <label class="form-label">Terlambat (Menit)</label>
+                        <input type="number" name="terlambat_menit" id="terlambat_menit" class="form-control"
+                            value="{{ old('terlambat_menit', $slip->kehadiran->terlambat_menit) }}">
                     </div>
                 </div>
+                <div class="row g-3 mb-4">
+
+                    <div class="col-md-3">
+                        <label class="form-label">Ijin Pulang Cepat</label>
+                        <input type="number" name="ijin_pulang_cepat" id="ijin_pulang_cepat" class="form-control"
+                            value="{{ old('ijin_pulang_cepat', $slip->kehadiran->ijin_pulang_cepat) }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Ijin Tdk Masuk</label>
+                        <input type="number" name="ijin_tidak_masuk" id="ijin_tidak_masuk" class="form-control"
+                            value="{{ old('ijin_tidak_masuk', $slip->kehadiran->ijin_tidak_masuk) }}">
+                    </div>
+                </div>
+                <div class="row g-3 mb-4">
+
+                    <div class="col-md-3">
+                        <label class="form-label">No Check In/Out</label>
+                        <input type="number" name="no_check_in_or_out" id="no_check_in_or_out" class="form-control"
+                            value="{{ old('no_check_in_or_out', $slip->kehadiran->no_check_in_or_out) }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">No Check In & Out</label>
+                        <input type="number" name="no_check_in_and_out" id="no_check_in_and_out" class="form-control"
+                            value="{{ old('no_check_in_and_out', $slip->kehadiran->no_check_in_and_out) }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Cuti (Hari)</label>
+                        <input type="number" name="cuti" id="cuti" class="form-control"
+                            value="{{ old('cuti', $slip->kehadiran->cuti) }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Kehadiran Lainnya</label>
+                        <input type="number" name="kehadiran_lainnya" id="kehadiran_lainnya" class="form-control"
+                            value="{{ old('kehadiran_lainnya', $slip->kehadiran_lainnya) }}">
+                    </div>
+                </div>
+
 
                 <hr class="my-4 text-muted opacity-25">
 
@@ -465,7 +482,7 @@
 
                 if (!empId) {
                     $('#karyawan_tanggal_masuk').val('');
-                        $('#karyawan_nip').val('');
+                    $('#karyawan_nip').val('');
                     $('#karyawan_divisi').val('');
                     $('#karyawan_klinik').val('');
                     $('#karyawan_no_wa').val('');
@@ -575,7 +592,7 @@
                 var lain = getRawValue('#lain_lain');
                 var pot_lainnya = getRawValue('#potongan_lainnya');
 
-                var totalDeductions = punishment + bpjstk + bpjs_kes + pph21 + pot_bpjstk + pot_bpjs_kes + pot_pph21 + sedekah + lain + pot_lainnya;
+                var totalDeductions = punishment + pot_bpjstk + pot_bpjs_kes + pot_pph21 + sedekah + lain + pot_lainnya;
                 $('#calculated_potongan').val(totalDeductions.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
 
                 var netTransfer = totalReceipts - totalDeductions;

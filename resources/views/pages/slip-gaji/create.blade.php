@@ -300,7 +300,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Terlambat (Kali)</label>
-                            <input type="number" name="terlambat_kali" id="terlambat_kali" class="form-control" value="{{ old('terlambat_kali', 0) }}">
+                            <input type="number" name="terlambat" id="terlambat" class="form-control" value="{{ old('terlambat', 0) }}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Terlambat (Menit)</label>

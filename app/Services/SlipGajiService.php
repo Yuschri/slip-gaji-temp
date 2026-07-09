@@ -69,6 +69,8 @@ class SlipGajiService
             $data['bpjs_tk'] = $data['bpjstk'] ?? 0;
             $data['nominal_lembur'] = $data['lembur'] ?? 0;
 
+            $data['t_operasional'] = $data['t__operasional'] ?? 0;
+
             // 3. Store the slip gaji
             return $this->slipGajiRepository->create($data);
         });

@@ -146,25 +146,4 @@ class SlipGaji extends Model
     {
         return $this->kehadiran ? $this->kehadiran->no_check_in_and_out : 0;
     }
-
-    // lembur/bpjstk backward compatibility accessors/mutators
-    public function getBpjstkAttribute()
-    {
-        return $this->bpjs_tk;
-    }
-
-    public function setBpjstkAttribute($value)
-    {
-        $this->attributes['bpjs_tk'] = $value;
-    }
-
-    public function getLemburAttribute()
-    {
-        return $this->nominal_lembur;
-    }
-
-    public function setLemburAttribute($value)
-    {
-        $this->attributes['nominal_lembur'] = $value;
-    }
 }
