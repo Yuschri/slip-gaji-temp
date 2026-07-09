@@ -112,12 +112,13 @@
                                 </div>
                             </div>
                             <div class="p-3 d-flex flex-column gap-1 small lh-lg">
-                                <a href="{{ route('logout') }}" 
-                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                   class="">
+                                <a href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                    class="">
                                     <span><i class="ti ti-logout"></i> Logout</span>
                                 </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                    style="display: none;">
                                     @csrf
                                 </form>
                                 <a href="#!" class="">
@@ -166,6 +167,10 @@
             <li><a class="nav-link" href="reports.html"><i class="ti ti-receipt"></i><span
                         class="nav-text">Reports</span></a>
             </li> --}}
+            <li><a class="nav-link {{ request()->routeIs('karyawan.*') ? 'active' : '' }}"
+                    href="{{ route('karyawan.index') }}"><i class="ti ti-users"></i><span
+                        class="nav-text">Karyawan</span></a>
+            </li>
             <li><a class="nav-link {{ request()->routeIs('slip-gaji.*') ? 'active' : '' }}"
                     href="{{ route('slip-gaji.index') }}"><i class="ti ti-file-description"></i><span
                         class="nav-text">Slip Gaji</span></a>

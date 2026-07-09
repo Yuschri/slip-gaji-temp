@@ -18,11 +18,6 @@ class SlipGajiImport implements ToModel, WithHeadingRow
         $this->tahun = $tahun;
     }
 
-    /**
-     * @param array $row
-     *
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
     public function model(array $row)
     {
         // Skip empty rows
@@ -30,14 +25,30 @@ class SlipGajiImport implements ToModel, WithHeadingRow
             return null;
         }
 
+        $id_karyawan = $row['id_karyawan'] ?? null;
+        if (!$id_karyawan) {
+            return null;
+        }
+
+        $kehadiran = \App\Models\Kehadiran::updateOrCreate(
+            [
+                'id_karyawan' => $id_karyawan,
+                'bulan' => $this->bulan,
+                'tahun' => $this->tahun
+            ],
+            [
+                'cuti' => $row['cuti'] ?? 0,
+                'lembur' => 0, // default count
+                'terlambat' => $row['terlambat'] ?? 0,
+                'ijin_pulang_cepat' => $row['ijin_pulang_cepat'] ?? 0,
+                'ijin_tidak_masuk' => $row['ijin_tidak_masuk'] ?? 0,
+                'no_check_in_or_out' => $row['no_check_in_or_out'] ?? 0,
+                'no_check_in_and_out' => $row['no_check_in_and_out'] ?? 0,
+            ]
+        );
+
         return new SlipGaji([
-            'id_karyawan' => $row['id_karyawan'] ?? null,
-            'nama_karyawan' => $row['nama_karyawan'],
-            'tanggal_masuk' => $this->transformDate($row['tanggal_masuk'] ?? null),
-            'divisi' => $row['divisi'] ?? '-',
-            'klinik' => $row['klinik'] ?? '-',
-            'no_wa' => $row['no_wa'] ?? '-',
-            'nomor_rekening' => $row['nomor_rekening'] ?? '-',
+            'id_karyawan' => $id_karyawan,
             'thp' => $row['thp'] ?? 0,
             'gaji_pokok' => $row['gaji_pokok'] ?? 0,
             't_jabatan' => $row['t_jabatan'] ?? 0,
@@ -45,22 +56,17 @@ class SlipGajiImport implements ToModel, WithHeadingRow
             't_kehadiran' => $row['t_kehadiran'] ?? 0,
             't_kinerja' => $row['t_kinerja'] ?? 0,
             't_hari_raya' => $row['t_hari_raya'] ?? 0,
-            'cuti' => $row['cuti'] ?? 0,
             'punishment' => $row['punishment'] ?? 0,
-            'bpjstk' => $row['bpjstk'] ?? 0,
+            'bpjs_tk' => $row['bpjstk'] ?? 0,
             'bpjs_kesehatan' => $row['bpjs_kesehatan'] ?? 0,
             'pph_21' => $row['pph_21'] ?? 0,
-            'lembur' => $row['lembur'] ?? 0,
+            'nominal_lembur' => $row['lembur'] ?? 0,
             'sedekah_rombongan' => $row['sedekah_rombongan'] ?? 0,
             'nominal_transfer' => $row['nominal_transfer'] ?? 0,
-            'terlambat' => $row['terlambat'] ?? 0,
-            'ijin_pulang_cepat' => $row['ijin_pulang_cepat'] ?? 0,
-            'ijin_tidak_masuk' => $row['ijin_tidak_masuk'] ?? 0,
-            'no_check_in_or_out' => $row['no_check_in_or_out'] ?? 0,
-            'no_check_in_and_out' => $row['no_check_in_and_out'] ?? 0,
             'lain_lain' => $row['lain_lain'] ?? 0,
             'bulan' => $this->bulan,
             'tahun' => $this->tahun,
+            'id_kehadiran' => $kehadiran->id_kehadiran,
         ]);
     }
 
