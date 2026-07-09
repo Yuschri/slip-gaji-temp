@@ -19,7 +19,7 @@ class SlipGaji extends Model
         't_pengalaman_kerja',
         't_jabatan',
         't_profesi',
-        'operasional',
+        't_operasional',
         't_kehadiran',
         't_kinerja',
         't_hari_raya',
@@ -50,7 +50,7 @@ class SlipGaji extends Model
         't_pengalaman_kerja' => 'decimal:2',
         't_jabatan' => 'decimal:2',
         't_profesi' => 'decimal:2',
-        'operasional' => 'decimal:2',
+        't_operasional' => 'decimal:2',
         't_kehadiran' => 'decimal:2',
         't_kinerja' => 'decimal:2',
         't_hari_raya' => 'decimal:2',
@@ -86,9 +86,6 @@ class SlipGaji extends Model
         return $this->belongsTo(Kehadiran::class, 'id_kehadiran', 'id_kehadiran');
     }
 
-    // --- Accessors/Mutators for virtual fields mapping ---
-
-    // Karyawan virtual fields
     public function getNamaKaryawanAttribute()
     {
         return $this->karyawan ? $this->karyawan->nama_karyawan : '';
