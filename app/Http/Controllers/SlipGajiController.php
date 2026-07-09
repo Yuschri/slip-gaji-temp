@@ -100,6 +100,7 @@ class SlipGajiController extends Controller
         return response()->json([
             'karyawan' => [
                 'nama' => $karyawan->nama_karyawan,
+                'nip' => $karyawan->nip ?? '-',
                 'tanggal_masuk' => $karyawan->tanggal_masuk ? \Carbon\Carbon::parse($karyawan->tanggal_masuk)->format('Y-m-d') : null,
                 'divisi' => $karyawan->divisi ? $karyawan->divisi->nama_divisi : '-',
                 'cabang' => $karyawan->cabang ?? '-',

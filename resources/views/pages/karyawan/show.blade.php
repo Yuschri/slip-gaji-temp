@@ -100,34 +100,36 @@
 
             <!-- Right Side: Salary Config (tb_gaji) -->
             <div class="col-lg-7 col-md-12">
-                <div class="card shadow-sm border-0 pb-3">
-                    <div class="card-header bg-success text-white py-3">
-                        <h5 class="mb-0 text-white"><i class="ti ti-cash me-2"></i> Gaji Pokok & Tunjangan</h5>
-                    </div>
-                    <div class="card-body pt-4">
-                        @if ($karyawan->gaji)
-                            <div class="alert alert-light-success border border-success border-dashed text-success-emphasis d-flex align-items-center mb-4"
-                                role="alert">
-                                <i class="ti ti-circle-check fs-4 me-2"></i>
-                                <div>
-                                    Data gaji untuk karyawan ini <strong>sudah diatur</strong>. Anda dapat memperbaruinya di
-                                    bawah.
-                                </div>
-                            </div>
-                        @else
-                            <div class="alert alert-light-warning border border-warning border-dashed text-warning-emphasis d-flex align-items-center mb-4"
-                                role="alert">
-                                <i class="ti ti-alert-triangle fs-4 me-2"></i>
-                                <div>
-                                    Data gaji untuk karyawan ini <strong>belum diatur</strong>. Silakan isi form di bawah untuk
-                                    mengisi data gaji.
-                                </div>
-                            </div>
-                        @endif
+                <form action="{{ route('karyawan.kompensasi.store', $karyawan->id_karyawan) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="id_karyawan" value="{{ $karyawan->id_karyawan }}">
 
-                        <form action="{{ route('karyawan.gaji.store', $karyawan->id_karyawan) }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="id_karyawan" value="{{ $karyawan->id_karyawan }}">
+                    <div class="card shadow-sm border-0 pb-3">
+                        <div class="card-header bg-success text-white py-3">
+                            <h5 class="mb-0 text-white"><i class="ti ti-cash me-2"></i> Gaji Pokok & Tunjangan</h5>
+                        </div>
+                        <div class="card-body pt-4">
+                            @if ($karyawan->gaji)
+                                <div class="alert alert-light-success border border-success border-dashed text-success-emphasis d-flex align-items-center mb-4"
+                                    role="alert">
+                                    <i class="ti ti-circle-check fs-4 me-2"></i>
+                                    <div>
+                                        Data gaji untuk karyawan ini <strong>sudah diatur</strong>. Anda dapat
+                                        memperbaruinya di
+                                        bawah.
+                                    </div>
+                                </div>
+                            @else
+                                <div class="alert alert-light-warning border border-warning border-dashed text-warning-emphasis d-flex align-items-center mb-4"
+                                    role="alert">
+                                    <i class="ti ti-alert-triangle fs-4 me-2"></i>
+                                    <div>
+                                        Data gaji untuk karyawan ini <strong>belum diatur</strong>. Silakan isi form di
+                                        bawah untuk
+                                        mengisi data gaji.
+                                    </div>
+                                </div>
+                            @endif
 
                             <div class="row g-3">
                                 <div class="col-md-12">
@@ -210,46 +212,37 @@
                                     @enderror
                                 </div>
                             </div>
-
-                            <div class="mt-4 pt-3">
-                                <button type="submit" class="btn btn-success btn-lg w-100">
-                                    <i class="ti ti-device-floppy me-1"></i> Simpan Data Gaji
-                                </button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Potongan (tb_potongan) -->
-                <div class="card shadow-sm border-0 pb-3 mt-4">
-                    <div class="card-header bg-danger text-white py-3">
-                        <h5 class="mb-0 text-white"><i class="ti ti-scissors me-2"></i> Potongan Gaji</h5>
-                    </div>
-                    <div class="card-body pt-4">
-                        @if ($karyawan->potongan)
-                            <div class="alert alert-light-danger border border-danger border-dashed text-danger-emphasis d-flex align-items-center mb-4"
-                                role="alert">
-                                <i class="ti ti-circle-check fs-4 me-2"></i>
-                                <div>
-                                    Data potongan untuk karyawan ini <strong>sudah diatur</strong>. Anda dapat memperbaruinya di
-                                    bawah.
+                    <!-- Potongan (tb_potongan) -->
+                    <div class="card shadow-sm border-0 pb-3 mt-4">
+                        <div class="card-header bg-danger text-white py-3">
+                            <h5 class="mb-0 text-white"><i class="ti ti-scissors me-2"></i> Potongan Gaji</h5>
+                        </div>
+                        <div class="card-body pt-4">
+                            @if ($karyawan->potongan)
+                                <div class="alert alert-light-danger border border-danger border-dashed text-danger-emphasis d-flex align-items-center mb-4"
+                                    role="alert">
+                                    <i class="ti ti-circle-check fs-4 me-2"></i>
+                                    <div>
+                                        Data potongan untuk karyawan ini <strong>sudah diatur</strong>. Anda dapat
+                                        memperbaruinya di
+                                        bawah.
+                                    </div>
                                 </div>
-                            </div>
-                        @else
-                            <div class="alert alert-light-warning border border-warning border-dashed text-warning-emphasis d-flex align-items-center mb-4"
-                                role="alert">
-                                <i class="ti ti-alert-triangle fs-4 me-2"></i>
-                                <div>
-                                    Data potongan untuk karyawan ini <strong>belum diatur</strong>. Silakan isi form di bawah
-                                    untuk
-                                    mengisi data potongan.
+                            @else
+                                <div class="alert alert-light-warning border border-warning border-dashed text-warning-emphasis d-flex align-items-center mb-4"
+                                    role="alert">
+                                    <i class="ti ti-alert-triangle fs-4 me-2"></i>
+                                    <div>
+                                        Data potongan untuk karyawan ini <strong>belum diatur</strong>. Silakan isi form di
+                                        bawah
+                                        untuk
+                                        mengisi data potongan.
+                                    </div>
                                 </div>
-                            </div>
-                        @endif
-
-                        <form action="{{ route('karyawan.potongan.store', $karyawan->id_karyawan) }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="id_karyawan" value="{{ $karyawan->id_karyawan }}">
+                            @endif
 
                             <div class="row g-3">
                                 <div class="col-md-12">
@@ -268,14 +261,16 @@
                                 </div>
                             </div>
 
-                            <div class="mt-4 pt-3">
-                                <button type="submit" class="btn btn-danger btn-lg w-100">
-                                    <i class="ti ti-device-floppy me-1"></i> Simpan Data Potongan
-                                </button>
-                            </div>
-                        </form>
+
+                        </div>
+
                     </div>
-                </div>
+                    <div class="mt-2 pt-3">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="ti ti-device-floppy me-1"></i> Simpan Data Gaji & Potongan
+                            </button>
+                        </div>
+                </form>
             </div>
         </div>
     </div>
@@ -283,7 +278,7 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             function formatRupiah(value) {
                 if (value === undefined || value === null || value === '') return '0';
                 var str = value.toString().trim();
@@ -307,10 +302,11 @@
             }
 
             // Format on keyup
-            $(document).on('input', '.rupiah-mask', function () {
+            $(document).on('input', '.rupiah-mask', function() {
                 var el = this;
                 var rawVal = el.value.replace(/\./g, '').replace(/[^0-9]/g, '');
-                var formatted = rawVal === '' ? '0' : parseInt(rawVal, 10).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                var formatted = rawVal === '' ? '0' : parseInt(rawVal, 10).toString().replace(
+                    /\B(?=(\d{3})+(?!\d))/g, '.');
                 var oldLen = el.value.length;
                 el.value = formatted;
                 var newLen = formatted.length;
@@ -319,13 +315,13 @@
             });
 
             // Format existing values on load
-            $('.rupiah-mask').each(function () {
+            $('.rupiah-mask').each(function() {
                 $(this).val(formatRupiah($(this).val()));
             });
 
             // Strip formatting before submit
-            $('form').on('submit', function () {
-                $(this).find('.rupiah-mask').each(function () {
+            $('form').on('submit', function() {
+                $(this).find('.rupiah-mask').each(function() {
                     $(this).val($(this).val().replace(/\./g, ''));
                 });
             });

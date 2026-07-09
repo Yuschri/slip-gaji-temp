@@ -59,6 +59,8 @@
                         <input type="number" name="tahun" id="tahun" class="form-control" required
                             value="{{ old('tahun', date('Y')) }}">
                     </div>
+                </div>
+                <div class="row g-3 mb-4">
 
                     <!-- Readonly Karyawan Info -->
                     <div class="col-md-4">
@@ -73,15 +75,17 @@
                         <label class="form-label text-muted">Divisi</label>
                         <input type="text" id="karyawan_divisi" class="form-control bg-light" readonly placeholder="-">
                     </div>
+                </div>
+                <div class="row g-3 mb-4">
                     <div class="col-md-4">
                         <label class="form-label text-muted">Klinik / Cabang</label>
                         <input type="text" id="karyawan_klinik" class="form-control bg-light" readonly placeholder="-">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label text-muted">WhatsApp</label>
                         <input type="text" id="karyawan_no_wa" class="form-control bg-light" readonly placeholder="-">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label text-muted">Nomor Rekening</label>
                         <input type="text" id="karyawan_nomor_rekening" class="form-control bg-light" readonly placeholder="-">
                     </div>
@@ -91,7 +95,7 @@
 
                 <h5 class="mb-3 text-success"><i class="ti ti-cash me-2"></i> 2. Pendapatan & Tunjangan</h5>
                 <div class="row g-3 mb-4">
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <label class="form-label">Gaji Pokok <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
@@ -99,6 +103,8 @@
                                 value="{{ old('gaji_pokok', 0) }}">
                         </div>
                     </div>
+                </div>
+                <div class="row g-3 mb-4">
                     <div class="col-md-3">
                         <label class="form-label">Tunjangan Pengalaman Kerja</label>
                         <div class="input-group">
@@ -124,7 +130,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Operasional</label>
+                        <label class="form-label">Tunjangan Operasional</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="operasional" id="operasional" class="form-control entry-calc entry-calc-rupiah"
@@ -148,13 +154,15 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">T. Hari Raya</label>
+                        <label class="form-label">Tunjangan Hari Raya</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
                             <input type="text" name="t_hari_raya" id="t_hari_raya" class="form-control entry-calc entry-calc-rupiah"
                                 value="{{ old('t_hari_raya', 0) }}">
                         </div>
                     </div>
+                </div>
+                <div class="row g-3 mb-4">
                     <div class="col-md-3">
                         <label class="form-label">Fee Beautician</label>
                         <div class="input-group">
@@ -179,6 +187,8 @@
                                 value="{{ old('lain_lain', 0) }}">
                         </div>
                     </div>
+                </div>
+                <div class="row g-3 mb-4">
                     <div class="col-md-3">
                         <label class="form-label">Prosentase Gaji (%)</label>
                         <input type="number" step="0.01" name="prosentase_gaji" id="prosentase_gaji" class="form-control entry-calc"
@@ -195,15 +205,8 @@
 
                 <h5 class="mb-3 text-danger"><i class="ti ti-scissors me-2"></i> 3. Potongan & Pengurangan</h5>
                 <div class="row g-3 mb-4">
-                    <div class="col-md-3">
-                        <label class="form-label">Punishment</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Rp</span>
-                            <input type="text" name="punishment" id="punishment" class="form-control entry-calc entry-calc-rupiah"
-                                value="{{ old('punishment', 0) }}">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
+
+                    <div class="col-md-4">
                         <label class="form-label">BPJS Ketenagakerjaan</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
@@ -211,7 +214,7 @@
                                 value="{{ old('bpjstk', 0) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label class="form-label">BPJS Kesehatan</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
@@ -219,7 +222,7 @@
                                 value="{{ old('bpjs_kesehatan', 0) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label class="form-label">PPh 21</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
@@ -227,7 +230,10 @@
                                 value="{{ old('pph_21', 0) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                </div>
+                <div class="row g-3 mb-4">
+
+                    <div class="col-md-4">
                         <label class="form-label">Potongan BPJS Ketenagakerjaan</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
@@ -235,7 +241,7 @@
                                 value="{{ old('potongan_bpjs_tk', 0) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label class="form-label">Potongan BPJS Kesehatan</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
@@ -243,7 +249,7 @@
                                 value="{{ old('potongan_bpjs_kesehatan', 0) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label class="form-label">Potongan PPh 21</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
@@ -251,7 +257,18 @@
                                 value="{{ old('potongan_pph_21', 0) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                </div>
+                <div class="row g-3 mb-4">
+
+                    <div class="col-md-4">
+                        <label class="form-label">Punishment</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Rp</span>
+                            <input type="text" name="punishment" id="punishment" class="form-control entry-calc entry-calc-rupiah"
+                                value="{{ old('punishment', 0) }}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
                         <label class="form-label">Sedekah Rombongan</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
@@ -259,7 +276,7 @@
                                 value="{{ old('sedekah_rombongan', 0) }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label class="form-label">Potongan Lainnya</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
@@ -273,35 +290,37 @@
 
                 <h5 class="mb-3 text-info"><i class="ti ti-calendar-stats me-2"></i> 4. Kehadiran & Status</h5>
                 <div class="row g-3 mb-4">
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="form-label">Cuti (Hari)</label>
                         <input type="number" name="cuti" id="cuti" class="form-control" value="{{ old('cuti', 0) }}">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="form-label">Lembur (Kali)</label>
                         <input type="number" name="lembur_kali" id="lembur_kali" class="form-control" value="{{ old('lembur_kali', 0) }}">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="form-label">Terlambat (Kali)</label>
                         <input type="number" name="terlambat" id="terlambat" class="form-control" value="{{ old('terlambat', 0) }}">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="form-label">Ijin Pulang Cepat</label>
                         <input type="number" name="ijin_pulang_cepat" id="ijin_pulang_cepat" class="form-control" value="{{ old('ijin_pulang_cepat', 0) }}">
                     </div>
-                    <div class="col-md-2">
+                </div>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
                         <label class="form-label">Ijin Tdk Masuk</label>
                         <input type="number" name="ijin_tidak_masuk" id="ijin_tidak_masuk" class="form-control" value="{{ old('ijin_tidak_masuk', 0) }}">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="form-label">No Check In/Out</label>
                         <input type="number" name="no_check_in_or_out" id="no_check_in_or_out" class="form-control" value="{{ old('no_check_in_or_out', 0) }}">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="form-label">No Check In & Out</label>
                         <input type="number" name="no_check_in_and_out" id="no_check_in_and_out" class="form-control" value="{{ old('no_check_in_and_out', 0) }}">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="form-label">Kehadiran Lainnya</label>
                         <input type="number" name="kehadiran_lainnya" id="kehadiran_lainnya" class="form-control" value="{{ old('kehadiran_lainnya', 0) }}">
                     </div>
@@ -392,7 +411,7 @@
                 var el = this;
                 var rawVal = el.value.replace(/\./g, '').replace(/[^0-9]/g, '');
                 var formatted = rawVal === '' ? '0' : parseInt(rawVal, 10).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                
+
                 // Hitung delta panjang untuk mempertahankan posisi kursor
                 var oldLen = el.value.length;
                 el.value = formatted;
@@ -524,9 +543,9 @@
                 var operasional = getRawValue('#operasional');
                 var fee_beautician = getRawValue('#fee_beautician');
                 var lembur = getRawValue('#nominal_lembur');
-                
+
                 var subtotalReceipts = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja + t_hari_raya + operasional + fee_beautician + lembur;
-                
+
                 var percentage = parseFloat($('#prosentase_gaji').val());
                 if (isNaN(percentage) || percentage <= 0) {
                     percentage = 100;
@@ -538,16 +557,16 @@
                 var bpjstk = getRawValue('#bpjstk');
                 var bpjs_kes = getRawValue('#bpjs_kesehatan');
                 var pph21 = getRawValue('#pph_21');
-                
+
                 var pot_bpjstk = getRawValue('#potongan_bpjs_tk');
                 var pot_bpjs_kes = getRawValue('#potongan_bpjs_kesehatan');
                 var pot_pph21 = getRawValue('#potongan_pph_21');
-                
+
                 var sedekah = getRawValue('#sedekah_rombongan');
                 var lain = getRawValue('#lain_lain');
                 var pot_lainnya = getRawValue('#potongan_lainnya');
 
-                var totalDeductions = punishment + bpjstk + bpjs_kes + pph21 + pot_bpjstk + pot_bpjs_kes + pot_pph21 + sedekah + lain + pot_lainnya;
+                var totalDeductions = punishment + pot_bpjstk + pot_bpjs_kes + pot_pph21 + sedekah + lain + pot_lainnya;
                 $('#calculated_potongan').val(totalDeductions.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
 
                 var netTransfer = totalReceipts - totalDeductions;
@@ -556,7 +575,7 @@
             }
 
             $(document).on('input change', '.entry-calc, #prosentase_gaji', calculateReceipt);
-            
+
             // Initial formatting on load
             $('.entry-calc-rupiah').each(function() {
                 var currentVal = $(this).val();
@@ -575,7 +594,7 @@
                 $('#nominal_transfer').val(cleanTransfer);
                 $('#thp').val(cleanTransfer);
             });
-            
+
             if ($('#id_karyawan').val()) {
                 fetchEmployeeDetails();
             }

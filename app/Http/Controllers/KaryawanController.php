@@ -124,9 +124,9 @@ class KaryawanController extends Controller
     }
 
     /**
-     * Store or update employee base salary and allowances.
+     * Store or update employee salary and deductions in one submit.
      */
-    public function saveGaji(Request $request, $id)
+    public function saveKompensasi(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'gaji_pokok' => 'required|numeric|min:0',
@@ -135,10 +135,14 @@ class KaryawanController extends Controller
             't_profesi' => 'nullable|numeric|min:0',
             't_kehadiran' => 'nullable|numeric|min:0',
             't_kinerja' => 'nullable|numeric|min:0',
+            'potongan_sedekah_rombongan' => 'required|numeric|min:0',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput()->with('error_gaji', 'Gagal menyimpan data gaji');
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Gagal menyimpan data gaji dan potongan');
         }
 
         $gajiData = [
@@ -150,30 +154,12 @@ class KaryawanController extends Controller
             't_kinerja' => $request->t_kinerja ?? 0,
         ];
 
-        $this->karyawanRepository->updateOrCreateGaji($id, $gajiData);
-
-        return redirect()->route('karyawan.show', $id)->with('success', 'Data gaji karyawan berhasil disimpan.');
-    }
-
-    /**
-     * Store or update employee deductions (potongan).
-     */
-    public function savePotongan(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'potongan_sedekah_rombongan' => 'required|numeric|min:0',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput()->with('error_potongan', 'Gagal menyimpan data potongan');
-        }
-
         $potonganData = [
             'potongan_sedekah_rombongan' => $request->potongan_sedekah_rombongan,
         ];
 
-        $this->karyawanRepository->updateOrCreatePotongan($id, $potonganData);
+        $this->karyawanRepository->updateOrCreateKompensasi($id, $gajiData, $potonganData);
 
-        return redirect()->route('karyawan.show', $id)->with('success', 'Data potongan karyawan berhasil disimpan.');
+        return redirect()->route('karyawan.show', $id)->with('success', 'Data gaji dan potongan karyawan berhasil disimpan.');
     }
 }

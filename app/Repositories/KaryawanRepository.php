@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Karyawan;
+use Illuminate\Support\Facades\DB;
 
 class KaryawanRepository
 {
@@ -50,26 +51,22 @@ class KaryawanRepository
     }
 
     /**
-     * Update or create salary information for an employee.
+     * Update or create salary and deduction data in one transaction.
      */
-    public function updateOrCreateGaji(int $karyawanId, array $data)
+    public function updateOrCreateKompensasi(int $karyawanId, array $gajiData, array $potonganData): void
     {
-        $karyawan = $this->find($karyawanId);
-        return $karyawan->gaji()->updateOrCreate(
-            ['id_karyawan' => $karyawanId],
-            $data
-        );
-    }
+        DB::transaction(function () use ($karyawanId, $gajiData, $potonganData) {
+            $karyawan = $this->find($karyawanId);
 
-    /**
-     * Update or create potongan information for an employee.
-     */
-    public function updateOrCreatePotongan(int $karyawanId, array $data)
-    {
-        $karyawan = $this->find($karyawanId);
-        return $karyawan->potongan()->updateOrCreate(
-            ['id_karyawan' => $karyawanId],
-            $data
-        );
+            $karyawan->gaji()->updateOrCreate(
+                ['id_karyawan' => $karyawanId],
+                $gajiData
+            );
+
+            $karyawan->potongan()->updateOrCreate(
+                ['id_karyawan' => $karyawanId],
+                $potonganData
+            );
+        });
     }
 }
