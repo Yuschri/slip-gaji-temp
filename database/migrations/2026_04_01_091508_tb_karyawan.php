@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->foreignId('id_jabatan')->constrained('tb_jabatan', 'id_jabatan')->onDelete('cascade');
             $table->string('no_wa', 20)->nullable();
             $table->string('nomor_rekening', 50)->nullable();
+            $table->string('cabang', 20)->nullable();
             $table->timestamps();
         });
     }

@@ -28,16 +28,18 @@ class SlipGajiController extends Controller
 
     public function create()
     {
-        return view('pages.slip-gaji.create');
+        $karyawans = \App\Models\Karyawan::orderBy('nama_karyawan')->get();
+        return view('pages.slip-gaji.create', compact('karyawans'));
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nama_karyawan' => 'required|string|max:255',
+            'id_karyawan' => 'required|exists:tb_karyawan,id_karyawan',
             'bulan' => 'required|integer|between:1,12',
             'tahun' => 'required|integer',
-            // Add other validations as needed
+            'gaji_pokok' => 'required|numeric|min:0',
+            'nominal_transfer' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -52,15 +54,18 @@ class SlipGajiController extends Controller
     public function edit($id)
     {
         $slip = $this->slipGajiService->findById($id);
-        return view('pages.slip-gaji.edit', compact('slip'));
+        $karyawans = \App\Models\Karyawan::orderBy('nama_karyawan')->get();
+        return view('pages.slip-gaji.edit', compact('slip', 'karyawans'));
     }
 
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'nama_karyawan' => 'required|string|max:255',
+            'id_karyawan' => 'required|exists:tb_karyawan,id_karyawan',
             'bulan' => 'required|integer|between:1,12',
             'tahun' => 'required|integer',
+            'gaji_pokok' => 'required|numeric|min:0',
+            'nominal_transfer' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -70,6 +75,59 @@ class SlipGajiController extends Controller
         $this->slipGajiService->update($id, $request->all());
 
         return redirect()->route('slip-gaji.index')->with('success', 'Slip Gaji updated successfully.');
+    }
+
+    public function getKaryawanDetails($id, Request $request)
+    {
+        $bulan = $request->input('bulan');
+        $tahun = $request->input('tahun');
+
+        $karyawan = \App\Models\Karyawan::with(['divisi', 'jabatan', 'gaji', 'potongan'])->find($id);
+
+        if (!$karyawan) {
+            return response()->json(['error' => 'Karyawan not found'], 404);
+        }
+
+        // Find attendance for the specified month and year
+        $kehadiran = null;
+        if ($bulan && $tahun) {
+            $kehadiran = \App\Models\Kehadiran::where('id_karyawan', $id)
+                ->where('bulan', $bulan)
+                ->where('tahun', $tahun)
+                ->first();
+        }
+
+        return response()->json([
+            'karyawan' => [
+                'nama' => $karyawan->nama_karyawan,
+                'tanggal_masuk' => $karyawan->tanggal_masuk ? \Carbon\Carbon::parse($karyawan->tanggal_masuk)->format('Y-m-d') : null,
+                'divisi' => $karyawan->divisi ? $karyawan->divisi->nama_divisi : '-',
+                'cabang' => $karyawan->cabang ?? '-',
+                'no_wa' => $karyawan->no_wa ?? '-',
+                'nomor_rekening' => $karyawan->nomor_rekening ?? '-',
+            ],
+            'gaji' => $karyawan->gaji ? [
+                'gaji_pokok' => $karyawan->gaji->gaji_pokok,
+                't_pengalaman_kerja' => $karyawan->gaji->t_pengalaman_kerja,
+                't_jabatan' => $karyawan->gaji->t_jabatan,
+                't_profesi' => $karyawan->gaji->t_profesi,
+                't_kehadiran' => $karyawan->gaji->t_kehadiran,
+                't_kinerja' => $karyawan->gaji->t_kinerja,
+            ] : null,
+            'potongan' => $karyawan->potongan ? [
+                'potongan_sedekah_rombongan' => $karyawan->potongan->potongan_sedekah_rombongan,
+            ] : null,
+            'kehadiran' => $kehadiran ? [
+                'id_kehadiran' => $kehadiran->id_kehadiran,
+                'cuti' => $kehadiran->cuti,
+                'lembur' => $kehadiran->lembur,
+                'terlambat' => $kehadiran->terlambat,
+                'ijin_pulang_cepat' => $kehadiran->ijin_pulang_cepat,
+                'ijin_tidak_masuk' => $kehadiran->ijin_tidak_masuk,
+                'no_check_in_or_out' => $kehadiran->no_check_in_or_out,
+                'no_check_in_and_out' => $kehadiran->no_check_in_and_out,
+            ] : null,
+        ]);
     }
 
     public function destroy($id)
@@ -171,7 +229,9 @@ class SlipGajiController extends Controller
         $tahun = $request->tahun;
 
         $slips = \App\Models\SlipGaji::when($klinik, function ($q) use ($klinik) {
-            return $q->where('klinik', $klinik);
+            return $q->whereHas('karyawan', function ($query) use ($klinik) {
+                $query->where('cabang', $klinik);
+            });
         })->when($bulan, function ($q) use ($bulan) {
             return $q->where('bulan', $bulan);
         })->when($tahun, function ($q) use ($tahun) {
