@@ -46,7 +46,7 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Bulan <span class="text-danger">*</span></label>
-                        <select name="bulan" id="bulan" class="form-select bg-light" required style="pointer-events: none;">
+                        <select name="bulan" id="bulan" class="form-select bg-light[]" required style="pointer-events: none;">
                             @for ($i = 1; $i <= 12; $i++)
                                 <option value="{{ $i }}" {{ old('bulan', $slip->bulan) == $i ? 'selected' : '' }}>
                                     {{ date('F', mktime(0, 0, 0, $i, 10)) }}

@@ -52,11 +52,16 @@ class Karyawan extends Model
 
     public function bpjsk()
     {
-        return $this->hasOne(Bpjstk::class, 'id_karyawan', 'id_karyawan');
+        return $this->hasOne(Bpjsk::class, 'id_karyawan', 'id_karyawan');
     }
 
     public function bpjstk()
     {
         return $this->hasOne(Bpjstk::class, 'id_karyawan', 'id_karyawan');
+    }
+
+    public function pph21()
+    {
+        return $this->hasOne(Pph21::class, 'id_karyawan', 'id_karyawan');
     }
 }

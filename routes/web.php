@@ -36,5 +36,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/update', [KaryawanController::class, 'update'])->name('update');
         Route::delete('/{id}/destroy', [KaryawanController::class, 'destroy'])->name('destroy');
         Route::post('/{id}/kompensasi', [KaryawanController::class, 'saveKompensasi'])->name('kompensasi.store');
+        Route::post('/{id}/bpjs', [KaryawanController::class, 'saveBpjs'])->name('bpjs.store');
+        Route::post('/{id}/pph21', [KaryawanController::class, 'savePph21'])->name('pph21.store');
     });
 });

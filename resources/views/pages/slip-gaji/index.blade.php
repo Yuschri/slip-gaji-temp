@@ -1,5 +1,26 @@
 @extends('layouts.main')
 
+@push('styles')
+<style>
+    .btn-success {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #198754;
+    --bs-btn-border-color: #198754;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #157347;
+    --bs-btn-hover-border-color: #146c43;
+    --bs-btn-focus-shadow-rgb: 60, 153, 110;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #146c43;
+    --bs-btn-active-border-color: #13653f;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #198754;
+    --bs-btn-disabled-border-color: #198754;
+}
+</style>
+@endpush
+
 @section('content')
     <div class="container-fluid">
         <div class="row">
@@ -7,13 +28,13 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="">
                         <h1 class="fs-3 mb-1">Slip Gaji</h1>
-                        <p class="mb-0">Manage and import employee payslips</p>
+                        <p class="mb-0">Mengelola dan mengimpor slip gaji karyawan</p>
                     </div>
                     <div>
                         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importModal">
-                            <i class="ti ti-file-import"></i> Import Excel
+                            <i class="ti ti-file-import"></i> Impor data dari Excel
                         </button>
-                        <a href="{{ route('slip-gaji.create') }}" class="btn btn-primary">Add Manually</a>
+                        <a href="{{ route('slip-gaji.create') }}" class="btn btn-primary">Tambah Manual</a>
                     </div>
                 </div>
             </div>
@@ -70,8 +91,8 @@
                     <input type="hidden" name="bulan" id="bulanHidden">
                     <input type="hidden" name="tahun" id="tahunHidden">
                     <button type="submit" class="btn btn-info text-white"
-                        onclick="return confirm('Broadcast to all filtered data?')">
-                        <i class="ti ti-brand-whatsapp"></i> Broadcast Filtered
+                        onclick="return confirm('Broadcast ke semua data yang difilter?')">
+                        <i class="ti ti-brand-whatsapp"></i> Broadcast data yang difilter
                     </button>
                 </form>
             </div>

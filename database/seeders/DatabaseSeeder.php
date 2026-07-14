@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Database\Seeders\GajiSeeder;
+use Database\Seeders\PotonganSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -24,6 +26,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             DivisiJabatanSeeder::class,
+            GajiSeeder::class,
+            PotonganSeeder::class,
             SkemaPPHSeeder::class,
             SkemaBPJSKSeeder::class,
             SkemaBPJSTKSeeder::class,

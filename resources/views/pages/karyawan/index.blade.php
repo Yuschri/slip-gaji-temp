@@ -7,11 +7,11 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="">
                         <h1 class="fs-3 mb-1">Data Karyawan</h1>
-                        <p class="mb-0">Manage employee personal records, roles and bank details</p>
+                        <p class="mb-0">Mengelola catatan pribadi karyawan, peran, dan detail rekening bank.</p>
                     </div>
                     <div>
                         <a href="{{ route('karyawan.create') }}" class="btn btn-primary">
-                            <i class="ti ti-plus"></i> Add Karyawan
+                            <i class="ti ti-plus"></i> Tambah Karyawan
                         </a>
                     </div>
                 </div>
@@ -78,8 +78,8 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                onclick="return confirm('Are you sure you want to delete database record for {{ $karyawan->nama_karyawan }}?')">
-                                                <i class="ti ti-trash"></i> Delete
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus data karyawan {{ $karyawan->nama_karyawan }}?')">
+                                                <i class="ti ti-trash"></i> Hapus
                                             </button>
                                         </form>
                                     </td>

@@ -3,6 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\Karyawan;
+use App\Models\Bpjstk;
+use App\Models\Bpjsk;
+use App\Models\Pph21;
 use Illuminate\Support\Facades\DB;
 
 class KaryawanRepository
@@ -20,7 +23,7 @@ class KaryawanRepository
      */
     public function find(int $id)
     {
-        return Karyawan::with(['divisi', 'jabatan', 'gaji', 'potongan'])->findOrFail($id);
+        return Karyawan::with(['divisi', 'jabatan', 'gaji', 'potongan', 'bpjstk', 'bpjsk', 'pph21'])->findOrFail($id);
     }
 
     /**
@@ -68,5 +71,28 @@ class KaryawanRepository
                 $potonganData
             );
         });
+    }
+
+    public function updateOrCreateBpjs(int $karyawanId, array $bpjstkData, array $bpjskData): void
+    {
+        DB::transaction(function () use ($karyawanId, $bpjstkData, $bpjskData) {
+            Bpjstk::updateOrCreate(
+                ['id_karyawan' => $karyawanId],
+                $bpjstkData
+            );
+
+            Bpjsk::updateOrCreate(
+                ['id_karyawan' => $karyawanId],
+                $bpjskData
+            );
+        });
+    }
+
+    public function updateOrCreatePph21(int $karyawanId, array $pphData): void
+    {
+        Pph21::updateOrCreate(
+            ['id_karyawan' => $karyawanId],
+            $pphData
+        );
     }
 }
