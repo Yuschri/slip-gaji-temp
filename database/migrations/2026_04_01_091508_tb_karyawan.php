@@ -13,7 +13,9 @@ return new class extends Migration {
         Schema::create('tb_karyawan', function (Blueprint $table) {
             $table->id('id_karyawan');
             $table->string('nip', 20)->unique();
+            $table->string('nik', 20)->unique();
             $table->string('nama_karyawan');
+            $table->date('tanggal_lahir')->nullable();
             $table->date('tanggal_masuk')->nullable();
             $table->foreignId('id_divisi')->constrained('tb_divisi', 'id_divisi')->onDelete('cascade');
             $table->foreignId('id_jabatan')->constrained('tb_jabatan', 'id_jabatan')->onDelete('cascade');

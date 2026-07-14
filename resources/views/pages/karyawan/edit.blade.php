@@ -43,6 +43,12 @@
                     </div>
 
                     <div class="col-md-4">
+                        <label class="form-label">Tanggal Lahir</label>
+                        <input type="date" name="tanggal_lahir" class="form-control"
+                            value="{{ old('tanggal_lahir', $karyawan->tanggal_lahir ? $karyawan->tanggal_lahir->format('Y-m-d') : '') }}">
+                    </div>
+
+                    <div class="col-md-4">
                         <label class="form-label">Tanggal Masuk</label>
                         <input type="date" name="tanggal_masuk" class="form-control"
                             value="{{ old('tanggal_masuk', $karyawan->tanggal_masuk ? $karyawan->tanggal_masuk->format('Y-m-d') : '') }}">
@@ -71,16 +77,14 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label class="form-label">No WA (WhatsApp) <span class="text-muted"><small>(e.g.
-                                    62812345678)</small></span></label>
-                        <input type="text" name="no_wa" class="form-control" placeholder="Enter active phone/WhatsApp"
-                            value="{{ old('no_wa', $karyawan->no_wa) }}">
+                        <label class="form-label">NIK</label>
+                        <input type="text" name="nik" class="form-control" placeholder="Enter NIK" required
+                            value="{{ old('nik', $karyawan->nik) }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Nomor Rekening</label>
-                        <input type="text" name="nomor_rekening" class="form-control"
-                            placeholder="Enter bank account number"
-                            value="{{ old('nomor_rekening', $karyawan->nomor_rekening) }}">
+                        <label class="form-label">Beban BPJS</label>
+                        <input type="text" name="beban_bpjs" class="form-control" placeholder="Enter BPJS burden"
+                            value="{{ old('beban_bpjs', $karyawan->beban_bpjs) }}">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Cabang <span class="text-danger">*</span></label>

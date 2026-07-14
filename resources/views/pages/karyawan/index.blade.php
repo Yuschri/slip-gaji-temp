@@ -40,6 +40,8 @@
                             <tr>
                                 <th>NIP</th>
                                 <th>Nama Karyawan</th>
+                                <th>NIK</th>
+                                <th>Beban BPJS</th>
                                 <th>Tanggal Masuk</th>
                                 <th>Divisi</th>
                                 <th>Jabatan</th>
@@ -54,6 +56,8 @@
                                 <tr class="align-middle">
                                     <td><strong>{{ $karyawan->nip }}</strong></td>
                                     <td>{{ $karyawan->nama_karyawan }}</td>
+                                    <td>{{ $karyawan->nik ?? '-' }}</td>
+                                    <td>{{ $karyawan->beban_bpjs ?? '-' }}</td>
                                     <td>{{ $karyawan->tanggal_masuk ? $karyawan->tanggal_masuk->format('d M Y') : '-' }}</td>
                                     <td>{{ $karyawan->divisi ? $karyawan->divisi->nama_divisi : '-' }}</td>
                                     <td>{{ $karyawan->jabatan ? $karyawan->jabatan->nama_jabatan : '-' }}</td>

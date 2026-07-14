@@ -33,18 +33,46 @@
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label class="form-label">NIP <span class="text-danger">*</span></label>
-                        <input type="text" name="nip" class="form-control" placeholder="Enter NIP" required
+                        <input type="text" name="nip" class="form-control" placeholder="NIP" required
                             value="{{ old('nip') }}">
                     </div>
-                    <div class="col-md-8">
-                        <label class="form-label">Nama Karyawan <span class="text-danger">*</span></label>
-                        <input type="text" name="nama_karyawan" class="form-control" placeholder="Enter full name" required
-                            value="{{ old('nama_karyawan') }}">
+                    <div class="col-md-4">
+                        <label class="form-label">NIK</label>
+                        <input type="text" name="nik" class="form-control" placeholder="NIK" value="{{ old('nik') }}">
                     </div>
-
+                    <div class="col-md-4">
+                        <label class="form-label">Tanggal Lahir</label>
+                        <input type="date" name="tanggal_lahir" class="form-control" value="{{ old('tanggal_lahir') }}">
+                    </div>
                     <div class="col-md-4">
                         <label class="form-label">Tanggal Masuk</label>
                         <input type="date" name="tanggal_masuk" class="form-control" value="{{ old('tanggal_masuk') }}">
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label">Nama Karyawan <span class="text-danger">*</span></label>
+                        <input type="text" name="nama_karyawan" class="form-control" placeholder="Nama Sesuai KTP" required
+                            value="{{ old('nama_karyawan') }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Cabang <span class="text-danger">*</span></label>
+                        <select name="cabang" class="form-select" required>
+                            <option value="">-- Select Cabang --</option>
+                            <option value="HO" {{ old('cabang') == 'HO' ? 'selected' : '' }}>HO</option>
+                            <option value="Klinik Paris" {{ old('cabang') == 'Klinik Paris' ? 'selected' : '' }}>Klinik Paris
+                            </option>
+                            <option value="Klinik Kavling DPR" {{ old('cabang') == 'Klinik Kavling DPR' ? 'selected' : '' }}>
+                                Klinik Kavling DPR</option>
+                            <option value="Klinik Kutisari" {{ old('cabang') == 'Klinik Kutisari' ? 'selected' : '' }}>Klinik
+                                Kutisari</option>
+                            <option value="Klinik Mulyosari" {{ old('cabang') == 'Klinik Mulyosari' ? 'selected' : '' }}>
+                                Klinik Mulyosari</option>
+                            <option value="Klinik Kutai" {{ old('cabang') == 'Klinik Kutai' ? 'selected' : '' }}>Klinik Kutai
+                            </option>
+                            <option value="Klinik Mojokerto" {{ old('cabang') == 'Klinik Mojokerto' ? 'selected' : '' }}>
+                                Klinik Mojokerto</option>
+                            <option value="Klinik Madiun" {{ old('cabang') == 'Klinik Madiun' ? 'selected' : '' }}>Klinik
+                                Madiun</option>
+                        </select>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Divisi <span class="text-danger">*</span></label>
@@ -68,38 +96,15 @@
                             @endforeach
                         </select>
                     </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label">No WA (WhatsApp) <span class="text-muted"><small>(e.g.
-                                    62812345678)</small></span></label>
-                        <input type="text" name="no_wa" class="form-control" placeholder="Enter active phone/WhatsApp"
-                            value="{{ old('no_wa') }}">
-                    </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label class="form-label">Nomor Rekening</label>
-                        <input type="text" name="nomor_rekening" class="form-control"
-                            placeholder="Enter bank account number" value="{{ old('nomor_rekening') }}">
+                        <input type="text" name="nomor_rekening" class="form-control" placeholder="Nomor Rekening"
+                            value="{{ old('nomor_rekening') }}">
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Cabang <span class="text-danger">*</span></label>
-                        <select name="cabang" class="form-select" required>
-                            <option value="">-- Select Cabang --</option>
-                            <option value="HO" {{ old('cabang') == 'HO' ? 'selected' : '' }}>HO</option>
-                            <option value="Klinik Paris" {{ old('cabang') == 'Klinik Paris' ? 'selected' : '' }}>Klinik Paris
-                            </option>
-                            <option value="Klinik Kavling DPR" {{ old('cabang') == 'Klinik Kavling DPR' ? 'selected' : '' }}>
-                                Klinik Kavling DPR</option>
-                            <option value="Klinik Kutisari" {{ old('cabang') == 'Klinik Kutisari' ? 'selected' : '' }}>Klinik
-                                Kutisari</option>
-                            <option value="Klinik Mulyosari" {{ old('cabang') == 'Klinik Mulyosari' ? 'selected' : '' }}>
-                                Klinik Mulyosari</option>
-                            <option value="Klinik Kutai" {{ old('cabang') == 'Klinik Kutai' ? 'selected' : '' }}>Klinik Kutai
-                            </option>
-                            <option value="Klinik Mojokerto" {{ old('cabang') == 'Klinik Mojokerto' ? 'selected' : '' }}>
-                                Klinik Mojokerto</option>
-                            <option value="Klinik Madiun" {{ old('cabang') == 'Klinik Madiun' ? 'selected' : '' }}>Klinik
-                                Madiun</option>
-                        </select>
+                    <div class="col-md-6">
+                        <label class="form-label">Nomor WhatsApp</label>
+                        <input type="text" name="no_wa" class="form-control" placeholder="Nomor WhatsApp"
+                            value="{{ old('no_wa') }}">
                     </div>
                 </div>
 

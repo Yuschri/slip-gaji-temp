@@ -50,6 +50,7 @@ class KaryawanController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nip' => 'required|string|max:20|unique:tb_karyawan,nip',
+            'nik' => 'nullable|string|max:20|unique:tb_karyawan,nik',
             'nama_karyawan' => 'required|string|max:255',
             'tanggal_masuk' => 'nullable|date',
             'id_divisi' => 'required|exists:tb_divisi,id_divisi',
@@ -74,7 +75,9 @@ class KaryawanController extends Controller
     public function show($id)
     {
         $karyawan = $this->karyawanRepository->find($id);
-        return view('pages.karyawan.show', compact('karyawan'));
+        $skemaBpjstk = \App\Models\SkemaBPJSTK::where('is_active', true)->first();
+        $skemaBpjsk = \App\Models\SkemaBPJSK::where('is_active', true)->first();
+        return view('pages.karyawan.show', compact('karyawan', 'skemaBpjstk', 'skemaBpjsk'));
     }
 
     /**
@@ -96,6 +99,7 @@ class KaryawanController extends Controller
         // For unique validation, we check the exception rule of unique
         $validator = Validator::make($request->all(), [
             'nip' => 'required|string|max:20|unique:tb_karyawan,nip,' . $id . ',id_karyawan',
+            'nik' => 'nullable|string|max:20|unique:tb_karyawan,nik,' . $id . ',id_karyawan',
             'nama_karyawan' => 'required|string|max:255',
             'tanggal_masuk' => 'nullable|date',
             'id_divisi' => 'required|exists:tb_divisi,id_divisi',

@@ -14,7 +14,9 @@ class Karyawan extends Model
 
     protected $fillable = [
         'nip',
+        'nik',
         'nama_karyawan',
+        'tanggal_lahir',
         'tanggal_masuk',
         'id_divisi',
         'id_jabatan',
@@ -24,6 +26,7 @@ class Karyawan extends Model
     ];
 
     protected $casts = [
+        'tanggal_lahir' => 'date',
         'tanggal_masuk' => 'date',
     ];
 
@@ -45,5 +48,15 @@ class Karyawan extends Model
     public function potongan()
     {
         return $this->hasOne(Potongan::class, 'id_karyawan', 'id_karyawan');
+    }
+
+    public function bpjsk()
+    {
+        return $this->hasOne(Bpjstk::class, 'id_karyawan', 'id_karyawan');
+    }
+
+    public function bpjstk()
+    {
+        return $this->hasOne(Bpjstk::class, 'id_karyawan', 'id_karyawan');
     }
 }
