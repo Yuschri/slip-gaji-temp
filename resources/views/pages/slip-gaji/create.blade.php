@@ -204,6 +204,145 @@
                     <hr class="my-4 text-muted opacity-25">
 
                     <h5 class="mb-3 text-danger"><i class="ti ti-scissors me-2"></i> 3. Potongan & Pengurangan</h5>
+                    <h6 class="mb-3 text-danger">BPJS TK</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-2">
+                            <label class="form-label">No Referensi</label>
+                            <input type="text" name="bpjsk_no_ref" id="bpjsk_no_ref" class="form-control entry-calc"
+                                value="{{ old('bpjsk_no_ref') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Upah yg didaftarkan</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" name="bpjsk_upah_daftar" id="bpjsk_upah_daftar" class="form-control entry-calc entry-calc-rupiah"
+                                    value="{{ old('bpjsk_upah_daftar', 0) }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Iuran JKK</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" name="bpjsk_iuran_jkk" id="bpjsk_iuran_jkk" class="form-control entry-calc entry-calc-rupiah"
+                                    value="{{ old('bpjsk_iuran_jkk', 0) }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Iuran JKM</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" name="bpjsk_iuran_jkm" id="bpjsk_iuran_jkm" class="form-control entry-calc entry-calc-rupiah"
+                                    value="{{ old('bpjsk_iuran_jkm', 0) }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Iuran JHT Pemberi Kerja</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" name="bpjsk_iuran_jht_pk" id="bpjsk_iuran_jht_pk" class="form-control entry-calc entry-calc-rupiah"
+                                    value="{{ old('bpjsk_iuran_jht_pk', 0) }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Iuran JHT Tenaga Kerja</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" name="bpjsk_iuran_jht_tk" id="bpjsk_iuran_jht_tk" class="form-control entry-calc entry-calc-rupiah"
+                                    value="{{ old('bpjsk_iuran_jht_tk', 0) }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Total</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" name="bpjsk_total" id="bpjsk_total" class="form-control entry-calc entry-calc-rupiah bg-light" readonly
+                                    value="{{ old('bpjsk_total', 0) }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="mb-3 text-danger">BPJS Kesehatan</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-2">
+                            <label class="form-label">No JKN Peserta</label>
+                            <input type="text" name="bpjsk_no_jkn" id="bpjsk_no_jkn" class="form-control"
+                                value="{{ old('bpjsk_no_jkn') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Beban BPJS Kesehatan</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" name="bpjsk_beban" id="bpjsk_beban" class="form-control entry-calc entry-calc-rupiah"
+                                    value="{{ old('bpjsk_beban', 0) }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">NPP</label>
+                            <input type="text" name="bpjsk_npp" id="bpjsk_npp" class="form-control"
+                                value="{{ old('bpjsk_npp') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Upah yang didaftarkan</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" name="bpjsk_upah" id="bpjsk_upah" class="form-control entry-calc entry-calc-rupiah"
+                                    value="{{ old('bpjsk_upah', 0) }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Premi</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" name="bpjsk_premi" id="bpjsk_premi" class="form-control entry-calc entry-calc-rupiah"
+                                    value="{{ old('bpjsk_premi', 0) }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Tanggungan Perusahaan</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" name="bpjsk_tg_gaji" id="bpjsk_tg_gaji" class="form-control entry-calc entry-calc-rupiah"
+                                    value="{{ old('bpjsk_tg_gaji', 0) }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Tanggungan Karyawan</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" name="bpjsk_tg_karyawan" id="bpjsk_tg_karyawan" class="form-control entry-calc entry-calc-rupiah"
+                                    value="{{ old('bpjsk_tg_karyawan', 0) }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="mb-3 text-danger">PPH21</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label">NPWP/KTP</label>
+                            <input type="text" name="pph21_npwp" id="pph21_npwp" class="form-control"
+                                value="{{ old('pph21_npwp') }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">PTKP</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" name="pph21_ptkp" id="pph21_ptkp" class="form-control entry-calc entry-calc-rupiah"
+                                    value="{{ old('pph21_ptkp', 0) }}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Kategori</label>
+                            <select name="pph21_kategori" id="pph21_kategori" class="form-select">
+                                <option value="">-- select category --</option>
+                                <option value="TK0" {{ old('pph21_kategori') == 'TK0' ? 'selected' : '' }}>TK0</option>
+                                <option value="TK1" {{ old('pph21_kategori') == 'TK1' ? 'selected' : '' }}>TK1</option>
+                                <option value="TK2" {{ old('pph21_kategori') == 'TK2' ? 'selected' : '' }}>TK2</option>
+                                <option value="I0" {{ old('pph21_kategori') == 'I0' ? 'selected' : '' }}>I0</option>
+                                <option value="I1" {{ old('pph21_kategori') == 'I1' ? 'selected' : '' }}>I1</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="row g-3 mb-4">
 
                         <div class="col-md-4">

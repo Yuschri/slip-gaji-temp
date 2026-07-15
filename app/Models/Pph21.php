@@ -15,6 +15,7 @@ class Pph21 extends Model
         'id_skema_pph21',
         'identitas',
         'ptkp',
+        'kategori',
     ];
 
     public function skema()

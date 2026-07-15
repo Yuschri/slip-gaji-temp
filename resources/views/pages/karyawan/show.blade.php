@@ -1,24 +1,24 @@
 @extends('layouts.main')
 
 @push('styles')
-<style>
-    .btn-info {
-    --bs-btn-color: #fff;
-    --bs-btn-bg: #0ea5e9;
-    --bs-btn-border-color: #0ea5e9;
-    --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #0284c7;
-    --bs-btn-hover-border-color: #0369a1;
-    --bs-btn-focus-shadow-rgb: 14, 165, 233;
-    --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #0369a1;
-    --bs-btn-active-border-color: #075985;
-    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-    --bs-btn-disabled-color: #fff;
-    --bs-btn-disabled-bg: #0ea5e9;
-    --bs-btn-disabled-border-color: #0ea5e9;
-}
-</style>
+    <style>
+        .btn-info {
+            --bs-btn-color: #fff;
+            --bs-btn-bg: #0ea5e9;
+            --bs-btn-border-color: #0ea5e9;
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: #0284c7;
+            --bs-btn-hover-border-color: #0369a1;
+            --bs-btn-focus-shadow-rgb: 14, 165, 233;
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: #0369a1;
+            --bs-btn-active-border-color: #075985;
+            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+            --bs-btn-disabled-color: #fff;
+            --bs-btn-disabled-bg: #0ea5e9;
+            --bs-btn-disabled-border-color: #0ea5e9;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -113,8 +113,7 @@
                             </div>
                         </div>
                         <div class="mt-4 text-center">
-                            <a href="{{ route('karyawan.edit', $karyawan->id_karyawan) }}"
-                                class="btn btn-info w-100 mt-6">
+                            <a href="{{ route('karyawan.edit', $karyawan->id_karyawan) }}" class="btn btn-info w-100 mt-6">
                                 <i class="ti ti-edit"></i> Edit Profil Karyawan
                             </a>
                         </div>
@@ -130,12 +129,14 @@
 
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-primary text-white py-3">
-                            <h5 class="mb-0 text-white"><i class="ti ti-wallet me-2"></i> Gaji Pokok, Tunjangan & Potongan</h5>
+                            <h5 class="mb-0 text-white"><i class="ti ti-wallet me-2"></i> Gaji Pokok, Tunjangan & Potongan
+                            </h5>
                         </div>
                         <div class="card-body pt-4">
 
                             {{-- Gaji Pokok & Tunjangan --}}
-                            <h6 class="fw-bold mb-3"><i class="ti ti-cash me-2 text-primary"></i> Gaji Pokok & Tunjangan</h6>
+                            <h6 class="fw-bold mb-3"><i class="ti ti-cash me-2 text-primary"></i> Gaji Pokok & Tunjangan
+                            </h6>
                             @if ($karyawan->gaji)
                                 <div class="alert alert-light-success border border-success border-dashed text-success-emphasis d-flex align-items-center mb-4"
                                     role="alert">
@@ -311,197 +312,212 @@
                 <form action="{{ route('karyawan.bpjs.store', $karyawan->id_karyawan) }}" method="POST">
                     @csrf
                     <input type="hidden" name="id_karyawan" value="{{ $karyawan->id_karyawan }}">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-primary text-white py-3">
-                        <h5 class="mb-0 text-white"><i class="ti ti-shield-heart me-2"></i> BPJS Ketenagakerjaan & Kesehatan</h5>
-                    </div>
-                    <div class="card-body pt-4">
-
-                        {{-- BPJS Ketenagakerjaan --}}
-                        <h6 class="fw-bold mb-3"><i class="ti ti-shield me-2 text-primary"></i> BPJS Ketenagakerjaan</h6>
-                        @if ($karyawan->bpjsk)
-                            <div class="alert alert-light-success border border-success border-dashed text-success-emphasis d-flex align-items-center mb-4"
-                                role="alert">
-                                <i class="ti ti-circle-check fs-4 me-2"></i>
-                                <div>
-                                    Data BPJS Ketenagakerjaan untuk karyawan ini <strong>sudah diatur</strong>. Anda dapat
-                                    memperbaruinya di bawah.
-                                </div>
-                            </div>
-                        @else
-                            <div class="alert alert-light-warning border border-warning border-dashed text-warning-emphasis d-flex align-items-center mb-4"
-                                role="alert">
-                                <i class="ti ti-alert-triangle fs-4 me-2"></i>
-                                <div>
-                                    Data BPJS Ketenagakerjaan untuk karyawan ini <strong>belum diatur</strong>. Silakan isi form
-                                    di bawah untuk mengisi data BPJS Ketenagakerjaan.
-                                </div>
-                            </div>
-                        @endif
-
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label font-weight-bold">Nomor Referensi</label>
-                                <input type="text" name="nomor_referensi" class="form-control" placeholder="No. Referensi"
-                                    value="{{ old('nomor_referensi', $karyawan->bpjstk ? $karyawan->bpjstk->no_referensi : '') }}">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label font-weight-bold">Upah yang didaftarkan<span
-                                        class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="text" id="bpjstk_upah" name="upah_didaftarkan_tk"
-                                        class="form-control text-end rupiah-mask" required placeholder="0"
-                                        value="{{ old('upah_didaftarkan_tk', $karyawan->bpjstk ? (int) $karyawan->bpjstk->upah_didaftarkan : '') }}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label font-weight-bold">Iuran JKK <span
-                                        class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="text" id="bpjstk_iuran_jkk" name="iuran_jkk"
-                                        class="form-control text-end rupiah-mask bg-light" readonly required placeholder="0"
-                                        value="{{ old('iuran_jkk', $karyawan->bpjstk ? (int) $karyawan->bpjstk->iuran_jkk : '') }}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label font-weight-bold">Iuran JKM <span
-                                        class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="text" id="bpjstk_iuran_jkm" name="iuran_jkm"
-                                        class="form-control text-end rupiah-mask bg-light" readonly required placeholder="0"
-                                        value="{{ old('iuran_jkm', $karyawan->bpjstk ? (int) $karyawan->bpjstk->iuran_jkm : '') }}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label font-weight-bold">Iuran JHT (Pemberi Kerja)<span
-                                        class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="text" id="bpjstk_pemberi_kerja" name="pemberi_kerja"
-                                        class="form-control text-end rupiah-mask bg-light" readonly required placeholder="0"
-                                        value="{{ old('pemberi_kerja', $karyawan->bpjstk ? (int) $karyawan->bpjstk->pemberi_kerja : '') }}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label font-weight-bold">Iuran JHT (Tenaga Kerja)<span
-                                        class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="text" id="bpjstk_tenaga_kerja" name="tenaga_kerja"
-                                        class="form-control text-end rupiah-mask bg-light" readonly required placeholder="0"
-                                        value="{{ old('tenaga_kerja', $karyawan->bpjstk ? (int) $karyawan->bpjstk->tenaga_kerja : '') }}">
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label font-weight-bold">Total Iuran<span
-                                        class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="text" id="bpjstk_total_iuran" name="total_iuran"
-                                        class="form-control text-end rupiah-mask bg-light" readonly required placeholder="0"
-                                        value="{{ old('total_iuran', $karyawan->bpjstk ? (int) $karyawan->bpjstk->total_iuran : '') }}">
-                                </div>
-                            </div>
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-primary text-white py-3">
+                            <h5 class="mb-0 text-white"><i class="ti ti-shield-heart me-2"></i> BPJS Ketenagakerjaan &
+                                Kesehatan</h5>
                         </div>
+                        <div class="card-body pt-4">
 
-                        <hr class="my-4">
+                            {{-- BPJS Ketenagakerjaan --}}
+                            <h6 class="fw-bold mb-3"><i class="ti ti-shield me-2 text-primary"></i> BPJS Ketenagakerjaan
+                            </h6>
+                            @if ($karyawan->bpjsk)
+                                <div class="alert alert-light-success border border-success border-dashed text-success-emphasis d-flex align-items-center mb-4"
+                                    role="alert">
+                                    <i class="ti ti-circle-check fs-4 me-2"></i>
+                                    <div>
+                                        Data BPJS Ketenagakerjaan untuk karyawan ini <strong>sudah diatur</strong>. Anda dapat
+                                        memperbaruinya di bawah.
+                                    </div>
+                                </div>
+                            @else
+                                <div class="alert alert-light-warning border border-warning border-dashed text-warning-emphasis d-flex align-items-center mb-4"
+                                    role="alert">
+                                    <i class="ti ti-alert-triangle fs-4 me-2"></i>
+                                    <div>
+                                        Data BPJS Ketenagakerjaan untuk karyawan ini <strong>belum diatur</strong>. Silakan isi
+                                        form
+                                        di bawah untuk mengisi data BPJS Ketenagakerjaan.
+                                    </div>
+                                </div>
+                            @endif
 
-                        {{-- BPJS Kesehatan --}}
-                        <h6 class="fw-bold mb-3"><i class="ti ti-heartbeat me-2 text-danger"></i> BPJS Kesehatan</h6>
-                        @if ($karyawan->bpjsk)
-                            <div class="alert alert-light-info border border-info border-dashed text-info-emphasis d-flex align-items-center mb-4"
-                                role="alert">
-                                <i class="ti ti-circle-check fs-4 me-2"></i>
-                                <div>
-                                    Data BPJS Kesehatan untuk karyawan ini <strong>sudah diatur</strong>. Anda dapat
-                                    memperbaruinya di bawah.
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label font-weight-bold">Nomor Referensi</label>
+                                    <input type="text" name="nomor_referensi" class="form-control"
+                                        placeholder="No. Referensi"
+                                        value="{{ old('nomor_referensi', $karyawan->bpjstk ? $karyawan->bpjstk->no_referensi : '') }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-weight-bold">Upah yang didaftarkan<span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" id="bpjstk_upah" name="upah_didaftarkan_tk"
+                                            class="form-control text-end rupiah-mask" required placeholder="0"
+                                            value="{{ old('upah_didaftarkan_tk', $karyawan->bpjstk ? (int) $karyawan->bpjstk->upah_didaftarkan : '') }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-weight-bold">Iuran JKK <span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" id="bpjstk_iuran_jkk" name="iuran_jkk"
+                                            class="form-control text-end rupiah-mask bg-light" readonly required
+                                            placeholder="0"
+                                            value="{{ old('iuran_jkk', $karyawan->bpjstk ? (int) $karyawan->bpjstk->iuran_jkk : '') }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-weight-bold">Iuran JKM <span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" id="bpjstk_iuran_jkm" name="iuran_jkm"
+                                            class="form-control text-end rupiah-mask bg-light" readonly required
+                                            placeholder="0"
+                                            value="{{ old('iuran_jkm', $karyawan->bpjstk ? (int) $karyawan->bpjstk->iuran_jkm : '') }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-weight-bold">Iuran JHT (Pemberi Kerja)<span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" id="bpjstk_pemberi_kerja" name="pemberi_kerja"
+                                            class="form-control text-end rupiah-mask bg-light" readonly required
+                                            placeholder="0"
+                                            value="{{ old('pemberi_kerja', $karyawan->bpjstk ? (int) $karyawan->bpjstk->pemberi_kerja : '') }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-weight-bold">Iuran JHT (Tenaga Kerja)<span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" id="bpjstk_tenaga_kerja" name="tenaga_kerja"
+                                            class="form-control text-end rupiah-mask bg-light" readonly required
+                                            placeholder="0"
+                                            value="{{ old('tenaga_kerja', $karyawan->bpjstk ? (int) $karyawan->bpjstk->tenaga_kerja : '') }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label font-weight-bold">Total Iuran<span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" id="bpjstk_total_iuran" name="total_iuran"
+                                            class="form-control text-end rupiah-mask bg-light" readonly required
+                                            placeholder="0"
+                                            value="{{ old('total_iuran', $karyawan->bpjstk ? (int) $karyawan->bpjstk->total_iuran : '') }}">
+                                    </div>
                                 </div>
                             </div>
-                        @else
-                            <div class="alert alert-light-warning border border-warning border-dashed text-warning-emphasis d-flex align-items-center mb-4"
-                                role="alert">
-                                <i class="ti ti-alert-triangle fs-4 me-2"></i>
-                                <div>
-                                    Data BPJS Kesehatan untuk karyawan ini <strong>belum diatur</strong>. Silakan isi form di
-                                    bawah untuk mengisi data BPJS Kesehatan.
-                                </div>
-                            </div>
-                        @endif
 
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label font-weight-bold">No JKN Peserta<span
-                                        class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <input type="text" name="no_jkn_peserta" class="form-control" required placeholder="0"
-                                        value="{{ old('no_jkn_peserta', $karyawan->bpjsk ? $karyawan->bpjsk->no_jkn_peserta : '') }}">
+                            <hr class="my-4">
+
+                            {{-- BPJS Kesehatan --}}
+                            <h6 class="fw-bold mb-3"><i class="ti ti-heartbeat me-2 text-danger"></i> BPJS Kesehatan</h6>
+                            @if ($karyawan->bpjsk)
+                                <div class="alert alert-light-info border border-info border-dashed text-info-emphasis d-flex align-items-center mb-4"
+                                    role="alert">
+                                    <i class="ti ti-circle-check fs-4 me-2"></i>
+                                    <div>
+                                        Data BPJS Kesehatan untuk karyawan ini <strong>sudah diatur</strong>. Anda dapat
+                                        memperbaruinya di bawah.
+                                    </div>
+                                </div>
+                            @else
+                                <div class="alert alert-light-warning border border-warning border-dashed text-warning-emphasis d-flex align-items-center mb-4"
+                                    role="alert">
+                                    <i class="ti ti-alert-triangle fs-4 me-2"></i>
+                                    <div>
+                                        Data BPJS Kesehatan untuk karyawan ini <strong>belum diatur</strong>. Silakan isi form
+                                        di
+                                        bawah untuk mengisi data BPJS Kesehatan.
+                                    </div>
+                                </div>
+                            @endif
+
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label font-weight-bold">No JKN Peserta<span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" name="no_jkn_peserta" class="form-control" required
+                                            placeholder="0"
+                                            value="{{ old('no_jkn_peserta', $karyawan->bpjsk ? $karyawan->bpjsk->no_jkn_peserta : '') }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-weight-bold">Beban BPJS Kesehatan<span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" id="bpjsk_beban" name="beban_bpjsk" class="form-control" required
+                                            placeholder="Jumlah orang"
+                                            value="{{ old('beban_bpjsk', $karyawan->bpjsk ? (int) $karyawan->bpjsk->beban_bpjsk : '') }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-weight-bold">NPP<span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" name="npp" class="form-control" required placeholder="0"
+                                            value="{{ old('npp', $karyawan->bpjsk ? $karyawan->bpjsk->npp : '') }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label font-weight-bold">Upah yang didaftarkan<span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" id="bpjsk_upah" name="upah_didaftarkan_ks"
+                                            class="form-control text-end rupiah-mask" required placeholder="0"
+                                            value="{{ old('upah_didaftarkan_ks', $karyawan->bpjsk ? (int) $karyawan->bpjsk->upah_didaftarkan : '') }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-weight-bold">Premi<span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" id="bpjsk_premi" name="premi"
+                                            class="form-control text-end rupiah-mask bg-light" readonly required
+                                            placeholder="0"
+                                            value="{{ old('premi', $karyawan->bpjsk ? (int) $karyawan->bpjsk->premi : '') }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-weight-bold">Tanggungan Perusahaan<span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" id="bpjsk_tanggungan_perusahaan" name="tanggungan_perusahaan"
+                                            class="form-control text-end rupiah-mask bg-light" readonly required
+                                            placeholder="0"
+                                            value="{{ old('tanggungan_perusahaan', $karyawan->bpjsk ? (int) $karyawan->bpjsk->tanggungan_perusahaan : '') }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-weight-bold">Tanggungan Karyawan<span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" id="bpjsk_tanggungan_karyawan" name="tanggungan_karyawan"
+                                            class="form-control text-end rupiah-mask bg-light" readonly required
+                                            placeholder="0"
+                                            value="{{ old('tanggungan_karyawan', $karyawan->bpjsk ? (int) $karyawan->bpjsk->tanggungan_karyawan : '') }}">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label font-weight-bold">Beban BPJS Kesehatan<span
-                                        class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <input type="text" id="bpjsk_beban" name="beban_bpjsk" class="form-control" required
-                                        placeholder="Jumlah orang"
-                                        value="{{ old('beban_bpjsk', $karyawan->bpjsk ? (int) $karyawan->bpjsk->beban_bpjsk : '') }}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label font-weight-bold">NPP<span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <input type="text" name="npp" class="form-control" required placeholder="0"
-                                        value="{{ old('npp', $karyawan->bpjsk ? $karyawan->bpjsk->npp : '') }}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label font-weight-bold">Upah yang didaftarkan<span
-                                        class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="text" id="bpjsk_upah" name="upah_didaftarkan_ks"
-                                        class="form-control text-end rupiah-mask" required placeholder="0"
-                                        value="{{ old('upah_didaftarkan_ks', $karyawan->bpjsk ? (int) $karyawan->bpjsk->upah_didaftarkan : '') }}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label font-weight-bold">Premi<span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="text" id="bpjsk_premi" name="premi"
-                                        class="form-control text-end rupiah-mask bg-light" readonly required placeholder="0"
-                                        value="{{ old('premi', $karyawan->bpjsk ? (int) $karyawan->bpjsk->premi : '') }}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label font-weight-bold">Tanggungan Perusahaan<span
-                                        class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <input type="text" id="bpjsk_tanggungan_perusahaan" name="tanggungan_perusahaan"
-                                        class="form-control text-end rupiah-mask bg-light" readonly required placeholder="0"
-                                        value="{{ old('tanggungan_perusahaan', $karyawan->bpjsk ? (int) $karyawan->bpjsk->tanggungan_perusahaan : '') }}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label font-weight-bold">Tanggungan Karyawan<span
-                                        class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <input type="text" id="bpjsk_tanggungan_karyawan" name="tanggungan_karyawan"
-                                        class="form-control text-end rupiah-mask bg-light" readonly required placeholder="0"
-                                        value="{{ old('tanggungan_karyawan', $karyawan->bpjsk ? (int) $karyawan->bpjsk->tanggungan_karyawan : '') }}">
-                                </div>
-                            </div>
+
                         </div>
-
+                        <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-4">
+                            <button type="submit" class="btn btn-info btn-lg w-100">
+                                <i class="ti ti-device-floppy me-1"></i> Simpan Data BPJS
+                            </button>
+                        </div>
                     </div>
-                    <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-4">
-                        <button type="submit" class="btn btn-primary btn-lg w-100">
-                            <i class="ti ti-device-floppy me-1"></i> Simpan Data BPJS
-                        </button>
-                    </div>
-                </div>
                 </form>
             </div>
 
@@ -537,7 +553,7 @@
                             @endif
 
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <label class="form-label font-weight-bold">Identitas (NPWP/KTP) <span
                                             class="text-danger">*</span></label>
                                     <input type="text" name="identitas" class="form-control" required
@@ -545,9 +561,29 @@
                                         value="{{ old('identitas', $karyawan->pph21 ? $karyawan->pph21->identitas : '') }}">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label font-weight-bold">PTKP<span class="text-danger">*</span></label>
-                                    <input type="text" name="ptkp" class="form-control" required placeholder="Masukkan PTKP"
-                                        value="{{ old('ptkp', $karyawan->pph21 ? $karyawan->pph21->ptkp : '') }}">
+                                    <label class="form-label font-weight-bold">PTKP<span
+                                            class="text-danger">*</span></label>
+                                    <select id="pph_ptkp" name="ptkp" class="form-control" required>
+                                        @php
+                                            $selectedPtkp = old('ptkp', $karyawan->pph21 ? $karyawan->pph21->ptkp : '');
+                                        @endphp
+                                        <option value="">Pilih PTKP</option>
+                                        <option value="TK/0" {{ $selectedPtkp == 'TK/0' ? 'selected' : '' }}>TK/0</option>
+                                        <option value="TK/1" {{ $selectedPtkp == 'TK/1' ? 'selected' : '' }}>TK/1</option>
+                                        <option value="TK/2" {{ $selectedPtkp == 'TK/2' ? 'selected' : '' }}>TK/2</option>
+                                        <option value="TK/3" {{ $selectedPtkp == 'TK/3' ? 'selected' : '' }}>TK/3</option>
+                                        <option value="K/0" {{ $selectedPtkp == 'K/0' ? 'selected' : '' }}>K/0</option>
+                                        <option value="K/1" {{ $selectedPtkp == 'K/1' ? 'selected' : '' }}>K/1</option>
+                                        <option value="K/2" {{ $selectedPtkp == 'K/2' ? 'selected' : '' }}>K/2</option>
+                                        <option value="K/3" {{ $selectedPtkp == 'K/3' ? 'selected' : '' }}>K/3</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label font-weight-bold">Kategori<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" id="pph_kategori" name="kategori" class="form-control" required
+                                        readonly placeholder="Masukkan Kategori"
+                                        value="{{ old('kategori', $karyawan->pph21 ? $karyawan->pph21->kategori : '') }}">
                                 </div>
                             </div>
                         </div>
@@ -670,6 +706,27 @@
                 $('#bpjsk_tanggungan_perusahaan').val(formatRupiah(Math.round(tp)));
                 $('#bpjsk_tanggungan_karyawan').val(formatRupiah(Math.round(tk)));
             }
+
+            // Pemetaan PTKP -> Kategori (golongan) sesuai aturan
+            var ptkpToKategori = {
+                'TK/0': 'A',
+                'TK/1': 'A',
+                'K/0': 'A',
+                'TK/2': 'B',
+                'TK/3': 'B',
+                'K/1': 'B',
+                'K/2': 'B',
+                'K/3': 'C'
+            };
+
+            // Auto-isi Kategori berdasarkan PTKP yang dipilih
+            function isiKategoriPph() {
+                var ptkp = $('#pph_ptkp').val();
+                $('#pph_kategori').val(ptkpToKategori[ptkp] || '');
+            }
+
+            $('#pph_ptkp').on('change', isiKategoriPph);
+            isiKategoriPph();
 
             $('#bpjsk_beban, #bpjsk_upah').on('input', hitungBPJSK);
             hitungBPJSK();

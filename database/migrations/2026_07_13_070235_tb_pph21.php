@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->foreignId('id_karyawan')->constrained('tb_karyawan', 'id_karyawan')->onDelete('cascade');
             $table->string('identitas', 20)->nullable()->comment('npwp/ktp');
             $table->string('ptkp', 20)->nullable();
+            $table->string('kategori', 2)->nullable();
             $table->timestamps();
         });
     }

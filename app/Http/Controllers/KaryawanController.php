@@ -175,20 +175,20 @@ class KaryawanController extends Controller
     public function saveBpjs(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'nomor_referensi'        => 'nullable|string|max:100',
-            'upah_didaftarkan_tk'    => 'required|numeric|min:0',
-            'iuran_jkk'              => 'required|numeric|min:0',
-            'iuran_jkm'              => 'required|numeric|min:0',
-            'pemberi_kerja'          => 'required|numeric|min:0',
-            'tenaga_kerja'           => 'required|numeric|min:0',
-            'total_iuran'            => 'required|numeric|min:0',
-            'no_jkn_peserta'         => 'required|string|max:50',
-            'beban_bpjsk'            => 'required|integer|min:0',
-            'npp'                    => 'required|string|max:50',
-            'upah_didaftarkan_ks'    => 'required|numeric|min:0',
-            'premi'                  => 'required|numeric|min:0',
-            'tanggungan_perusahaan'  => 'required|numeric|min:0',
-            'tanggungan_karyawan'    => 'required|numeric|min:0',
+            'nomor_referensi' => 'nullable|string|max:100',
+            'upah_didaftarkan_tk' => 'required|numeric|min:0',
+            'iuran_jkk' => 'required|numeric|min:0',
+            'iuran_jkm' => 'required|numeric|min:0',
+            'pemberi_kerja' => 'required|numeric|min:0',
+            'tenaga_kerja' => 'required|numeric|min:0',
+            'total_iuran' => 'required|numeric|min:0',
+            'no_jkn_peserta' => 'required|string|max:50',
+            'beban_bpjsk' => 'required|integer|min:0',
+            'npp' => 'required|string|max:50',
+            'upah_didaftarkan_ks' => 'required|numeric|min:0',
+            'premi' => 'required|numeric|min:0',
+            'tanggungan_perusahaan' => 'required|numeric|min:0',
+            'tanggungan_karyawan' => 'required|numeric|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -199,25 +199,25 @@ class KaryawanController extends Controller
         }
 
         $bpjstkData = [
-            'id_karyawan'       => $id,
-            'no_referensi'      => $request->nomor_referensi,
-            'upah_didaftarkan'  => $request->upah_didaftarkan_tk,
-            'iuran_jkk'         => $request->iuran_jkk,
-            'iuran_jkm'         => $request->iuran_jkm,
-            'pemberi_kerja'     => $request->pemberi_kerja,
-            'tenaga_kerja'      => $request->tenaga_kerja,
-            'total_iuran'       => $request->total_iuran,
+            'id_karyawan' => $id,
+            'no_referensi' => $request->nomor_referensi,
+            'upah_didaftarkan' => $request->upah_didaftarkan_tk,
+            'iuran_jkk' => $request->iuran_jkk,
+            'iuran_jkm' => $request->iuran_jkm,
+            'pemberi_kerja' => $request->pemberi_kerja,
+            'tenaga_kerja' => $request->tenaga_kerja,
+            'total_iuran' => $request->total_iuran,
         ];
 
         $bpjskData = [
-            'id_karyawan'           => $id,
-            'no_jkn_peserta'        => $request->no_jkn_peserta,
-            'beban_bpjsk'           => $request->beban_bpjsk,
-            'npp'                   => $request->npp,
-            'upah_didaftarkan'      => $request->upah_didaftarkan_ks,
-            'premi'                 => $request->premi,
+            'id_karyawan' => $id,
+            'no_jkn_peserta' => $request->no_jkn_peserta,
+            'beban_bpjsk' => $request->beban_bpjsk,
+            'npp' => $request->npp,
+            'upah_didaftarkan' => $request->upah_didaftarkan_ks,
+            'premi' => $request->premi,
             'tanggungan_perusahaan' => $request->tanggungan_perusahaan,
-            'tanggungan_karyawan'   => $request->tanggungan_karyawan,
+            'tanggungan_karyawan' => $request->tanggungan_karyawan,
         ];
 
         $this->karyawanRepository->updateOrCreateBpjs($id, $bpjstkData, $bpjskData);
@@ -232,7 +232,8 @@ class KaryawanController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'identitas' => 'required|string|max:20',
-            'ptkp'      => 'required|string|max:20',
+            'ptkp' => 'required|string|max:20',
+            'kategori' => 'required|string|max:2',
         ]);
 
         if ($validator->fails()) {
@@ -244,7 +245,8 @@ class KaryawanController extends Controller
 
         $pphData = [
             'identitas' => $request->identitas,
-            'ptkp'      => $request->ptkp,
+            'ptkp' => $request->ptkp,
+            'kategori' => $request->kategori,
         ];
 
         $this->karyawanRepository->updateOrCreatePph21($id, $pphData);
