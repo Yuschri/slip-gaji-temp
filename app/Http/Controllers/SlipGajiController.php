@@ -102,7 +102,7 @@ class SlipGajiController extends Controller
         $bulan = $request->input('bulan');
         $tahun = $request->input('tahun');
 
-        $karyawan = \App\Models\Karyawan::with(['divisi', 'jabatan', 'gaji', 'potongan'])->find($id);
+        $karyawan = \App\Models\Karyawan::with(['divisi', 'jabatan', 'gaji', 'potongan', 'bpjstk', 'bpjsk', 'pph21'])->find($id);
 
         if (!$karyawan) {
             return response()->json(['error' => 'Karyawan not found'], 404);
@@ -139,6 +139,30 @@ class SlipGajiController extends Controller
             'potongan' => $karyawan->potongan ? [
                 'potongan_sedekah_rombongan' => $karyawan->potongan->potongan_sedekah_rombongan,
             ] : null,
+            'bpjstk' => $karyawan->bpjstk ? [
+                'no_referensi' => $karyawan->bpjstk->no_referensi,
+                'tanggal_kepesertaan' => $karyawan->bpjstk->tanggal_kepesertaan,
+                'upah_didaftarkan' => $karyawan->bpjstk->upah_didaftarkan,
+                'iuran_jkk' => $karyawan->bpjstk->iuran_jkk,
+                'iuran_jkm' => $karyawan->bpjstk->iuran_jkm,
+                'pemberi_kerja' => $karyawan->bpjstk->pemberi_kerja,
+                'tenaga_kerja' => $karyawan->bpjstk->tenaga_kerja,
+                'total_iuran' => $karyawan->bpjstk->total_iuran,
+            ] : null,
+            'bpjsk' => $karyawan->bpjsk ? [
+                'no_jkn_peserta' => $karyawan->bpjsk->no_jkn_peserta,
+                'beban_bpjsk' => $karyawan->bpjsk->beban_bpjsk,
+                'npp' => $karyawan->bpjsk->npp,
+                'upah_didaftarkan' => $karyawan->bpjsk->upah_didaftarkan,
+                'premi' => $karyawan->bpjsk->premi,
+                'tanggungan_perusahaan' => $karyawan->bpjsk->tanggungan_perusahaan,
+                'tanggungan_karyawan' => $karyawan->bpjsk->tanggungan_karyawan,
+            ] : null,
+            'pph21' => $karyawan->pph21 ? [
+                'identitas' => $karyawan->pph21->identitas,
+                'ptkp' => $karyawan->pph21->ptkp,
+                'kategori' => $karyawan->pph21->kategori,
+            ] : null,
             'kehadiran' => $kehadiran ? [
                 'id_kehadiran' => $kehadiran->id_kehadiran,
                 'cuti' => $kehadiran->cuti,
@@ -151,6 +175,38 @@ class SlipGajiController extends Controller
                 'no_check_in_or_out' => $kehadiran->no_check_in_or_out,
                 'no_check_in_and_out' => $kehadiran->no_check_in_and_out,
             ] : null,
+        ]);
+    }
+
+    public function calculatePph21(Request $request)
+    {
+        $kategori = $request->input('kategori');
+        $totalGaji = (float) $request->input('total_gaji', 0);
+
+        // Map kategori ke golongan A/B/C
+        $golonganMap = [
+            'TK0' => 'A', 'TK1' => 'A',
+            'TK2' => 'B', 'TK3' => 'B',
+            'K0'  => 'A', 'K1'  => 'B', 'K2' => 'B', 'K3' => 'C',
+            'I0'  => 'A', 'I1'  => 'B', 'I2' => 'B',
+        ];
+
+        $golongan = $golonganMap[$kategori] ?? 'A';
+
+        $skema = \App\Models\SkemaPph21::where('golongan', $golongan)
+            ->where('batas_uang', '<=', $totalGaji)
+            ->orderBy('batas_uang', 'desc')
+            ->first();
+
+        $ter = $skema ? (float) $skema->persen : 0;
+        $pph21 = $totalGaji * ($ter);
+
+        // dd($totalGaji, $golongan, $ter, $pph21);
+
+        return response()->json([
+            'golongan' => $golongan,
+            'ter' => $ter,
+            'pph21' => round($pph21),
         ]);
     }
 
