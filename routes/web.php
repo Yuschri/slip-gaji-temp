@@ -17,6 +17,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', [SlipGajiController::class, 'create'])->name('create');
         Route::get('/karyawan-details/{id}', [SlipGajiController::class, 'getKaryawanDetails'])->name('karyawan-details');
         Route::get('/calculate-pph21', [SlipGajiController::class, 'calculatePph21'])->name('calculate-pph21');
+        Route::get('/calculate-gaji-resign', [SlipGajiController::class, 'calculateGajiResign'])->name('calculate-gaji-resign');
         Route::post('/store', [SlipGajiController::class, 'store'])->name('store');
         Route::get('/{id}/edit', [SlipGajiController::class, 'edit'])->name('edit');
         Route::post('/{id}/update', [SlipGajiController::class, 'update'])->name('update');

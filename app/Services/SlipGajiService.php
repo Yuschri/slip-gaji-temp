@@ -65,8 +65,9 @@ class SlipGajiService
             $data['id_kehadiran'] = $kehadiran->id_kehadiran;
 
             // map bpjstk to bpjs_tk and lembur to nominal_lembur
-            $data['bpjs_tk'] = $data['bpjstk'] ?? 0;
-            $data['nominal_lembur'] = $data['lembur'] ?? 0;
+            $data['bpjs_tk'] = $data['bpjstk'] ?? $data['bpjs_tk'] ?? 0;
+            $data['bpjs_kesehatan'] = $data['bpjsk'] ?? $data['bpjs_kesehatan'] ?? 0;
+            $data['nominal_lembur'] = $data['lembur'] ?? $data['nominal_lembur'] ?? 0;
 
             $data['t_operasional'] = $data['t_operasional'] ?? $data['t__operasional'] ?? $data['t_ operasional'] ?? 0;
 
@@ -104,8 +105,9 @@ class SlipGajiService
             $data['id_kehadiran'] = $kehadiran->id_kehadiran;
 
             // map bpjstk to bpjs_tk and lembur to nominal_lembur
-            $data['bpjs_tk'] = $data['bpjstk'] ?? 0;
-            $data['nominal_lembur'] = $data['lembur'] ?? 0;
+            $data['bpjs_tk'] = $data['bpjstk'] ?? $data['bpjs_tk'] ?? 0;
+            $data['bpjs_kesehatan'] = $data['bpjsk'] ?? $data['bpjs_kesehatan'] ?? 0;
+            $data['nominal_lembur'] = $data['lembur'] ?? $data['nominal_lembur'] ?? 0;
 
             $data['t_operasional'] = $data['t_operasional'] ?? $data['t__operasional'] ?? $data['t_ operasional'] ?? 0;
 

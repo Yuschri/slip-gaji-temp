@@ -22,6 +22,8 @@ return new class extends Migration {
             $table->string('no_wa', 20)->nullable();
             $table->string('nomor_rekening', 50)->nullable();
             $table->string('cabang', 20)->nullable();
+            $table->integer('periode_cut_off')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

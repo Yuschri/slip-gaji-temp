@@ -58,6 +58,7 @@ class KaryawanController extends Controller
             'no_wa' => 'nullable|string|max:20',
             'nomor_rekening' => 'nullable|string|max:50',
             'cabang' => 'required|string|max:20',
+            'periode_cut_off' => 'required|integer|in:15,21',
         ]);
 
         if ($validator->fails()) {
@@ -107,6 +108,7 @@ class KaryawanController extends Controller
             'no_wa' => 'nullable|string|max:20',
             'nomor_rekening' => 'nullable|string|max:50',
             'cabang' => 'required|string|max:20',
+            'periode_cut_off' => 'required|integer|in:15,21',
         ]);
 
         if ($validator->fails()) {

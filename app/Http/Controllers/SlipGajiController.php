@@ -117,15 +117,26 @@ class SlipGajiController extends Controller
                 ->first();
         }
 
+        // Hitung akhir masa training (3 bulan penuh setelah tanggal masuk)
+        $akhirTraining = null;
+        if ($karyawan->tanggal_masuk) {
+            $akhirTraining = \Carbon\Carbon::parse($karyawan->tanggal_masuk)
+                ->addMonths(3)
+                ->subDay()
+                ->format('Y-m-d');
+        }
+
         return response()->json([
             'karyawan' => [
                 'nama' => $karyawan->nama_karyawan,
                 'nip' => $karyawan->nip ?? '-',
                 'tanggal_masuk' => $karyawan->tanggal_masuk ? \Carbon\Carbon::parse($karyawan->tanggal_masuk)->format('Y-m-d') : null,
+                'akhir_training' => $akhirTraining,
                 'divisi' => $karyawan->divisi ? $karyawan->divisi->nama_divisi : '-',
                 'cabang' => $karyawan->cabang ?? '-',
                 'no_wa' => $karyawan->no_wa ?? '-',
                 'nomor_rekening' => $karyawan->nomor_rekening ?? '-',
+                'periode_cut_off' => $karyawan->periode_cut_off ?? 21,
             ],
             'gaji' => $karyawan->gaji ? [
                 'gaji_pokok' => $karyawan->gaji->gaji_pokok,
@@ -178,20 +189,98 @@ class SlipGajiController extends Controller
         ]);
     }
 
+    /**
+     * Hitung gaji terakhir karyawan yang resign.
+     * Menggunakan rumus pro-rata berbasis cutoff dengan mempertimbangkan masa training.
+     */
+    public function calculateGajiResign(Request $request)
+    {
+        $tanggalMasuk = $request->input('tanggal_masuk');   // Y-m-d
+        $tanggalResign = $request->input('tanggal_resign');   // Y-m-d
+        $bulan = (int) $request->input('bulan');       // bulan payroll
+        $tahun = (int) $request->input('tahun');       // tahun payroll
+        $cutoff = (int) $request->input('cutoff', 21); // 15 atau 21
+        $thpFull = (float) $request->input('thp_full', 0); // THP 100%
+
+        if (!$tanggalMasuk || !$tanggalResign || !$bulan || !$tahun || $thpFull <= 0) {
+            return response()->json(['error' => 'Parameter tidak lengkap'], 422);
+        }
+
+        $tglMasuk = \Carbon\Carbon::parse($tanggalMasuk)->startOfDay();
+        $tglResign = \Carbon\Carbon::parse($tanggalResign)->startOfDay();
+        $akhirTraining = $tglMasuk->copy()->addMonths(3)->subDay(); // masuk + 3 bulan - 1 hari
+
+        // --- Penentuan Periode Payroll ---
+        // Akhir Periode  = tanggal {cutoff} bulan & tahun payroll
+        $periodeAkhir = \Carbon\Carbon::create($tahun, $bulan, $cutoff)->startOfDay();
+        // Awal Periode   = tanggal ({cutoff}+1) bulan sebelumnya
+        $periodeAwal = $periodeAkhir->copy()->subMonthNoOverflow()->addDay(); // cutoff+1 bulan lalu
+
+        $totalHariPeriode = $periodeAwal->diffInDays($periodeAkhir) + 1;
+
+        // Tanggal kerja efektif: maks antara tglMasuk dan periodeAwal
+        $tglMulaiHitung = $tglMasuk->gt($periodeAwal) ? $tglMasuk->copy() : $periodeAwal->copy();
+
+        // Tanggal akhir kerja efektif: min antara tglResign dan periodeAkhir
+        $tglAkhirHitung = $tglResign->lt($periodeAkhir) ? $tglResign->copy() : $periodeAkhir->copy();
+
+        // Belum mulai bekerja di periode ini
+        if ($tglMasuk->gt($periodeAkhir) || $tglResign->lt($periodeAwal)) {
+            return response()->json([
+                'gaji_resign' => 0,
+                'periode_awal' => $periodeAwal->format('Y-m-d'),
+                'periode_akhir' => $periodeAkhir->format('Y-m-d'),
+                'total_hari_periode' => $totalHariPeriode,
+                'hari_kerja' => 0,
+                'akhir_training' => $akhirTraining->format('Y-m-d'),
+                'skenario' => 'belum_mulai_atau_sudah_selesai',
+            ]);
+        }
+
+        $hariKerjaTotal = $tglMulaiHitung->diffInDays($tglAkhirHitung) + 1;
+        $gajiResign = 0;
+        $skenario = '';
+
+        // SKENARIO A: Masa Transisi - akhirTraining jatuh di dalam periode & sebelum tglResign
+        if ($akhirTraining->gte($tglMulaiHitung) && $akhirTraining->lt($tglAkhirHitung)) {
+            $hariTraining = $tglMulaiHitung->diffInDays($akhirTraining) + 1;
+            $gajiTraining = ($hariTraining / $totalHariPeriode) * 0.8 * $thpFull;
+
+            $tglMulaiLulus = $akhirTraining->copy()->addDay();
+            $hariLulus = $tglMulaiLulus->diffInDays($tglAkhirHitung) + 1;
+            $gajiLulus = ($hariLulus / $totalHariPeriode) * 1.0 * $thpFull;
+
+            $gajiResign = $gajiTraining + $gajiLulus;
+            $skenario = 'A_transisi';
+        }
+        // SKENARIO B: Masih full dalam masa training s/d akhir periode / akhir resign
+        elseif ($tglAkhirHitung->lte($akhirTraining)) {
+            $gajiResign = ($hariKerjaTotal / $totalHariPeriode) * 0.8 * $thpFull;
+            $skenario = ($hariKerjaTotal === $totalHariPeriode) ? 'B_full_training' : 'B_prorata_training';
+        }
+        // SKENARIO C: Sudah lulus training
+        else {
+            $gajiResign = ($hariKerjaTotal / $totalHariPeriode) * 1.0 * $thpFull;
+            $skenario = ($hariKerjaTotal === $totalHariPeriode) ? 'C_full_lulus' : 'C_prorata_lulus';
+        }
+
+        return response()->json([
+            'gaji_resign' => round($gajiResign),
+            'periode_awal' => $periodeAwal->format('Y-m-d'),
+            'periode_akhir' => $periodeAkhir->format('Y-m-d'),
+            'total_hari_periode' => $totalHariPeriode,
+            'hari_kerja' => $hariKerjaTotal,
+            'akhir_training' => $akhirTraining->format('Y-m-d'),
+            'skenario' => $skenario,
+        ]);
+    }
+
     public function calculatePph21(Request $request)
     {
         $kategori = $request->input('kategori');
         $totalGaji = (float) $request->input('total_gaji', 0);
 
-        // Map kategori ke golongan A/B/C
-        $golonganMap = [
-            'TK0' => 'A', 'TK1' => 'A',
-            'TK2' => 'B', 'TK3' => 'B',
-            'K0'  => 'A', 'K1'  => 'B', 'K2' => 'B', 'K3' => 'C',
-            'I0'  => 'A', 'I1'  => 'B', 'I2' => 'B',
-        ];
-
-        $golongan = $golonganMap[$kategori] ?? 'A';
+        $golongan = $kategori;
 
         $skema = \App\Models\SkemaPph21::where('golongan', $golongan)
             ->where('batas_uang', '<=', $totalGaji)
@@ -199,14 +288,12 @@ class SlipGajiController extends Controller
             ->first();
 
         $ter = $skema ? (float) $skema->persen : 0;
-        $pph21 = $totalGaji * ($ter);
-
-        // dd($totalGaji, $golongan, $ter, $pph21);
+        $pph21 = $totalGaji * $ter;
 
         return response()->json([
             'golongan' => $golongan,
             'ter' => $ter,
-            'pph21' => round($pph21),
+            'pph21' => $pph21,
         ]);
     }
 

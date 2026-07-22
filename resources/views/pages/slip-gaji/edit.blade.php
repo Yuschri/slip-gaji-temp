@@ -30,12 +30,14 @@
         <div class="card p-4 shadow-sm border-0">
             <form action="{{ route('slip-gaji.update', $slip->id_slip) }}" method="POST" id="slipGajiForm">
                 @csrf
+                <input type="hidden" id="pph21_kategori" value="{{ optional(optional($slip->karyawan)->pph21)->kategori }}">
 
                 <h5 class="mb-3 text-primary"><i class="ti ti-user me-2"></i> 1. Karyawan & Periode</h5>
                 <div class="row g-3 mb-4">
                     <div class="col-md-4">
                         <label class="form-label font-weight-bold">Nama Karyawan <span class="text-danger">*</span></label>
-                        <select name="id_karyawan" id="id_karyawan" class="form-select bg-light" required style="pointer-events: none; ">
+                        <select name="id_karyawan" id="id_karyawan" class="form-select bg-light" required
+                            style="pointer-events: none; ">
                             <option value="">-- select employee --</option>
                             @foreach ($karyawans as $emp)
                                 <option value="{{ $emp->id_karyawan }}" {{ old('id_karyawan', $slip->id_karyawan) == $emp->id_karyawan ? 'selected' : '' }}>
@@ -46,7 +48,8 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Bulan <span class="text-danger">*</span></label>
-                        <select name="bulan" id="bulan" class="form-select bg-light[]" required style="pointer-events: none;">
+                        <select name="bulan" id="bulan" class="form-select bg-light[]" required
+                            style="pointer-events: none;">
                             @for ($i = 1; $i <= 12; $i++)
                                 <option value="{{ $i }}" {{ old('bulan', $slip->bulan) == $i ? 'selected' : '' }}>
                                     {{ date('F', mktime(0, 0, 0, $i, 10)) }}
@@ -238,9 +241,8 @@
                         <label class="form-label">BPJS Kesehatan</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
-                            <input type="text" name="bpjs_kesehatan" id="bpjs_kesehatan"
-                                class="form-control entry-calc entry-calc-rupiah"
-                                value="{{ old('bpjs_kesehatan', $slip->bpjs_kesehatan) }}">
+                            <input type="text" name="bpjsk" id="bpjsk" class="form-control entry-calc entry-calc-rupiah"
+                                value="{{ old('bpjsk', $slip->bpjs_kesehatan) }}">
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -519,28 +521,18 @@
                             $('#no_check_in_and_out').val(data.kehadiran.no_check_in_and_out || 0);
                         }
 
-                        // --- Hitung prosentase_gaji & jumlah_hari_gabung ---
-                        if (data.karyawan.tanggal_masuk && data.karyawan.tanggal_masuk !== '-') {
-                            var tglMasuk = new Date(data.karyawan.tanggal_masuk);
-                            var today = new Date();
+                        // Simpan data training untuk dipakai calculateReceipt()
+                        window._karyawanTanggalMasuk = data.karyawan.tanggal_masuk || null;
+                        window._karyawanAkhirTraining = data.karyawan.akhir_training || null;
 
-                            // Jumlah hari gabung selalu dihitung
-                            var diffMs = today - tglMasuk;
+                        // --- Hitung jumlah hari gabung ---
+                        if (data.karyawan.tanggal_masuk && data.karyawan.tanggal_masuk !== '-') {
+                            var tglMasukTmp = new Date(data.karyawan.tanggal_masuk);
+                            var todayTmp = new Date();
+                            var diffMs = todayTmp - tglMasukTmp;
                             var diffHari = Math.floor(diffMs / (1000 * 60 * 60 * 24));
                             $('#jumlah_hari_gabung').val(diffHari);
-
-                            // Selisih dalam bulan untuk menentukan prosentase
-                            var bulanMasuk = tglMasuk.getFullYear() * 12 + tglMasuk.getMonth();
-                            var bulanSekarang = today.getFullYear() * 12 + today.getMonth();
-                            var selisihBulan = bulanSekarang - bulanMasuk;
-
-                            if (selisihBulan < 3) {
-                                $('#prosentase_gaji').val(80);
-                            } else {
-                                $('#prosentase_gaji').val(100);
-                            }
                         } else {
-                            $('#prosentase_gaji').val(100);
                             $('#jumlah_hari_gabung').val(0);
                         }
                         // --- End hitung ---
@@ -560,6 +552,113 @@
                 }
             });
 
+            // ==================== PPH21 CALCULATION ====================
+            var pphTimeout;
+            function calculatePph21(totalGajiVal, totalDeductions) {
+                // If the user is currently editing the PPh 21 field manually, don't overwrite it.
+                if (document.activeElement && document.activeElement.id === 'potongan_pph_21') {
+                    var manualPph = getRawValue('#potongan_pph_21');
+                    updateFinalTransfer(totalGajiVal, manualPph, totalDeductions);
+                    return;
+                }
+
+                var kategori = $('#pph21_kategori').val();
+                if (!kategori) {
+                    updateFinalTransfer(totalGajiVal, getRawValue('#potongan_pph_21') || 0, totalDeductions);
+                    return;
+                }
+
+                $.ajax({
+                    url: '/slip-gaji/calculate-pph21',
+                    type: 'GET',
+                    data: {
+                        kategori: kategori,
+                        total_gaji: totalGajiVal
+                    },
+                    success: function (result) {
+                        // Double check that user hasn't focused the field in the meantime
+                        if (document.activeElement && document.activeElement.id === 'potongan_pph_21') {
+                            return;
+                        }
+                        var pph21Value = Math.round(result.pph21);
+                        $('#pph_21').val(formatRupiah(pph21Value));
+                        $('#potongan_pph_21').val(formatRupiah(pph21Value));
+                        updateFinalTransfer(totalGajiVal, pph21Value, totalDeductions);
+                    },
+                    error: function () {
+                        console.error('Failed to calculate PPH21');
+                    }
+                });
+            }
+
+            // totalDeductions = punishment + sedekah + potongan_lainnya (without PPh21)
+            function updateFinalTransfer(totalGajiVal, pph21Value, totalDeductions) {
+                var netTransfer = totalGajiVal - pph21Value;
+                if (netTransfer < 0) netTransfer = 0;
+                $('#nominal_transfer').val(formatRupiah(netTransfer));
+                $('#thp').val(totalGajiVal);
+
+                // Subtotal Potongan = Punishment + Sedekah + Potongan Lainnya + PPh21
+                var subtotalPotongan = totalDeductions + pph21Value;
+                $('#calculated_potongan').val(subtotalPotongan.toLocaleString('id-ID', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }));
+            }
+
+            // ==================== TRAINING / PRO-RATA CALCULATION ====================
+            /**
+             * Menghitung total gaji untuk 1 periode dengan mempertimbangkan masa training.
+             * Training = 80% THP_Full, Lulus training = 100% THP_Full.
+             * Masa training = 3 bulan penuh setelah tanggal masuk (akhirTraining = masuk + 3 bulan - 1 hari).
+             */
+            function hitungGajiPerPeriode(tglMasuk, akhirTraining, periodeAwal, periodeAkhir, thpFull) {
+                var selisihHari = function (a, b) {
+                    return Math.round((b - a) / (1000 * 60 * 60 * 24));
+                };
+
+                var totalHariPeriode = selisihHari(periodeAwal, periodeAkhir) + 1;
+
+                // 1. Belum mulai bekerja di periode ini
+                if (tglMasuk > periodeAkhir) {
+                    return 0;
+                }
+
+                var tglMulaiHitung = tglMasuk > periodeAwal ? tglMasuk : periodeAwal;
+
+                // 2. KONDISI TRANSISI: masa training berakhir DI DALAM periode ini
+                if (akhirTraining >= tglMulaiHitung && akhirTraining < periodeAkhir) {
+                    var hariTraining = selisihHari(tglMulaiHitung, akhirTraining) + 1;
+                    var gajiTraining = (hariTraining / totalHariPeriode) * 0.8 * thpFull;
+
+                    var tglMulaiMaju = new Date(akhirTraining);
+                    tglMulaiMaju.setDate(tglMulaiMaju.getDate() + 1);
+                    var hariLulus = selisihHari(tglMulaiMaju, periodeAkhir) + 1;
+                    var gajiLulus = (hariLulus / totalHariPeriode) * 1.0 * thpFull;
+
+                    return gajiTraining + gajiLulus;
+                }
+
+                // 3. KONDISI FULL TRAINING atau PRO-RATA awal masuk
+                if (periodeAkhir <= akhirTraining) {
+                    var hariKerja = selisihHari(tglMulaiHitung, periodeAkhir) + 1;
+                    if (hariKerja === totalHariPeriode) {
+                        return 0.8 * thpFull;
+                    } else {
+                        return (hariKerja / totalHariPeriode) * 0.8 * thpFull;
+                    }
+                }
+
+                // 4. KONDISI SUDAH LULUS TRAINING SEPENUHNYA
+                var hariKerja2 = selisihHari(tglMulaiHitung, periodeAkhir) + 1;
+                if (hariKerja2 === totalHariPeriode) {
+                    return thpFull;
+                } else {
+                    return (hariKerja2 / totalHariPeriode) * 1.0 * thpFull;
+                }
+            }
+
+            // ==================== RECEIPT & DEDUCTION CALCULATION ====================
             function calculateReceipt() {
                 var gaji = getRawValue('#gaji_pokok');
                 var t_pengalaman = getRawValue('#t_pengalaman_kerja');
@@ -571,35 +670,63 @@
                 var t_operasional = getRawValue('#t_operasional');
                 var fee_beautician = getRawValue('#fee_beautician');
                 var lembur = getRawValue('#nominal_lembur');
+                var lain = getRawValue('#lain_lain');
 
-                var subtotalReceipts = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja + t_hari_raya + t_operasional + fee_beautician + lembur;
+                var thpFull = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja + t_hari_raya + t_operasional + fee_beautician + lembur + lain;
 
-                var percentage = parseFloat($('#prosentase_gaji').val());
-                if (isNaN(percentage) || percentage <= 0) {
-                    percentage = 100;
+                // --- Hitung gaji dengan mempertimbangkan training & pro-rata ---
+                var totalReceipts = thpFull; // default
+
+                var bulan = parseInt($('#bulan').val()) || new Date().getMonth() + 1;
+                var tahun = parseInt($('#tahun').val()) || new Date().getFullYear();
+                var periodeAwal = new Date(tahun, bulan - 1, 1);
+                var periodeAkhir = new Date(tahun, bulan, 0);
+
+                var tglMasukStr = window._karyawanTanggalMasuk || null;
+                var akhirTrainStr = window._karyawanAkhirTraining || null;
+
+                if (tglMasukStr && tglMasukStr !== '-' && akhirTrainStr) {
+                    var tglMasuk = new Date(tglMasukStr);
+                    var akhirTraining = new Date(akhirTrainStr);
+                    totalReceipts = hitungGajiPerPeriode(tglMasuk, akhirTraining, periodeAwal, periodeAkhir, thpFull);
+
+                    // Update prosentase_gaji sebagai informasi representatif
+                    var pct = thpFull > 0 ? Math.round((totalReceipts / thpFull) * 100 * 100) / 100 : 100;
+                    $('#prosentase_gaji').val(pct);
+                } else {
+                    var percentage = parseFloat($('#prosentase_gaji').val());
+                    if (isNaN(percentage) || percentage <= 0) percentage = 100;
+                    totalReceipts = thpFull * (percentage / 100);
                 }
-                var totalReceipts = subtotalReceipts * (percentage / 100);
-                $('#calculated_penerimaan').val(totalReceipts.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+
+                $('#calculated_penerimaan').val(Math.round(totalReceipts).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
 
                 var punishment = getRawValue('#punishment');
-                var bpjstk = getRawValue('#bpjstk');
-                var bpjs_kes = getRawValue('#bpjs_kesehatan');
-                var pph21 = getRawValue('#pph_21');
-
-                var pot_bpjstk = getRawValue('#potongan_bpjs_tk');
-                var pot_bpjs_kes = getRawValue('#potongan_bpjs_kesehatan');
-                var pot_pph21 = getRawValue('#potongan_pph_21');
-
                 var sedekah = getRawValue('#sedekah_rombongan');
-                var lain = getRawValue('#lain_lain');
                 var pot_lainnya = getRawValue('#potongan_lainnya');
+                var totalDeductions = punishment + sedekah + pot_lainnya;
 
-                var totalDeductions = punishment + pot_bpjstk + pot_bpjs_kes + pot_pph21 + sedekah + lain + pot_lainnya;
-                $('#calculated_potongan').val(totalDeductions.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+                // Tampilkan subtotal potongan sementara (tanpa PPh21, akan diupdate saat AJAX selesai)
+                var currentPph21 = getRawValue('#potongan_pph_21');
+                $('#calculated_potongan').val((totalDeductions + currentPph21).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
 
-                var netTransfer = totalReceipts - totalDeductions;
-                $('#nominal_transfer').val(formatRupiah(netTransfer));
-                $('#thp').val(netTransfer);
+                var bpjstk_total = getRawValue('#bpjstk');
+                var bpjsk_premi = getRawValue('#bpjsk');
+                var jht_tk = getRawValue('#potongan_bpjs_tk');
+                var tg_karyawan = getRawValue('#potongan_bpjs_kesehatan');
+
+                var totalGaji = Math.round(totalReceipts) - totalDeductions + bpjstk_total + bpjsk_premi - jht_tk - tg_karyawan;
+                if (totalGaji < 0) totalGaji = 0;
+
+                if (document.activeElement && document.activeElement.id === 'potongan_pph_21') {
+                    updateFinalTransfer(totalGaji, getRawValue('#potongan_pph_21'), totalDeductions);
+                } else {
+                    // Debounce calculation of PPh 21
+                    clearTimeout(pphTimeout);
+                    pphTimeout = setTimeout(function () {
+                        calculatePph21(totalGaji, totalDeductions);
+                    }, 300);
+                }
             }
 
             $(document).on('input change', '.entry-calc, #prosentase_gaji', calculateReceipt);
@@ -609,6 +736,27 @@
                 var currentVal = $(this).val();
                 $(this).val(formatRupiah(currentVal));
             });
+
+            // Inisialisasi data training dari DOM (untuk edit page: tanggal masuk sudah tersedia)
+            (function initTrainingData() {
+                var tglMasukVal = $('#karyawan_tanggal_masuk').val();
+                if (tglMasukVal && tglMasukVal !== '-' && tglMasukVal !== '') {
+                    window._karyawanTanggalMasuk = tglMasukVal;
+                    // Hitung akhir training = tanggal masuk + 3 bulan - 1 hari
+                    var tglMasuk = new Date(tglMasukVal);
+                    var akhir = new Date(tglMasuk);
+                    akhir.setMonth(akhir.getMonth() + 3);
+                    akhir.setDate(akhir.getDate() - 1);
+                    // Format YYYY-MM-DD
+                    var y = akhir.getFullYear();
+                    var m = String(akhir.getMonth() + 1).padStart(2, '0');
+                    var d = String(akhir.getDate()).padStart(2, '0');
+                    window._karyawanAkhirTraining = y + '-' + m + '-' + d;
+                } else {
+                    window._karyawanTanggalMasuk = null;
+                    window._karyawanAkhirTraining = null;
+                }
+            })();
 
             calculateReceipt();
 
@@ -620,7 +768,8 @@
                 });
                 var cleanTransfer = $('#nominal_transfer').val().replace(/\./g, '');
                 $('#nominal_transfer').val(cleanTransfer);
-                $('#thp').val(cleanTransfer);
+                var cleanThp = $('#thp').val().toString().replace(/\./g, '');
+                $('#thp').val(cleanThp);
             });
         });
     </script>

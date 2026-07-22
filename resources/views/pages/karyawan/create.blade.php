@@ -106,6 +106,15 @@
                         <input type="text" name="no_wa" class="form-control" placeholder="Nomor WhatsApp"
                             value="{{ old('no_wa') }}">
                     </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Periode Cut Off <span class="text-danger">*</span></label>
+                        <select name="periode_cut_off" class="form-select" required>
+                            <option value="">-- Pilih Tanggal Cut Off --</option>
+                            <option value="15" {{ old('periode_cut_off') == '15' ? 'selected' : '' }}>Tanggal 15</option>
+                            <option value="21" {{ old('periode_cut_off') == '21' ? 'selected' : '' }}>Tanggal 21</option>
+                        </select>
+                        <div class="form-text">Tanggal akhir periode penggajian setiap bulan.</div>
+                    </div>
                 </div>
 
                 <div class="mt-5">

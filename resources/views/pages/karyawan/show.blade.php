@@ -676,6 +676,7 @@
                 tanggungan_karyawan: {{ $skemaBpjsk ? $skemaBpjsk->tanggungan_karyawan : 0 }},
             };
             var BPJSK_PREMI_MAX = 600000;
+            var BPJSK_UPAH_MAX = 12000000;
 
             // Auto-calculate Premi, Tanggungan Perusahaan and Tanggungan Karyawan (BPJS Kesehatan)
             function hitungBPJSK() {
@@ -691,6 +692,7 @@
                 var premi = upah * bpjskRates.premi;
                 if (premi > BPJSK_PREMI_MAX) {
                     premi = BPJSK_PREMI_MAX;
+                    upah = BPJSK_UPAH_MAX;
                 }
 
                 // Setiap 1 beban menambah 1% pada persentase tanggungan karyawan
@@ -698,7 +700,6 @@
                 if (beban > 0) {
                     tkRate += beban * 0.01;
                 }
-
                 var tp = upah * bpjskRates.tanggungan_perusahaan;
                 var tk = upah * tkRate;
 

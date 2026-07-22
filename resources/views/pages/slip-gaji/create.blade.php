@@ -194,8 +194,7 @@
                                 <select name="id_karyawan" id="id_karyawan" class="form-select" required>
                                     <option value="">-- select employee --</option>
                                     @foreach ($karyawans as $emp)
-                                        <option value="{{ $emp->id_karyawan }}"
-                                            {{ old('id_karyawan') == $emp->id_karyawan ? 'selected' : '' }}>
+                                        <option value="{{ $emp->id_karyawan }}" {{ old('id_karyawan') == $emp->id_karyawan ? 'selected' : '' }}>
                                             {{ $emp->nama_karyawan }} ({{ $emp->nip }})
                                         </option>
                                     @endforeach
@@ -205,8 +204,7 @@
                                 <label class="form-label">Bulan <span class="text-danger">*</span></label>
                                 <select name="bulan" id="bulan" class="form-select" required>
                                     @for ($i = 1; $i <= 12; $i++)
-                                        <option value="{{ $i }}"
-                                            {{ old('bulan', date('m')) == $i ? 'selected' : '' }}>
+                                        <option value="{{ $i }}" {{ old('bulan', date('m')) == $i ? 'selected' : '' }}>
                                             {{ date('F', mktime(0, 0, 0, $i, 10)) }}
                                         </option>
                                     @endfor
@@ -226,8 +224,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label text-muted">NIP</label>
-                                <input type="text" id="karyawan_nip" class="form-control bg-light" readonly
-                                    placeholder="-">
+                                <input type="text" id="karyawan_nip" class="form-control bg-light" readonly placeholder="-">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label text-muted">Divisi</label>
@@ -264,8 +261,7 @@
                     <div class="tab-pane fade" id="tab-pendapatan" role="tabpanel" aria-labelledby="tab-pendapatan-tab">
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Gaji Pokok <span
-                                        class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">Gaji Pokok <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
                                     <input type="text" name="gaji_pokok" id="gaji_pokok"
@@ -289,8 +285,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
                                     <input type="text" name="t_jabatan" id="t_jabatan"
-                                        class="form-control entry-calc entry-calc-rupiah"
-                                        value="{{ old('t_jabatan', 0) }}">
+                                        class="form-control entry-calc entry-calc-rupiah" value="{{ old('t_jabatan', 0) }}">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -298,15 +293,14 @@
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
                                     <input type="text" name="t_profesi" id="t_profesi"
-                                        class="form-control entry-calc entry-calc-rupiah"
-                                        value="{{ old('t_profesi', 0) }}">
+                                        class="form-control entry-calc entry-calc-rupiah" value="{{ old('t_profesi', 0) }}">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Tunjangan Operasional</label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
-                                    <input type="text" name="t_ operasional" id="t_operasional"
+                                    <input type="text" name="t_operasional" id="t_operasional"
                                         class="form-control entry-calc entry-calc-rupiah"
                                         value="{{ old('t_operasional', 0) }}">
                                 </div>
@@ -325,8 +319,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
                                     <input type="text" name="t_kinerja" id="t_kinerja"
-                                        class="form-control entry-calc entry-calc-rupiah"
-                                        value="{{ old('t_kinerja', 0) }}">
+                                        class="form-control entry-calc entry-calc-rupiah" value="{{ old('t_kinerja', 0) }}">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -362,8 +355,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
                                     <input type="text" name="lain_lain" id="lain_lain"
-                                        class="form-control entry-calc entry-calc-rupiah"
-                                        value="{{ old('lain_lain', 0) }}">
+                                        class="form-control entry-calc entry-calc-rupiah" value="{{ old('lain_lain', 0) }}">
                                 </div>
                             </div>
                         </div>
@@ -375,8 +367,8 @@
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Jumlah Hari Gabung</label>
-                                <input type="number" name="jumlah_hari_gabung" id="jumlah_hari_gabung"
-                                    class="form-control" value="{{ old('jumlah_hari_gabung', 0) }}">
+                                <input type="number" name="jumlah_hari_gabung" id="jumlah_hari_gabung" class="form-control"
+                                    value="{{ old('jumlah_hari_gabung', 0) }}">
                             </div>
                         </div>
 
@@ -401,13 +393,13 @@
                         <div class="row g-3 mb-4">
                             <div class="col-md-3">
                                 <label class="form-label">No. Referensi</label>
-                                <input type="text" name="bpjsk_no_ref" id="bpjsk_no_ref"
-                                    class="form-control bg-light" readonly value="{{ old('bpjsk_no_ref') }}">
+                                <input type="text" name="bpjsk_no_ref" id="bpjsk_no_ref" class="form-control bg-light"
+                                    readonly value="{{ old('bpjsk_no_ref') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Tanggal Kepesertaan</label>
-                                <input type="text" id="bpjstk_tanggal_kepesertaan" class="form-control bg-light"
-                                    readonly placeholder="-">
+                                <input type="text" id="bpjstk_tanggal_kepesertaan" class="form-control bg-light" readonly
+                                    placeholder="-">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Upah yg didaftarkan</label>
@@ -440,27 +432,27 @@
                                 <label class="form-label">Iuran JHT Pemberi Kerja</label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
-                                    <input type="text" name="bpjsk_iuran_jht_pk" id="bpjsk_iuran_jht_pk"
+                                    <input type="text" name="bpjstk_iuran_jht_pk" id="bpjstk_iuran_jht_pk"
                                         class="form-control entry-calc entry-calc-rupiah bg-light" readonly
-                                        value="{{ old('bpjsk_iuran_jht_pk', 0) }}">
+                                        value="{{ old('bpjstk_iuran_jht_pk', 0) }}">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Iuran JHT Tenaga Kerja</label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
-                                    <input type="text" name="bpjsk_iuran_jht_tk" id="bpjsk_iuran_jht_tk"
+                                    <input type="text" name="bpjstk_iuran_jht_tk" id="bpjstk_iuran_jht_tk"
                                         class="form-control entry-calc entry-calc-rupiah bg-light" readonly
-                                        value="{{ old('bpjsk_iuran_jht_tk', 0) }}">
+                                        value="{{ old('bpjstk_iuran_jht_tk', 0) }}">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Total</label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
-                                    <input type="text" name="bpjsk_total" id="bpjsk_total"
+                                    <input type="text" name="bpjstk_total" id="bpjstk_total"
                                         class="form-control entry-calc entry-calc-rupiah bg-light fw-bold" readonly
-                                        value="{{ old('bpjsk_total', 0) }}">
+                                        value="{{ old('bpjstk_total', 0) }}">
                                 </div>
                             </div>
                         </div>
@@ -472,8 +464,8 @@
                         <div class="row g-3 mb-4">
                             <div class="col-md-3">
                                 <label class="form-label">No JKN Peserta</label>
-                                <input type="text" name="bpjsk_no_jkn" id="bpjsk_no_jkn"
-                                    class="form-control bg-light" readonly value="{{ old('bpjsk_no_jkn') }}">
+                                <input type="text" name="bpjsk_no_jkn" id="bpjsk_no_jkn" class="form-control bg-light"
+                                    readonly value="{{ old('bpjsk_no_jkn') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Beban BPJS Kesehatan</label>
@@ -486,8 +478,8 @@
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">NPP</label>
-                                <input type="text" name="bpjsk_npp" id="bpjsk_npp" class="form-control bg-light"
-                                    readonly value="{{ old('bpjsk_npp') }}">
+                                <input type="text" name="bpjsk_npp" id="bpjsk_npp" class="form-control bg-light" readonly
+                                    value="{{ old('bpjsk_npp') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Upah yang didaftarkan</label>
@@ -534,8 +526,8 @@
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
                                 <label class="form-label">NPWP/KTP</label>
-                                <input type="text" name="pph21_npwp" id="pph21_npwp" class="form-control bg-light"
-                                    readonly value="{{ old('pph21_npwp') }}">
+                                <input type="text" name="pph21_npwp" id="pph21_npwp" class="form-control bg-light" readonly
+                                    value="{{ old('pph21_npwp') }}">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">PTKP</label>
@@ -550,8 +542,8 @@
 
                                 <label class="form-label">Kategori</label>
                                 <div class="input-group">
-                                    <input class="form-control entry-calc bg-light" type="text"
-                                        name="pph21_kategori" id="pph21_kategori" value="{{ old('pph21_kategori') }}" readonly>
+                                    <input class="form-control entry-calc bg-light" type="text" name="pph21_kategori"
+                                        id="pph21_kategori" value="{{ old('pph21_kategori') }}" readonly>
                                 </div>
                             </div>
                         </div>
@@ -581,54 +573,7 @@
                         <div class="section-subheader section-subheader-lainnya">
                             <i class="ti ti-minus me-1"></i> D. Potongan Lainnya
                         </div>
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-4">
-                                <label class="form-label">BPJS Ketenagakerjaan</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="text" name="bpjstk" id="bpjstk"
-                                        class="form-control entry-calc entry-calc-rupiah" value="{{ old('bpjstk', 0) }}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">BPJS Kesehatan</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="text" name="bpjs_kesehatan" id="bpjs_kesehatan"
-                                        class="form-control entry-calc entry-calc-rupiah"
-                                        value="{{ old('bpjs_kesehatan', 0) }}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-4">
-                                <label class="form-label">Potongan BPJS Ketenagakerjaan</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="text" name="potongan_bpjs_tk" id="potongan_bpjs_tk"
-                                        class="form-control entry-calc entry-calc-rupiah"
-                                        value="{{ old('potongan_bpjs_tk', 0) }}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Potongan BPJS Kesehatan</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="text" name="potongan_bpjs_kesehatan" id="potongan_bpjs_kesehatan"
-                                        class="form-control entry-calc entry-calc-rupiah"
-                                        value="{{ old('potongan_bpjs_kesehatan', 0) }}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Potongan PPh 21</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Rp</span>
-                                    <input type="text" name="potongan_pph_21" id="potongan_pph_21"
-                                        class="form-control entry-calc entry-calc-rupiah"
-                                        value="{{ old('potongan_pph_21', 0) }}">
-                                </div>
-                            </div>
-                        </div>
+
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
                                 <label class="form-label">Punishment</label>
@@ -697,8 +642,8 @@
                         <div class="row g-3 mb-4">
                             <div class="col-md-3">
                                 <label class="form-label">Ijin Pulang Cepat</label>
-                                <input type="number" name="ijin_pulang_cepat" id="ijin_pulang_cepat"
-                                    class="form-control" value="{{ old('ijin_pulang_cepat', 0) }}">
+                                <input type="number" name="ijin_pulang_cepat" id="ijin_pulang_cepat" class="form-control"
+                                    value="{{ old('ijin_pulang_cepat', 0) }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Ijin Tdk Masuk</label>
@@ -707,8 +652,8 @@
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">No Check In/Out</label>
-                                <input type="number" name="no_check_in_or_out" id="no_check_in_or_out"
-                                    class="form-control" value="{{ old('no_check_in_or_out', 0) }}">
+                                <input type="number" name="no_check_in_or_out" id="no_check_in_or_out" class="form-control"
+                                    value="{{ old('no_check_in_or_out', 0) }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">No Check In & Out</label>
@@ -724,8 +669,8 @@
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Kehadiran Lainnya</label>
-                                <input type="number" name="kehadiran_lainnya" id="kehadiran_lainnya"
-                                    class="form-control" value="{{ old('kehadiran_lainnya', 0) }}">
+                                <input type="number" name="kehadiran_lainnya" id="kehadiran_lainnya" class="form-control"
+                                    value="{{ old('kehadiran_lainnya', 0) }}">
                             </div>
                         </div>
 
@@ -774,6 +719,14 @@
                                             class="form-control bg-transparent border-primary fw-bold text-end text-primary fs-5 entry-calc-rupiah"
                                             required value="{{ old('nominal_transfer', 0) }}">
                                     </div>
+                                    <input type="hidden" name="bpjstk" id="bpjstk" value="{{ old('bpjstk', 0) }}">
+                                    <input type="hidden" name="bpjsk" id="bpjsk" value="{{ old('bpjsk', 0) }}">
+                                    <input type="hidden" name="potongan_bpjs_tk" id="potongan_bpjs_tk"
+                                        value="{{ old('potongan_bpjs_tk', 0) }}">
+                                    <input type="hidden" name="potongan_bpjs_kesehatan" id="potongan_bpjs_kesehatan"
+                                        value="{{ old('potongan_bpjs_kesehatan', 0) }}">
+                                    <input type="hidden" name="potongan_pph_21" id="potongan_pph_21"
+                                        value="{{ old('potongan_pph_21', 0) }}">
                                     <input type="hidden" name="thp" id="thp" value="{{ old('thp', 0) }}">
                                 </div>
                             </div>
@@ -785,30 +738,93 @@
                                 <i class="ti ti-arrow-left me-1"></i> Sebelumnya
                             </button>
                             <div>
-                                <a href="{{ route('slip-gaji.index') }}"
-                                    class="btn btn-light btn-lg px-4 me-2">Cancel</a>
+                                <a href="{{ route('slip-gaji.index') }}" class="btn btn-light btn-lg px-4 me-2">Cancel</a>
                                 <button type="submit" class="btn btn-primary btn-lg px-5">
                                     <i class="ti ti-device-floppy me-1"></i> Save Slip Gaji
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    {{-- ===== PANEL: GAJI TERAKHIR (RESIGN) ===== --}}
+                            <div class="card border-warning mt-4" id="panelResign">
+                                <div class="card-header bg-warning bg-opacity-10 text-warning d-flex align-items-center gap-2">
+                                    <i class="ti ti-user-minus fs-5"></i>
+                                    <strong>Hitung Gaji Terakhir (Resign)</strong>
+                                    <span class="ms-auto badge bg-warning text-dark">Opsional</span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted small mb-3">Gunakan kalkulator ini untuk menghitung gaji terakhir karyawan yang resign, berdasarkan tanggal resign dan periode cut-off.</p>
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label">Tanggal Resign</label>
+                                            <input type="date" id="resign_tanggal_resign" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">THP Full (Otomatis)</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">Rp</span>
+                                                <input type="text" id="resign_thp_full" class="form-control bg-light" readonly placeholder="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 d-flex align-items-end">
+                                            <button type="button" id="btnHitungResign" class="btn btn-warning w-100">
+                                                <i class="ti ti-calculator me-1"></i> Hitung Gaji Resign
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="resignResult" class="mt-3" style="display:none">
+                                        <hr>
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <label class="form-label text-muted">Periode</label>
+                                                <input type="text" id="resign_info_periode" class="form-control bg-light" readonly>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label text-muted">Total Hari</label>
+                                                <input type="text" id="resign_info_total_hari" class="form-control bg-light" readonly>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label text-muted">Hari Kerja</label>
+                                                <input type="text" id="resign_info_hari_kerja" class="form-control bg-light" readonly>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label text-muted">Akhir Training</label>
+                                                <input type="text" id="resign_info_akhir_training" class="form-control bg-light" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3 mt-1">
+                                            <div class="col-md-4">
+                                                <label class="form-label text-muted">Skenario</label>
+                                                <input type="text" id="resign_info_skenario" class="form-control bg-light fw-bold" readonly>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label class="form-label fw-semibold text-warning">Gaji Terakhir (Resign)</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text border-warning">Rp</span>
+                                                    <input type="text" id="resign_gaji_result" class="form-control fw-bold fs-5 border-warning text-warning" readonly placeholder="0">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- ===== END PANEL RESIGN ===== --}}
+                        </div>
 
-                </div>{{-- end .tab-content --}}
-            </form>
+                    </div>{{-- end .tab-content --}}
+                </form>
+            </div>
         </div>
-    </div>
 @endsection
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // ==================== TAB NAVIGATION ====================
-            $(document).on('click', '.btn-next-tab', function() {
+            $(document).on('click', '.btn-next-tab', function () {
                 var nextTab = $(this).data('next');
                 $('#' + nextTab).tab('show');
             });
-            $(document).on('click', '.btn-prev-tab', function() {
+            $(document).on('click', '.btn-prev-tab', function () {
                 var prevTab = $(this).data('prev');
                 $('#' + prevTab).tab('show');
             });
@@ -846,7 +862,7 @@
             }
 
             // Format saat user mengetik di field Rupiah
-            $(document).on('input', '.entry-calc-rupiah', function() {
+            $(document).on('input', '.entry-calc-rupiah', function () {
                 var el = this;
                 if ($(el).attr('readonly')) return; // skip readonly fields
                 var rawVal = el.value.replace(/\./g, '').replace(/[^0-9]/g, '');
@@ -880,8 +896,7 @@
                         bulan: bulan,
                         tahun: tahun
                     },
-                    success: function(data) {
-                        // console.log('Fetched employee details:', data);
+                    success: function (data) {
                         // --- Tab 1: Data Karyawan ---
                         $('#karyawan_tanggal_masuk').val(data.karyawan.tanggal_masuk || '-');
                         $('#karyawan_nip').val(data.karyawan.nip || '-');
@@ -908,16 +923,16 @@
                         if (data.bpjstk) {
                             $('#bpjsk_no_ref').val(data.bpjstk.no_referensi || '');
                             $('#bpjstk_tanggal_kepesertaan').val(data.bpjstk.tanggal_kepesertaan ||
-                            '-');
+                                '-');
                             $('#bpjsk_upah_daftar').val(formatRupiah(data.bpjstk.upah_didaftarkan));
                             $('#bpjsk_iuran_jkk').val(formatRupiah(data.bpjstk.iuran_jkk));
                             $('#bpjsk_iuran_jkm').val(formatRupiah(data.bpjstk.iuran_jkm));
-                            $('#bpjsk_iuran_jht_pk').val(formatRupiah(data.bpjstk.pemberi_kerja));
-                            $('#bpjsk_iuran_jht_tk').val(formatRupiah(data.bpjstk.tenaga_kerja));
-                            $('#bpjsk_total').val(formatRupiah(data.bpjstk.total_iuran));
+                            $('#bpjstk_iuran_jht_pk').val(formatRupiah(data.bpjstk.pemberi_kerja));
+                            $('#bpjstk_iuran_jht_tk').val(formatRupiah(data.bpjstk.tenaga_kerja));
+                            $('#bpjstk_total').val(formatRupiah(data.bpjstk.total_iuran));
                         } else {
                             $('#bpjsk_no_ref, #bpjstk_tanggal_kepesertaan').val('');
-                            $('#bpjsk_upah_daftar, #bpjsk_iuran_jkk, #bpjsk_iuran_jkm, #bpjsk_iuran_jht_pk, #bpjsk_iuran_jht_tk, #bpjsk_total')
+                            $('#bpjsk_upah_daftar, #bpjsk_iuran_jkk, #bpjsk_iuran_jkm, #bpjstk_iuran_jht_pk, #bpjstk_iuran_jht_tk, #bpjstk_total')
                                 .val('0');
                         }
 
@@ -972,91 +987,163 @@
                                 .val(0);
                         }
 
-                        // --- Hitung prosentase_gaji & jumlah_hari_gabung ---
+                        // Simpan data training untuk dipakai calculateReceipt()
+                        window._karyawanTanggalMasuk = data.karyawan.tanggal_masuk || null;
+                        window._karyawanAkhirTraining = data.karyawan.akhir_training || null;
+                        window._cutoffDate = data.karyawan.periode_cut_off || 21;
+
+                        // --- Hitung jumlah hari gabung (dari tanggal masuk ke hari ini) ---
                         if (data.karyawan.tanggal_masuk && data.karyawan.tanggal_masuk !== '-') {
                             var tglMasuk = new Date(data.karyawan.tanggal_masuk);
                             var today = new Date();
-
                             var diffMs = today - tglMasuk;
                             var diffHari = Math.floor(diffMs / (1000 * 60 * 60 * 24));
                             $('#jumlah_hari_gabung').val(diffHari);
-
-                            var bulanMasuk = tglMasuk.getFullYear() * 12 + tglMasuk.getMonth();
-                            var bulanSekarang = today.getFullYear() * 12 + today.getMonth();
-                            var selisihBulan = bulanSekarang - bulanMasuk;
-
-                            if (selisihBulan < 3) {
-                                $('#prosentase_gaji').val(80);
-                            } else {
-                                $('#prosentase_gaji').val(100);
-                            }
                         } else {
-                            $('#prosentase_gaji').val(100);
                             $('#jumlah_hari_gabung').val(0);
                         }
 
                         calculateReceipt();
-                        calculatePph21();
                     },
-                    error: function() {
+                    error: function () {
                         console.error('Failed to retrieve employee details');
                     }
                 });
             }
 
             $('#id_karyawan').on('change', fetchEmployeeDetails);
-            $('#bulan, #tahun').on('change', function() {
+            $('#bulan, #tahun').on('change', function () {
                 if ($('#id_karyawan').val()) {
                     fetchEmployeeDetails();
                 }
             });
 
             // ==================== PPH21 CALCULATION ====================
-            function calculatePph21() {
+            var pphTimeout;
+            function calculatePph21(totalGajiVal, totalDeductions) {
                 var kategori = $('#pph21_kategori').val();
                 if (!kategori) {
                     $('#pph21_ter').val('0');
                     $('#pph21_tarif_persentase').val('0');
                     $('#pph_21').val('0');
+                    $('#potongan_pph_21').val('0');
+                    updateFinalTransfer(totalGajiVal, 0, totalDeductions);
                     return;
                 }
-
-                // Total Gaji = Gaji + Nominal Lembur + BPJS TK (Premi Perusahaan) + BPJS Kesehatan (Premi Perusahaan)
-                //            - BPJS TK Tanggungan Pegawai - BPJS Kesehatan Tanggungan Pegawai
-                var gaji = getRawValue('#gaji_pokok');
-                var lembur = getRawValue('#nominal_lembur');
-                var bpjstkPremi = getRawValue('#bpjsk_iuran_jht_pk'); // Pemberi Kerja = JHT Pemberi Kerja
-                var bpjskPremi = getRawValue('#bpjsk_tg_gaji'); // Tanggungan Perusahaan BPJS Kesehatan
-                var bpjstkTgPegawai = getRawValue('#bpjsk_iuran_jht_tk'); // JHT Tenaga Kerja
-                var bpjskTgPegawai = getRawValue('#bpjsk_tg_karyawan'); // Tanggungan Karyawan BPJS Kesehatan
-
-                var totalGaji = gaji + lembur + bpjstkPremi + bpjskPremi - bpjstkTgPegawai - bpjskTgPegawai;
-                if (totalGaji < 0) totalGaji = 0;
-
                 $.ajax({
                     url: '/slip-gaji/calculate-pph21',
                     type: 'GET',
                     data: {
                         kategori: kategori,
-                        total_gaji: totalGaji
+                        total_gaji: totalGajiVal
                     },
-                    success: function(result) {
-                        $('#pph21_ter').val(result.ter*100);
-                        $('#pph21_tarif_persentase').val(result.ter*100);
-                        $('#pph_21').val(formatRupiah(result.pph21));
-                        calculateReceipt(); // Recalculate totals
+                    success: function (result) {
+                        $('#pph21_ter').val(result.ter * 100);
+                        $('#pph21_tarif_persentase').val(result.ter * 100);
+                        var pph21Value = Math.round(result.pph21);
+                        $('#pph_21').val(formatRupiah(pph21Value));
+                        $('#potongan_pph_21').val(pph21Value);
+                        updateFinalTransfer(totalGajiVal, pph21Value, totalDeductions);
                     },
-                    error: function() {
+                    error: function () {
                         console.error('Failed to calculate PPH21');
                     }
                 });
             }
 
+            // totalDeductions = punishment + sedekah + potongan_lainnya (without PPh21)
+            function updateFinalTransfer(totalGajiVal, pph21Value, totalDeductions) {
+                var netTransfer = totalGajiVal - pph21Value;
+                if (netTransfer < 0) netTransfer = 0;
+                $('#nominal_transfer').val(formatRupiah(netTransfer));
+                $('#thp').val(totalGajiVal);
+
+                // Subtotal Potongan = Punishment + Sedekah + Potongan Lainnya + PPh21
+                var subtotalPotongan = totalDeductions + pph21Value;
+                $('#calculated_potongan').val(subtotalPotongan.toLocaleString('id-ID', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }));
+            }
+
             // Sync disabled select to hidden input
-            $('#pph21_kategori').on('change', function() {
+            $('#pph21_kategori').on('change', function () {
                 $('#pph21_kategori_hidden').val($(this).val());
-                calculatePph21();
+                var totalReceipts = getRawValue('#calculated_penerimaan');
+                var punishment = getRawValue('#punishment');
+                var sedekah = getRawValue('#sedekah_rombongan');
+                var pot_lainnya = getRawValue('#potongan_lainnya');
+                var totalDeductions = punishment + sedekah + pot_lainnya;
+
+                var bpjstk_total = getRawValue('#bpjstk_total');
+                var bpjsk_premi = getRawValue('#bpjsk_premi');
+                var jht_tk = getRawValue('#bpjstk_iuran_jht_tk');
+                var tg_karyawan = getRawValue('#bpjsk_tg_karyawan');
+
+                var totalGaji = totalReceipts - totalDeductions + bpjstk_total + bpjsk_premi - jht_tk - tg_karyawan;
+                if (totalGaji < 0) totalGaji = 0;
+                calculatePph21(totalGaji, totalDeductions);
             });
+
+            // ==================== TRAINING / PRO-RATA CALCULATION ====================
+            /**
+             * Menghitung total gaji untuk 1 periode dengan mempertimbangkan masa training.
+             * Training = 80% THP_Full, Lulus training = 100% THP_Full.
+             * Masa training = 3 bulan penuh setelah tanggal masuk (akhirTraining = masuk + 3 bulan - 1 hari).
+             *
+             * @param {Date}   tglMasuk         - tanggal_masuk karyawan
+             * @param {Date}   akhirTraining     - hari terakhir masa training
+             * @param {Date}   periodeAwal       - hari pertama bulan slip (misal 1 Juli 2025)
+             * @param {Date}   periodeAkhir      - hari terakhir bulan slip (misal 31 Juli 2025)
+             * @param {number} thpFull           - THP 100% (subtotal penerimaan tanpa faktor training)
+             * @returns {number} nilai gaji yang sudah diperhitungkan pro-rata & training
+             */
+            function hitungGajiPerPeriode(tglMasuk, akhirTraining, periodeAwal, periodeAkhir, thpFull) {
+                var selisihHari = function (a, b) {
+                    return Math.round((b - a) / (1000 * 60 * 60 * 24));
+                };
+
+                var totalHariPeriode = selisihHari(periodeAwal, periodeAkhir) + 1;
+
+                // 1. Belum mulai bekerja di periode ini
+                if (tglMasuk > periodeAkhir) {
+                    return 0;
+                }
+
+                // Tanggal mulai hitung (antisipasi bulan pertama bergabung)
+                var tglMulaiHitung = tglMasuk > periodeAwal ? tglMasuk : periodeAwal;
+
+                // 2. SKENARIO A: MASA TRANSISI — akhirTraining jatuh di DALAM periode ini
+                if (akhirTraining >= tglMulaiHitung && akhirTraining < periodeAkhir) {
+                    var hariTraining = selisihHari(tglMulaiHitung, akhirTraining) + 1;
+                    var gajiTraining = (hariTraining / totalHariPeriode) * 0.8 * thpFull;
+
+                    var tglMulaiMaju = new Date(akhirTraining);
+                    tglMulaiMaju.setDate(tglMulaiMaju.getDate() + 1);
+                    var hariLulus = selisihHari(tglMulaiMaju, periodeAkhir) + 1;
+                    var gajiLulus = (hariLulus / totalHariPeriode) * 1.0 * thpFull;
+
+                    return gajiTraining + gajiLulus;
+                }
+
+                // 3. SKENARIO B: FULL TRAINING atau PRO-RATA awal masuk (masih dalam masa training)
+                if (periodeAkhir <= akhirTraining) {
+                    var hariKerja = selisihHari(tglMulaiHitung, periodeAkhir) + 1;
+                    if (hariKerja === totalHariPeriode) {
+                        return 0.8 * thpFull;
+                    } else {
+                        return (hariKerja / totalHariPeriode) * 0.8 * thpFull;
+                    }
+                }
+
+                // 4. SKENARIO C: SUDAH LULUS TRAINING SEPENUHNYA
+                var hariKerja2 = selisihHari(tglMulaiHitung, periodeAkhir) + 1;
+                if (hariKerja2 === totalHariPeriode) {
+                    return thpFull;
+                } else {
+                    return (hariKerja2 / totalHariPeriode) * 1.0 * thpFull;
+                }
+            }
 
             // ==================== RECEIPT CALCULATION ====================
             function calculateReceipt() {
@@ -1072,54 +1159,183 @@
                 var lembur = getRawValue('#nominal_lembur');
                 var lain = getRawValue('#lain_lain');
 
-                var subtotalReceipts = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja +
+                var thpFull = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja +
                     t_hari_raya + t_operasional + fee_beautician + lembur + lain;
 
-                var percentage = parseFloat($('#prosentase_gaji').val());
-                if (isNaN(percentage) || percentage <= 0) {
-                    percentage = 100;
+                // --- Hitung gaji dengan mempertimbangkan training & pro-rata ---
+                var totalReceipts = thpFull; // default: sudah lulus training, full bulan
+
+                var bulan = parseInt($('#bulan').val()) || new Date().getMonth() + 1;
+                var tahun = parseInt($('#tahun').val()) || new Date().getFullYear();
+                var cutoff = window._cutoffDate || 21;
+
+                // --- Periode berbasis cutoff ---
+                // Akhir Periode = tanggal {cutoff} pada bulan & tahun payroll
+                var periodeAkhir = new Date(tahun, bulan - 1, cutoff);
+                // Awal Periode  = tanggal ({cutoff}+1) bulan sebelumnya
+                var periodeAwalTmp = new Date(tahun, bulan - 1, cutoff);
+                periodeAwalTmp.setMonth(periodeAwalTmp.getMonth() - 1);
+                periodeAwalTmp.setDate(periodeAwalTmp.getDate() + 1);
+                var periodeAwal = periodeAwalTmp;
+
+                var tglMasukStr = window._karyawanTanggalMasuk || null;
+                var akhirTrainStr = window._karyawanAkhirTraining || null;
+
+                if (tglMasukStr && tglMasukStr !== '-' && akhirTrainStr) {
+                    var tglMasuk = new Date(tglMasukStr);
+                    var akhirTraining = new Date(akhirTrainStr);
+                    totalReceipts = hitungGajiPerPeriode(tglMasuk, akhirTraining, periodeAwal, periodeAkhir, thpFull);
+
+                    // Update prosentase_gaji sebagai informasi (read-only representatif)
+                    var pct = thpFull > 0 ? Math.round((totalReceipts / thpFull) * 100 * 100) / 100 : 100;
+                    $('#prosentase_gaji').val(pct);
+                } else {
+                    // Tidak ada data tanggal masuk: gunakan prosentase_gaji manual
+                    var percentage = parseFloat($('#prosentase_gaji').val());
+                    if (isNaN(percentage) || percentage <= 0) percentage = 100;
+                    totalReceipts = thpFull * (percentage / 100);
                 }
-                var totalReceipts = subtotalReceipts * (percentage / 100);
-                $('#calculated_penerimaan').val(totalReceipts.toLocaleString('id-ID', {
+
+                $('#calculated_penerimaan').val(Math.round(totalReceipts).toLocaleString('id-ID', {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0
                 }));
 
+                // Potongan langsung: Punishment + Sedekah + Potongan Lainnya
                 var punishment = getRawValue('#punishment');
-                var pot_bpjstk = getRawValue('#potongan_bpjs_tk');
-                var pot_bpjs_kes = getRawValue('#potongan_bpjs_kesehatan');
-                var pot_pph21 = getRawValue('#potongan_pph_21');
                 var sedekah = getRawValue('#sedekah_rombongan');
                 var pot_lainnya = getRawValue('#potongan_lainnya');
+                var totalDeductions = punishment + sedekah + pot_lainnya;
 
-                var totalDeductions = punishment + pot_bpjstk + pot_bpjs_kes + pot_pph21 + sedekah + pot_lainnya;
-                $('#calculated_potongan').val(totalDeductions.toLocaleString('id-ID', {
+                // Tampilkan subtotal potongan sementara (tanpa PPh21, akan diupdate saat AJAX selesai)
+                var currentPph21 = getRawValue('#potongan_pph_21');
+                $('#calculated_potongan').val((totalDeductions + currentPph21).toLocaleString('id-ID', {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0
                 }));
 
-                var netTransfer = totalReceipts - totalDeductions;
-                $('#nominal_transfer').val(formatRupiah(netTransfer));
-                $('#thp').val(netTransfer);
+                var bpjstk_total = getRawValue('#bpjstk_total');
+                var bpjsk_premi = getRawValue('#bpjsk_premi');
+                var jht_tk = getRawValue('#bpjstk_iuran_jht_tk');
+                var tg_karyawan = getRawValue('#bpjsk_tg_karyawan');
+
+                var totalGaji = Math.round(totalReceipts) - totalDeductions + bpjstk_total + bpjsk_premi - jht_tk - tg_karyawan;
+                if (totalGaji < 0) totalGaji = 0;
+
+                // Sync hidden inputs for backend storage
+                $('#bpjstk').val(bpjstk_total);
+                $('#bpjsk').val(bpjsk_premi);
+                $('#potongan_bpjs_tk').val(jht_tk);
+                $('#potongan_bpjs_kesehatan').val(tg_karyawan);
+
+                // Debounce calculation of PPh 21
+                clearTimeout(pphTimeout);
+                pphTimeout = setTimeout(function () {
+                    calculatePph21(totalGaji, totalDeductions);
+                }, 300);
             }
 
             $(document).on('input change', '.entry-calc, #prosentase_gaji', calculateReceipt);
 
+            // ==================== GAJI TERAKHIR (RESIGN) ====================
+            function syncResignThpFull() {
+                // THP Full = subtotal penerimaan SEBELUM faktor training/pro-rata
+                var gaji         = getRawValue('#gaji_pokok');
+                var t_pengalaman = getRawValue('#t_pengalaman_kerja');
+                var t_jabatan     = getRawValue('#t_jabatan');
+                var t_profesi    = getRawValue('#t_profesi');
+                var t_hadir      = getRawValue('#t_kehadiran');
+                var t_kinerja    = getRawValue('#t_kinerja');
+                var t_hari_raya  = getRawValue('#t_hari_raya');
+                var t_operasional = getRawValue('#t_operasional');
+                var fee          = getRawValue('#fee_beautician');
+                var lembur       = getRawValue('#nominal_lembur');
+                var lain         = getRawValue('#lain_lain');
+                var thpFull = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja +
+                              t_hari_raya + t_operasional + fee + lembur + lain;
+                $('#resign_thp_full').val(formatRupiah(thpFull));
+                return thpFull;
+            }
+
+            // Sync THP Full ke panel resign setiap kali perhitungan berubah
+            $(document).on('input change', '.entry-calc, #prosentase_gaji', syncResignThpFull);
+
+            $('#tab-ringkasan-tab').on('shown.bs.tab', syncResignThpFull);
+
+            $('#btnHitungResign').on('click', function () {
+                var tanggalResign = $('#resign_tanggal_resign').val();
+                if (!tanggalResign) {
+                    alert('Harap isi tanggal resign terlebih dahulu.');
+                    return;
+                }
+
+                var tanggalMasuk = window._karyawanTanggalMasuk || null;
+                if (!tanggalMasuk || tanggalMasuk === '-') {
+                    alert('Data tanggal masuk karyawan tidak tersedia.');
+                    return;
+                }
+
+                var bulan    = parseInt($('#bulan').val()) || new Date().getMonth() + 1;
+                var tahun    = parseInt($('#tahun').val()) || new Date().getFullYear();
+                var cutoff   = window._cutoffDate || 21;
+                var thpFull  = syncResignThpFull();
+
+                $('#btnHitungResign').prop('disabled', true).html('<i class="ti ti-loader me-1"></i> Menghitung...');
+
+                $.ajax({
+                    url: '/slip-gaji/calculate-gaji-resign',
+                    type: 'GET',
+                    data: {
+                        tanggal_masuk: tanggalMasuk,
+                        tanggal_resign: tanggalResign,
+                        bulan: bulan,
+                        tahun: tahun,
+                        cutoff: cutoff,
+                        thp_full: thpFull
+                    },
+                    success: function (res) {
+                        $('#resign_info_periode').val(res.periode_awal + ' s/d ' + res.periode_akhir);
+                        $('#resign_info_total_hari').val(res.total_hari_periode + ' hari');
+                        $('#resign_info_hari_kerja').val(res.hari_kerja + ' hari');
+                        $('#resign_info_akhir_training').val(res.akhir_training);
+                        var skenarioLabel = {
+                            'A_transisi'       : 'A — Transisi Training',
+                            'B_full_training'  : 'B — Full Training (80%)',
+                            'B_prorata_training': 'B — Pro-rata Training (80%)',
+                            'C_full_lulus'     : 'C — Full Lulus (100%)',
+                            'C_prorata_lulus'  : 'C — Pro-rata Lulus (100%)',
+                            'belum_mulai_atau_sudah_selesai': '—'
+                        };
+                        $('#resign_info_skenario').val(skenarioLabel[res.skenario] || res.skenario);
+                        $('#resign_gaji_result').val(formatRupiah(res.gaji_resign));
+                        $('#resignResult').slideDown(200);
+                    },
+                    error: function (xhr) {
+                        var msg = xhr.responseJSON ? xhr.responseJSON.error : 'Gagal menghitung gaji resign.';
+                        alert(msg);
+                    },
+                    complete: function () {
+                        $('#btnHitungResign').prop('disabled', false).html('<i class="ti ti-calculator me-1"></i> Hitung Gaji Resign');
+                    }
+                });
+            });
+
             // ==================== INITIAL SETUP ====================
             // Format on load
-            $('.entry-calc-rupiah').each(function() {
+            $('.entry-calc-rupiah').each(function () {
                 var currentVal = $(this).val();
                 $(this).val(formatRupiah(currentVal));
             });
 
             calculateReceipt();
+            syncResignThpFull();
 
             // Intercept form submit to clean formatting
-            $('#slipGajiForm').on('submit', function() {
+            $('#slipGajiForm').on('submit', function () {
                 // Re-enable disabled select so its value is submitted
                 $('#pph21_kategori').prop('disabled', false);
 
-                $('.entry-calc-rupiah').each(function() {
+                $('.entry-calc-rupiah').each(function () {
                     var cleanVal = $(this).val().replace(/\./g, '');
                     $(this).val(cleanVal);
                 });

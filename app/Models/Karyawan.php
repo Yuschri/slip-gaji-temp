@@ -23,6 +23,8 @@ class Karyawan extends Model
         'no_wa',
         'nomor_rekening',
         'cabang',
+        'periode_cut_off',
+        'is_active',
     ];
 
     protected $casts = [
