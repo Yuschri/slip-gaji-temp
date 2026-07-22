@@ -216,12 +216,17 @@
                     <div class="col-md-3">
                         <label class="form-label">Prosentase Gaji (%)</label>
                         <input type="number" step="0.01" name="prosentase_gaji" id="prosentase_gaji"
-                            class="form-control entry-calc" value="{{ old('prosentase_gaji', $slip->prosentase_gaji) }}">
+                            class="form-control entry-calc" value="{{ old('prosentase_gaji', $slip->prosentase_gaji ?? 100) }}">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Jumlah Hari Gabung</label>
                         <input type="number" name="jumlah_hari_gabung" id="jumlah_hari_gabung" class="form-control"
-                            value="{{ old('jumlah_hari_gabung', $slip->jumlah_hari_gabung) }}">
+                            value="{{ old('jumlah_hari_gabung', $slip->jumlah_hari_gabung ?? 0) }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Penyesuaian Gaji Lalu</label>
+                        <input type="number" name="penyesuaian_gaji_lalu" id="penyesuaian_gaji_lalu" class="form-control"
+                            value="{{ old('penyesuaian_gaji_lalu', $slip->penyesuaian_gaji_lalu ?? 0) }}">
                     </div>
                 </div>
 
@@ -386,8 +391,14 @@
                         <label class="form-label text-muted font-weight-bold">Subtotal Penerimaan</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light">Rp</span>
-                            <input type="text" id="calculated_penerimaan" class="form-control bg-light text-end fw-bold"
+                            <input type="text" id="calculated_penerimaan" class="form-control bg-light text-end fw-bold text-success"
                                 readonly value="0">
+                        </div>
+                        <div class="mt-2 p-2 rounded bg-light border text-start" style="font-size: 0.78rem; line-height: 1.4;">
+                            <div class="fw-semibold text-success mb-1 pb-1 border-bottom"><i class="ti ti-list-details me-1"></i> Rincian Penerimaan:</div>
+                            <div id="penerimaan_detail_list" class="text-secondary">
+                                <div class="text-muted fst-italic py-1">Belum ada data</div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -396,6 +407,12 @@
                             <span class="input-group-text bg-light">Rp</span>
                             <input type="text" id="calculated_potongan"
                                 class="form-control bg-light text-end fw-bold text-danger" readonly value="0">
+                        </div>
+                        <div class="mt-2 p-2 rounded bg-light border text-start" style="font-size: 0.78rem; line-height: 1.4;">
+                            <div class="fw-semibold text-danger mb-1 pb-1 border-bottom"><i class="ti ti-list-details me-1"></i> Rincian Potongan:</div>
+                            <div id="potongan_detail_list" class="text-secondary">
+                                <div class="text-muted fst-italic py-1">Belum ada data</div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -407,6 +424,12 @@
                                 required value="{{ old('nominal_transfer', $slip->nominal_transfer) }}">
                         </div>
                         <input type="hidden" name="thp" id="thp" value="{{ old('thp', $slip->thp) }}">
+                        <div class="mt-2 p-2 rounded bg-light border text-start" style="font-size: 0.78rem; line-height: 1.4;">
+                            <div class="fw-semibold text-primary mb-1 pb-1 border-bottom"><i class="ti ti-calculator me-1"></i> Rincian Perhitungan THP:</div>
+                            <div id="thp_detail_list" class="text-secondary">
+                                <div class="text-muted fst-italic py-1">Belum ada data</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -604,6 +627,159 @@
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0
                 }));
+                renderBreakdownDetails();
+            }
+
+            function renderBreakdownDetails() {
+                // === 1. RINCIAN PENERIMAAN ===
+                var gaji = getRawValue('#gaji_pokok');
+                var t_pengalaman = getRawValue('#t_pengalaman_kerja');
+                var t_jabatan = getRawValue('#t_jabatan');
+                var t_profesi = getRawValue('#t_profesi');
+                var t_operasional = getRawValue('#t_operasional');
+                var t_hadir = getRawValue('#t_kehadiran');
+                var t_kinerja = getRawValue('#t_kinerja');
+                var t_hari_raya = getRawValue('#t_hari_raya');
+                var fee_beautician = getRawValue('#fee_beautician');
+                var lembur = getRawValue('#nominal_lembur');
+                var lain = getRawValue('#lain_lain');
+
+                var thpFull = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja + t_hari_raya + t_operasional + fee_beautician + lembur + lain;
+
+                var totalCalcPenerimaan = getRawValue('#calculated_penerimaan');
+                var factor = thpFull > 0 ? (totalCalcPenerimaan / thpFull) : 1;
+
+                var penerimaanItems = [
+                    { label: 'Gaji Pokok', val: gaji },
+                    { label: 'T. Pengalaman Kerja', val: t_pengalaman },
+                    { label: 'T. Jabatan', val: t_jabatan },
+                    { label: 'T. Profesi', val: t_profesi },
+                    { label: 'T. Operasional', val: t_operasional },
+                    { label: 'T. Kehadiran', val: t_hadir },
+                    { label: 'T. Kinerja', val: t_kinerja },
+                    { label: 'T. Hari Raya', val: t_hari_raya },
+                    { label: 'Fee Beautician', val: fee_beautician },
+                    { label: 'Nominal Lembur', val: lembur },
+                    { label: 'Lain-lain', val: lain }
+                ];
+
+                var penerimaanHtml = '';
+                var activePenerimaanCount = 0;
+
+                penerimaanItems.forEach(function(item) {
+                    if (item.val > 0) {
+                        activePenerimaanCount++;
+                        var adjustedVal = Math.round(item.val * factor);
+                        penerimaanHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                            '<span class="text-secondary">' + item.label + '</span>' +
+                            '<span class="fw-semibold text-dark">Rp ' + formatRupiah(adjustedVal) + '</span>' +
+                            '</div>';
+                    }
+                });
+
+                if (activePenerimaanCount === 0) {
+                    penerimaanHtml = '<div class="text-muted fst-italic py-1 text-start">Tidak ada penerimaan</div>';
+                } else if (factor < 0.999 && factor > 0) {
+                    var pctStr = (factor * 100).toFixed(1).replace('.0', '');
+                    penerimaanHtml += '<div class="text-primary fst-italic mt-1 text-start" style="font-size:0.72rem;">* Nilai telah disesuaikan prorata (' + pctStr + '%)</div>';
+                }
+
+                $('#penerimaan_detail_list').html(penerimaanHtml);
+
+                // === 2. RINCIAN POTONGAN ===
+                var punishment = getRawValue('#punishment');
+                var sedekah = getRawValue('#sedekah_rombongan');
+                var pot_lainnya = getRawValue('#potongan_lainnya');
+                var totalDeductions = punishment + sedekah + pot_lainnya;
+                var pph21 = getRawValue('#potongan_pph_21') || getRawValue('#pph_21');
+
+                var potonganItems = [
+                    { label: 'Punishment', val: punishment },
+                    { label: 'Sedekah Rombongan', val: sedekah },
+                    { label: 'Potongan Lainnya', val: pot_lainnya },
+                    { label: 'Potongan PPh 21', val: pph21 }
+                ];
+
+                var potonganHtml = '';
+                var activePotonganCount = 0;
+
+                potonganItems.forEach(function(item) {
+                    if (item.val > 0) {
+                        activePotonganCount++;
+                        potonganHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                            '<span class="text-secondary">' + item.label + '</span>' +
+                            '<span class="fw-semibold text-danger">Rp ' + formatRupiah(item.val) + '</span>' +
+                            '</div>';
+                    }
+                });
+
+                if (activePotonganCount === 0) {
+                    potonganHtml = '<div class="text-muted fst-italic py-1 text-start">Tidak ada potongan</div>';
+                }
+
+                $('#potongan_detail_list').html(potonganHtml);
+
+                // === 3. RINCIAN PERHITUNGAN THP / NOMINAL TRANSFER ===
+                var bpjstk_total = getRawValue('#bpjstk');
+                var bpjsk_premi = getRawValue('#bpjsk');
+                var jht_tk = getRawValue('#potongan_bpjs_tk');
+                var tg_karyawan = getRawValue('#potongan_bpjs_kesehatan');
+                var netTransfer = getRawValue('#nominal_transfer');
+
+                var thpHtml = '';
+                thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                    '<span class="text-secondary">Subtotal Penerimaan</span>' +
+                    '<span class="fw-semibold text-success">+ Rp ' + formatRupiah(totalCalcPenerimaan) + '</span>' +
+                    '</div>';
+
+                if (totalDeductions > 0) {
+                    thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                        '<span class="text-secondary">Potongan Langsung</span>' +
+                        '<span class="fw-semibold text-danger">- Rp ' + formatRupiah(totalDeductions) + '</span>' +
+                        '</div>';
+                }
+
+                if (bpjstk_total > 0) {
+                    thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                        '<span class="text-secondary">BPJS TK (Perusahaan)</span>' +
+                        '<span class="fw-semibold text-success">+ Rp ' + formatRupiah(bpjstk_total) + '</span>' +
+                        '</div>';
+                }
+
+                if (bpjsk_premi > 0) {
+                    thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                        '<span class="text-secondary">BPJS Kes (Perusahaan)</span>' +
+                        '<span class="fw-semibold text-success">+ Rp ' + formatRupiah(bpjsk_premi) + '</span>' +
+                        '</div>';
+                }
+
+                if (jht_tk > 0) {
+                    thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                        '<span class="text-secondary">Potongan BPJS TK</span>' +
+                        '<span class="fw-semibold text-danger">- Rp ' + formatRupiah(jht_tk) + '</span>' +
+                        '</div>';
+                }
+
+                if (tg_karyawan > 0) {
+                    thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                        '<span class="text-secondary">Potongan BPJS Kes</span>' +
+                        '<span class="fw-semibold text-danger">- Rp ' + formatRupiah(tg_karyawan) + '</span>' +
+                        '</div>';
+                }
+
+                if (pph21 > 0) {
+                    thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                        '<span class="text-secondary">Potongan PPh 21</span>' +
+                        '<span class="fw-semibold text-danger">- Rp ' + formatRupiah(pph21) + '</span>' +
+                        '</div>';
+                }
+
+                thpHtml += '<div class="d-flex justify-content-between align-items-center pt-2 mt-1 text-start fw-bold text-primary">' +
+                    '<span>Nominal Transfer</span>' +
+                    '<span>Rp ' + formatRupiah(netTransfer) + '</span>' +
+                    '</div>';
+
+                $('#thp_detail_list').html(thpHtml);
             }
 
             // ==================== TRAINING / PRO-RATA CALCULATION ====================
@@ -717,6 +893,8 @@
 
                 var totalGaji = Math.round(totalReceipts) - totalDeductions + bpjstk_total + bpjsk_premi - jht_tk - tg_karyawan;
                 if (totalGaji < 0) totalGaji = 0;
+
+                renderBreakdownDetails();
 
                 if (document.activeElement && document.activeElement.id === 'potongan_pph_21') {
                     updateFinalTransfer(totalGaji, getRawValue('#potongan_pph_21'), totalDeductions);

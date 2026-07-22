@@ -370,6 +370,11 @@
                                 <input type="number" name="jumlah_hari_gabung" id="jumlah_hari_gabung" class="form-control"
                                     value="{{ old('jumlah_hari_gabung', 0) }}">
                             </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Penyesuaian Gaji Lalu</label>
+                                <input type="number" name="penyesuaian_gaji_lalu" id="penyesuaian_gaji_lalu"
+                                    class="form-control" value="{{ old('penyesuaian_gaji_lalu', 0) }}">
+                            </div>
                         </div>
 
                         <div class="d-flex justify-content-between mt-3">
@@ -697,6 +702,16 @@
                                             class="form-control bg-transparent border-success text-end fw-bold text-success fs-5"
                                             readonly value="0">
                                     </div>
+                                    <div class="mt-2 p-2 rounded bg-white bg-opacity-50 border border-success border-opacity-25 text-start"
+                                        style="font-size: 0.78rem; line-height: 1.4;">
+                                        <div
+                                            class="fw-semibold text-success mb-1 pb-1 border-bottom border-success border-opacity-25">
+                                            <i class="ti ti-list-details me-1"></i> Rincian Penerimaan:
+                                        </div>
+                                        <div id="penerimaan_detail_list" class="text-secondary">
+                                            <div class="text-muted fst-italic py-1">Belum ada data</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -707,6 +722,16 @@
                                         <input type="text" id="calculated_potongan"
                                             class="form-control bg-transparent border-danger text-end fw-bold text-danger fs-5"
                                             readonly value="0">
+                                    </div>
+                                    <div class="mt-2 p-2 rounded bg-white bg-opacity-50 border border-danger border-opacity-25 text-start"
+                                        style="font-size: 0.78rem; line-height: 1.4;">
+                                        <div
+                                            class="fw-semibold text-danger mb-1 pb-1 border-bottom border-danger border-opacity-25">
+                                            <i class="ti ti-list-details me-1"></i> Rincian Potongan:
+                                        </div>
+                                        <div id="potongan_detail_list" class="text-secondary">
+                                            <div class="text-muted fst-italic py-1">Belum ada data</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -728,6 +753,16 @@
                                     <input type="hidden" name="potongan_pph_21" id="potongan_pph_21"
                                         value="{{ old('potongan_pph_21', 0) }}">
                                     <input type="hidden" name="thp" id="thp" value="{{ old('thp', 0) }}">
+                                    <div class="mt-2 p-2 rounded bg-white bg-opacity-50 border border-primary border-opacity-25 text-start"
+                                        style="font-size: 0.78rem; line-height: 1.4;">
+                                        <div
+                                            class="fw-semibold text-primary mb-1 pb-1 border-bottom border-primary border-opacity-25">
+                                            <i class="ti ti-calculator me-1"></i> Rincian Perhitungan THP:
+                                        </div>
+                                        <div id="thp_detail_list" class="text-secondary">
+                                            <div class="text-muted fst-italic py-1">Belum ada data</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -744,76 +779,86 @@
                                 </button>
                             </div>
                         </div>
-                    {{-- ===== PANEL: GAJI TERAKHIR (RESIGN) ===== --}}
-                            <div class="card border-warning mt-4" id="panelResign">
-                                <div class="card-header bg-warning bg-opacity-10 text-warning d-flex align-items-center gap-2">
-                                    <i class="ti ti-user-minus fs-5"></i>
-                                    <strong>Hitung Gaji Terakhir (Resign)</strong>
-                                    <span class="ms-auto badge bg-warning text-dark">Opsional</span>
-                                </div>
-                                <div class="card-body">
-                                    <p class="text-muted small mb-3">Gunakan kalkulator ini untuk menghitung gaji terakhir karyawan yang resign, berdasarkan tanggal resign dan periode cut-off.</p>
-                                    <div class="row g-3">
-                                        <div class="col-md-4">
-                                            <label class="form-label">Tanggal Resign</label>
-                                            <input type="date" id="resign_tanggal_resign" class="form-control">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">THP Full (Otomatis)</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">Rp</span>
-                                                <input type="text" id="resign_thp_full" class="form-control bg-light" readonly placeholder="0">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 d-flex align-items-end">
-                                            <button type="button" id="btnHitungResign" class="btn btn-warning w-100">
-                                                <i class="ti ti-calculator me-1"></i> Hitung Gaji Resign
-                                            </button>
+                        {{-- ===== PANEL: GAJI TERAKHIR (RESIGN) ===== --}}
+                        <div class="card border-warning mt-4" id="panelResign">
+                            <div class="card-header bg-warning bg-opacity-10 text-warning d-flex align-items-center gap-2">
+                                <i class="ti ti-user-minus fs-5"></i>
+                                <strong>Hitung Gaji Terakhir (Resign)</strong>
+                                <span class="ms-auto badge bg-warning text-dark">Opsional</span>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">Gunakan kalkulator ini untuk menghitung gaji terakhir
+                                    karyawan yang resign, berdasarkan tanggal resign dan periode cut-off.</p>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Tanggal Resign</label>
+                                        <input type="date" id="resign_tanggal_resign" class="form-control">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">THP Full (Otomatis)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">Rp</span>
+                                            <input type="text" id="resign_thp_full" class="form-control bg-light" readonly
+                                                placeholder="0">
                                         </div>
                                     </div>
-                                    <div id="resignResult" class="mt-3" style="display:none">
-                                        <hr>
-                                        <div class="row g-3">
-                                            <div class="col-md-4">
-                                                <label class="form-label text-muted">Periode</label>
-                                                <input type="text" id="resign_info_periode" class="form-control bg-light" readonly>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label class="form-label text-muted">Total Hari</label>
-                                                <input type="text" id="resign_info_total_hari" class="form-control bg-light" readonly>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label class="form-label text-muted">Hari Kerja</label>
-                                                <input type="text" id="resign_info_hari_kerja" class="form-control bg-light" readonly>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label text-muted">Akhir Training</label>
-                                                <input type="text" id="resign_info_akhir_training" class="form-control bg-light" readonly>
-                                            </div>
+                                    <div class="col-md-4 d-flex align-items-end">
+                                        <button type="button" id="btnHitungResign" class="btn btn-warning w-100">
+                                            <i class="ti ti-calculator me-1"></i> Hitung Gaji Resign
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="resignResult" class="mt-3" style="display:none">
+                                    <hr>
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label text-muted">Periode</label>
+                                            <input type="text" id="resign_info_periode" class="form-control bg-light"
+                                                readonly>
                                         </div>
-                                        <div class="row g-3 mt-1">
-                                            <div class="col-md-4">
-                                                <label class="form-label text-muted">Skenario</label>
-                                                <input type="text" id="resign_info_skenario" class="form-control bg-light fw-bold" readonly>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <label class="form-label fw-semibold text-warning">Gaji Terakhir (Resign)</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text border-warning">Rp</span>
-                                                    <input type="text" id="resign_gaji_result" class="form-control fw-bold fs-5 border-warning text-warning" readonly placeholder="0">
-                                                </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label text-muted">Total Hari</label>
+                                            <input type="text" id="resign_info_total_hari" class="form-control bg-light"
+                                                readonly>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label text-muted">Hari Kerja</label>
+                                            <input type="text" id="resign_info_hari_kerja" class="form-control bg-light"
+                                                readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label text-muted">Akhir Training</label>
+                                            <input type="text" id="resign_info_akhir_training" class="form-control bg-light"
+                                                readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3 mt-1">
+                                        <div class="col-md-4">
+                                            <label class="form-label text-muted">Skenario</label>
+                                            <input type="text" id="resign_info_skenario"
+                                                class="form-control bg-light fw-bold" readonly>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <label class="form-label fw-semibold text-warning">Gaji Terakhir
+                                                (Resign)</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text border-warning">Rp</span>
+                                                <input type="text" id="resign_gaji_result"
+                                                    class="form-control fw-bold fs-5 border-warning text-warning" readonly
+                                                    placeholder="0">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            {{-- ===== END PANEL RESIGN ===== --}}
                         </div>
+                        {{-- ===== END PANEL RESIGN ===== --}}
+                    </div>
 
-                    </div>{{-- end .tab-content --}}
-                </form>
-            </div>
+                </div>{{-- end .tab-content --}}
+            </form>
         </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -1064,6 +1109,159 @@
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0
                 }));
+                renderBreakdownDetails();
+            }
+
+            function renderBreakdownDetails() {
+                // === 1. RINCIAN PENERIMAAN ===
+                var gaji = getRawValue('#gaji_pokok');
+                var t_pengalaman = getRawValue('#t_pengalaman_kerja');
+                var t_jabatan = getRawValue('#t_jabatan');
+                var t_profesi = getRawValue('#t_profesi');
+                var t_operasional = getRawValue('#t_operasional');
+                var t_hadir = getRawValue('#t_kehadiran');
+                var t_kinerja = getRawValue('#t_kinerja');
+                var t_hari_raya = getRawValue('#t_hari_raya');
+                var fee_beautician = getRawValue('#fee_beautician');
+                var lembur = getRawValue('#nominal_lembur');
+                var lain = getRawValue('#lain_lain');
+
+                var thpFull = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja + t_hari_raya + t_operasional + fee_beautician + lembur + lain;
+
+                var totalCalcPenerimaan = getRawValue('#calculated_penerimaan');
+                var factor = thpFull > 0 ? (totalCalcPenerimaan / thpFull) : 1;
+
+                var penerimaanItems = [
+                    { label: 'Gaji Pokok', val: gaji },
+                    { label: 'T. Pengalaman Kerja', val: t_pengalaman },
+                    { label: 'T. Jabatan', val: t_jabatan },
+                    { label: 'T. Profesi', val: t_profesi },
+                    { label: 'T. Operasional', val: t_operasional },
+                    { label: 'T. Kehadiran', val: t_hadir },
+                    { label: 'T. Kinerja', val: t_kinerja },
+                    { label: 'T. Hari Raya', val: t_hari_raya },
+                    { label: 'Fee Beautician', val: fee_beautician },
+                    { label: 'Nominal Lembur', val: lembur },
+                    { label: 'Lain-lain', val: lain }
+                ];
+
+                var penerimaanHtml = '';
+                var activePenerimaanCount = 0;
+
+                penerimaanItems.forEach(function (item) {
+                    if (item.val > 0) {
+                        activePenerimaanCount++;
+                        var adjustedVal = Math.round(item.val * factor);
+                        penerimaanHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                            '<span class="text-secondary">' + item.label + '</span>' +
+                            '<span class="fw-semibold text-dark">Rp ' + formatRupiah(adjustedVal) + '</span>' +
+                            '</div>';
+                    }
+                });
+
+                if (activePenerimaanCount === 0) {
+                    penerimaanHtml = '<div class="text-muted fst-italic py-1 text-start">Tidak ada penerimaan</div>';
+                } else if (factor < 0.999 && factor > 0) {
+                    var pctStr = (factor * 100).toFixed(1).replace('.0', '');
+                    penerimaanHtml += '<div class="text-primary fst-italic mt-1 text-start" style="font-size:0.72rem;">* Nilai telah disesuaikan prorata (' + pctStr + '%)</div>';
+                }
+
+                $('#penerimaan_detail_list').html(penerimaanHtml);
+
+                // === 2. RINCIAN POTONGAN ===
+                var punishment = getRawValue('#punishment');
+                var sedekah = getRawValue('#sedekah_rombongan');
+                var pot_lainnya = getRawValue('#potongan_lainnya');
+                var totalDeductions = punishment + sedekah + pot_lainnya;
+                var pph21 = getRawValue('#potongan_pph_21') || getRawValue('#pph_21');
+
+                var potonganItems = [
+                    { label: 'Punishment', val: punishment },
+                    { label: 'Sedekah Rombongan', val: sedekah },
+                    { label: 'Potongan Lainnya', val: pot_lainnya },
+                    { label: 'Potongan PPh 21', val: pph21 }
+                ];
+
+                var potonganHtml = '';
+                var activePotonganCount = 0;
+
+                potonganItems.forEach(function (item) {
+                    if (item.val > 0) {
+                        activePotonganCount++;
+                        potonganHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                            '<span class="text-secondary">' + item.label + '</span>' +
+                            '<span class="fw-semibold text-danger">Rp ' + formatRupiah(item.val) + '</span>' +
+                            '</div>';
+                    }
+                });
+
+                if (activePotonganCount === 0) {
+                    potonganHtml = '<div class="text-muted fst-italic py-1 text-start">Tidak ada potongan</div>';
+                }
+
+                $('#potongan_detail_list').html(potonganHtml);
+
+                // === 3. RINCIAN PERHITUNGAN THP / NOMINAL TRANSFER ===
+                var bpjstk_total = getRawValue('#bpjstk_total') || getRawValue('#bpjstk');
+                var bpjsk_premi = getRawValue('#bpjsk_premi') || getRawValue('#bpjsk');
+                var jht_tk = getRawValue('#bpjstk_iuran_jht_tk') || getRawValue('#potongan_bpjs_tk');
+                var tg_karyawan = getRawValue('#bpjsk_tg_karyawan') || getRawValue('#potongan_bpjs_kesehatan');
+                var netTransfer = getRawValue('#nominal_transfer');
+
+                var thpHtml = '';
+                thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                    '<span class="text-secondary">Subtotal Penerimaan</span>' +
+                    '<span class="fw-semibold text-success">+ Rp ' + formatRupiah(totalCalcPenerimaan) + '</span>' +
+                    '</div>';
+
+                if (totalDeductions > 0) {
+                    thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                        '<span class="text-secondary">Potongan Langsung</span>' +
+                        '<span class="fw-semibold text-danger">- Rp ' + formatRupiah(totalDeductions) + '</span>' +
+                        '</div>';
+                }
+
+                if (bpjstk_total > 0) {
+                    thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                        '<span class="text-secondary">BPJS TK (Perusahaan)</span>' +
+                        '<span class="fw-semibold text-success">+ Rp ' + formatRupiah(bpjstk_total) + '</span>' +
+                        '</div>';
+                }
+
+                if (bpjsk_premi > 0) {
+                    thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                        '<span class="text-secondary">BPJS Kes (Perusahaan)</span>' +
+                        '<span class="fw-semibold text-success">+ Rp ' + formatRupiah(bpjsk_premi) + '</span>' +
+                        '</div>';
+                }
+
+                if (jht_tk > 0) {
+                    thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                        '<span class="text-secondary">Potongan BPJS TK</span>' +
+                        '<span class="fw-semibold text-danger">- Rp ' + formatRupiah(jht_tk) + '</span>' +
+                        '</div>';
+                }
+
+                if (tg_karyawan > 0) {
+                    thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                        '<span class="text-secondary">Potongan BPJS Kes</span>' +
+                        '<span class="fw-semibold text-danger">- Rp ' + formatRupiah(tg_karyawan) + '</span>' +
+                        '</div>';
+                }
+
+                if (pph21 > 0) {
+                    thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
+                        '<span class="text-secondary">Potongan PPh 21</span>' +
+                        '<span class="fw-semibold text-danger">- Rp ' + formatRupiah(pph21) + '</span>' +
+                        '</div>';
+                }
+
+                thpHtml += '<div class="d-flex justify-content-between align-items-center pt-2 mt-1 text-start fw-bold text-primary">' +
+                    '<span>Nominal Transfer</span>' +
+                    '<span>Rp ' + formatRupiah(netTransfer) + '</span>' +
+                    '</div>';
+
+                $('#thp_detail_list').html(thpHtml);
             }
 
             // Sync disabled select to hidden input
@@ -1228,6 +1426,8 @@
                 $('#potongan_bpjs_tk').val(jht_tk);
                 $('#potongan_bpjs_kesehatan').val(tg_karyawan);
 
+                renderBreakdownDetails();
+
                 // Debounce calculation of PPh 21
                 clearTimeout(pphTimeout);
                 pphTimeout = setTimeout(function () {
@@ -1240,19 +1440,19 @@
             // ==================== GAJI TERAKHIR (RESIGN) ====================
             function syncResignThpFull() {
                 // THP Full = subtotal penerimaan SEBELUM faktor training/pro-rata
-                var gaji         = getRawValue('#gaji_pokok');
+                var gaji = getRawValue('#gaji_pokok');
                 var t_pengalaman = getRawValue('#t_pengalaman_kerja');
-                var t_jabatan     = getRawValue('#t_jabatan');
-                var t_profesi    = getRawValue('#t_profesi');
-                var t_hadir      = getRawValue('#t_kehadiran');
-                var t_kinerja    = getRawValue('#t_kinerja');
-                var t_hari_raya  = getRawValue('#t_hari_raya');
+                var t_jabatan = getRawValue('#t_jabatan');
+                var t_profesi = getRawValue('#t_profesi');
+                var t_hadir = getRawValue('#t_kehadiran');
+                var t_kinerja = getRawValue('#t_kinerja');
+                var t_hari_raya = getRawValue('#t_hari_raya');
                 var t_operasional = getRawValue('#t_operasional');
-                var fee          = getRawValue('#fee_beautician');
-                var lembur       = getRawValue('#nominal_lembur');
-                var lain         = getRawValue('#lain_lain');
+                var fee = getRawValue('#fee_beautician');
+                var lembur = getRawValue('#nominal_lembur');
+                var lain = getRawValue('#lain_lain');
                 var thpFull = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja +
-                              t_hari_raya + t_operasional + fee + lembur + lain;
+                    t_hari_raya + t_operasional + fee + lembur + lain;
                 $('#resign_thp_full').val(formatRupiah(thpFull));
                 return thpFull;
             }
@@ -1275,10 +1475,10 @@
                     return;
                 }
 
-                var bulan    = parseInt($('#bulan').val()) || new Date().getMonth() + 1;
-                var tahun    = parseInt($('#tahun').val()) || new Date().getFullYear();
-                var cutoff   = window._cutoffDate || 21;
-                var thpFull  = syncResignThpFull();
+                var bulan = parseInt($('#bulan').val()) || new Date().getMonth() + 1;
+                var tahun = parseInt($('#tahun').val()) || new Date().getFullYear();
+                var cutoff = window._cutoffDate || 21;
+                var thpFull = syncResignThpFull();
 
                 $('#btnHitungResign').prop('disabled', true).html('<i class="ti ti-loader me-1"></i> Menghitung...');
 
@@ -1299,11 +1499,11 @@
                         $('#resign_info_hari_kerja').val(res.hari_kerja + ' hari');
                         $('#resign_info_akhir_training').val(res.akhir_training);
                         var skenarioLabel = {
-                            'A_transisi'       : 'A — Transisi Training',
-                            'B_full_training'  : 'B — Full Training (80%)',
+                            'A_transisi': 'A — Transisi Training',
+                            'B_full_training': 'B — Full Training (80%)',
                             'B_prorata_training': 'B — Pro-rata Training (80%)',
-                            'C_full_lulus'     : 'C — Full Lulus (100%)',
-                            'C_prorata_lulus'  : 'C — Pro-rata Lulus (100%)',
+                            'C_full_lulus': 'C — Full Lulus (100%)',
+                            'C_prorata_lulus': 'C — Pro-rata Lulus (100%)',
                             'belum_mulai_atau_sudah_selesai': '—'
                         };
                         $('#resign_info_skenario').val(skenarioLabel[res.skenario] || res.skenario);

@@ -13,8 +13,9 @@ class SlipGaji extends Model
     protected $primaryKey = 'id_slip';
 
     protected $fillable = [
+        'bulan',
+        'tahun',
         'id_karyawan',
-        'thp',
         'gaji_pokok',
         't_pengalaman_kerja',
         't_jabatan',
@@ -23,29 +24,33 @@ class SlipGaji extends Model
         't_kehadiran',
         't_kinerja',
         't_hari_raya',
-        'prosentase_gaji',
-        'jumlah_hari_gabung',
-        'nominal_lembur',
         'fee_beautician',
-        'lain_lain',
+        'nominal_lembur',
+        'pendapatan_lainnya',
+        'penyesuaian_gaji_lalu',
+        'subtotal_penerimaan',
+        'bpjstk_perusahaan',
+        'bpjsk_perusahaan',
         'punishment',
-        'bpjs_tk',
-        'bpjs_kesehatan',
-        'pph_21',
-        'potongan_bpjs_tk',
-        'potongan_bpjs_kesehatan',
-        'potongan_pph_21',
         'sedekah_rombongan',
         'potongan_lainnya',
-        'nominal_transfer',
-        'id_kehadiran',
+        'bpjstk_karyawan',
+        'bpjsk_karyawan',
+        'pph21',
+        'lembur_kali',
+        'lembur_menit',
+        'terlambat_kali',
+        'terlambat_menit',
+        'ijin_pulang_awal',
+        'ijin_tidak_masuk',
+        'no_checkin_or_checkout',
+        'no_checkin_and_checkout',
+        'cuti',
         'kehadiran_lainnya',
-        'bulan',
-        'tahun',
+        'total_diterima',
     ];
 
     protected $casts = [
-        'thp' => 'decimal:2',
         'gaji_pokok' => 'decimal:2',
         't_pengalaman_kerja' => 'decimal:2',
         't_jabatan' => 'decimal:2',
@@ -54,24 +59,30 @@ class SlipGaji extends Model
         't_kehadiran' => 'decimal:2',
         't_kinerja' => 'decimal:2',
         't_hari_raya' => 'decimal:2',
-        'prosentase_gaji' => 'decimal:2',
-        'jumlah_hari_gabung' => 'integer',
-        'nominal_lembur' => 'decimal:2',
         'fee_beautician' => 'decimal:2',
-        'lain_lain' => 'decimal:2',
+        'nominal_lembur' => 'decimal:2',
+        'pendapatan_lainnya' => 'decimal:2',
+        'penyesuaian_gaji_lalu' => 'decimal:2',
+        'subtotal_penerimaan' => 'decimal:2',
+        'bpjstk_perusahaan' => 'decimal:2',
+        'bpjsk_perusahaan' => 'decimal:2',
         'punishment' => 'decimal:2',
-        'bpjs_tk' => 'decimal:2',
-        'bpjs_kesehatan' => 'decimal:2',
-        'pph_21' => 'decimal:2',
-        'potongan_bpjs_tk' => 'decimal:2',
-        'potongan_bpjs_kesehatan' => 'decimal:2',
-        'potongan_pph_21' => 'decimal:2',
         'sedekah_rombongan' => 'decimal:2',
         'potongan_lainnya' => 'decimal:2',
-        'nominal_transfer' => 'decimal:2',
+        'bpjstk_karyawan' => 'decimal:2',
+        'bpjsk_karyawan' => 'decimal:2',
+        'pph21' => 'decimal:2',
+        'lembur_kali' => 'integer',
+        'lembur_menit' => 'integer',
+        'terlambat_kali' => 'integer',
+        'terlambat_menit' => 'integer',
+        'ijin_pulang_awal' => 'integer',
+        'ijin_tidak_masuk' => 'integer',
+        'no_checkin_or_checkout' => 'integer',
+        'no_checkin_and_checkout' => 'integer',
+        'cuti' => 'integer',
         'kehadiran_lainnya' => 'integer',
-        'bulan' => 'integer',
-        'tahun' => 'integer',
+        'total_diterima' => 'decimal:2',
     ];
 
     // --- Relationships ---
@@ -81,14 +92,21 @@ class SlipGaji extends Model
         return $this->belongsTo(Karyawan::class, 'id_karyawan', 'id_karyawan');
     }
 
-    public function kehadiran()
+    // --- Virtual Accessors / Aliases for View & Export Compatibility ---
+
+    public function getIdGajiAttribute()
     {
-        return $this->belongsTo(Kehadiran::class, 'id_kehadiran', 'id_kehadiran');
+        return $this->id_slip;
     }
 
     public function getNamaKaryawanAttribute()
     {
         return $this->karyawan ? $this->karyawan->nama_karyawan : '';
+    }
+
+    public function getNipAttribute()
+    {
+        return $this->karyawan ? $this->karyawan->nip : '';
     }
 
     public function getTanggalMasukAttribute()
@@ -116,34 +134,92 @@ class SlipGaji extends Model
         return $this->karyawan ? $this->karyawan->nomor_rekening : '';
     }
 
-    // Kehadiran virtual fields
-    public function getCutiAttribute()
+    public function getThpAttribute()
     {
-        return $this->kehadiran ? $this->kehadiran->cuti : 0;
+        return $this->total_diterima;
+    }
+
+    public function getNominalTransferAttribute()
+    {
+        return $this->total_diterima;
+    }
+
+    public function getLainLainAttribute()
+    {
+        return $this->pendapatan_lainnya;
+    }
+
+    public function getBpjsTkAttribute()
+    {
+        return $this->bpjstk_perusahaan;
+    }
+
+    public function getBpjsKesehatanAttribute()
+    {
+        return $this->bpjsk_perusahaan;
+    }
+
+    public function getPotonganBpjsTkAttribute()
+    {
+        return $this->bpjstk_karyawan;
+    }
+
+    public function getPotonganBpjsKesehatanAttribute()
+    {
+        return $this->bpjsk_karyawan;
+    }
+
+    public function getPph21Attribute()
+    {
+        return $this->attributes['pph21'] ?? 0;
+    }
+
+    public function getPph21CalculatedAttribute()
+    {
+        return $this->attributes['pph21'] ?? 0;
+    }
+
+    public function getPotonganPph21Attribute()
+    {
+        return $this->attributes['pph21'] ?? 0;
     }
 
     public function getTerlambatAttribute()
     {
-        return $this->kehadiran ? $this->kehadiran->terlambat : 0;
+        return $this->terlambat_kali;
     }
 
     public function getIjinPulangCepatAttribute()
     {
-        return $this->kehadiran ? $this->kehadiran->ijin_pulang_cepat : 0;
-    }
-
-    public function getIjinTidakMasukAttribute()
-    {
-        return $this->kehadiran ? $this->kehadiran->ijin_tidak_masuk : 0;
+        return $this->ijin_pulang_awal;
     }
 
     public function getNoCheckInOrOutAttribute()
     {
-        return $this->kehadiran ? $this->kehadiran->no_check_in_or_out : 0;
+        return $this->no_checkin_or_checkout;
     }
 
     public function getNoCheckInAndOutAttribute()
     {
-        return $this->kehadiran ? $this->kehadiran->no_check_in_and_out : 0;
+        return $this->no_checkin_and_checkout;
+    }
+
+    /**
+     * Virtual relationship-like property for Kehadiran compatibility in views/PDFs.
+     */
+    public function getKehadiranAttribute()
+    {
+        return (object) [
+            'id_kehadiran' => null,
+            'cuti' => $this->cuti,
+            'lembur' => $this->lembur_kali,
+            'lembur_menit' => $this->lembur_menit,
+            'terlambat' => $this->terlambat_kali,
+            'terlambat_menit' => $this->terlambat_menit,
+            'ijin_pulang_cepat' => $this->ijin_pulang_awal,
+            'ijin_tidak_masuk' => $this->ijin_tidak_masuk,
+            'no_check_in_or_out' => $this->no_checkin_or_checkout,
+            'no_check_in_and_out' => $this->no_checkin_and_checkout,
+        ];
     }
 }

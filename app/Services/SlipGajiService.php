@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Repositories\SlipGajiRepository;
-use App\Models\Kehadiran;
 use App\Imports\SlipGajiImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
@@ -38,82 +37,72 @@ class SlipGajiService
         return $this->slipGajiRepository->find($id);
     }
 
+    /**
+     * Clean numeric/Rupiah inputs (remove dots/commas if formatted).
+     */
+    public function cleanRupiah($value)
+    {
+        if ($value === null || $value === '') return 0;
+        if (is_numeric($value)) return (float) $value;
+        $clean = str_replace('.', '', (string) $value);
+        $clean = preg_replace('/[^0-9\.-]/', '', $clean);
+        return (float) ($clean ?: 0);
+    }
+
+    /**
+     * Map request input data to tb_slip_gaji columns.
+     */
+    public function mapInputToSlipData(array $data)
+    {
+        return [
+            'bulan' => (string) ($data['bulan'] ?? date('n')),
+            'tahun' => (string) ($data['tahun'] ?? date('Y')),
+            'id_karyawan' => $data['id_karyawan'],
+            'gaji_pokok' => $this->cleanRupiah($data['gaji_pokok'] ?? 0),
+            't_pengalaman_kerja' => $this->cleanRupiah($data['t_pengalaman_kerja'] ?? 0),
+            't_jabatan' => $this->cleanRupiah($data['t_jabatan'] ?? 0),
+            't_profesi' => $this->cleanRupiah($data['t_profesi'] ?? 0),
+            't_operasional' => $this->cleanRupiah($data['t_operasional'] ?? $data['t__operasional'] ?? 0),
+            't_kehadiran' => $this->cleanRupiah($data['t_kehadiran'] ?? 0),
+            't_kinerja' => $this->cleanRupiah($data['t_kinerja'] ?? 0),
+            't_hari_raya' => $this->cleanRupiah($data['t_hari_raya'] ?? 0),
+            'fee_beautician' => $this->cleanRupiah($data['fee_beautician'] ?? 0),
+            'nominal_lembur' => $this->cleanRupiah($data['nominal_lembur'] ?? $data['lembur'] ?? 0),
+            'pendapatan_lainnya' => $this->cleanRupiah($data['pendapatan_lainnya'] ?? $data['lain_lain'] ?? 0),
+            'penyesuaian_gaji_lalu' => $this->cleanRupiah($data['penyesuaian_gaji_lalu'] ?? 0),
+            'subtotal_penerimaan' => $this->cleanRupiah($data['subtotal_penerimaan'] ?? $data['calculated_penerimaan'] ?? 0),
+            'bpjstk_perusahaan' => $this->cleanRupiah($data['bpjstk_perusahaan'] ?? $data['bpjstk'] ?? $data['bpjs_tk'] ?? 0),
+            'bpjsk_perusahaan' => $this->cleanRupiah($data['bpjsk_perusahaan'] ?? $data['bpjsk'] ?? $data['bpjs_kesehatan'] ?? 0),
+            'punishment' => $this->cleanRupiah($data['punishment'] ?? 0),
+            'sedekah_rombongan' => $this->cleanRupiah($data['sedekah_rombongan'] ?? 0),
+            'potongan_lainnya' => $this->cleanRupiah($data['potongan_lainnya'] ?? 0),
+            'bpjstk_karyawan' => $this->cleanRupiah($data['bpjstk_karyawan'] ?? $data['potongan_bpjs_tk'] ?? 0),
+            'bpjsk_karyawan' => $this->cleanRupiah($data['bpjsk_karyawan'] ?? $data['potongan_bpjs_kesehatan'] ?? 0),
+            'pph21' => $this->cleanRupiah($data['pph21'] ?? $data['potongan_pph_21'] ?? $data['pph_21'] ?? 0),
+            'lembur_kali' => (int) ($data['lembur_kali'] ?? 0),
+            'lembur_menit' => (int) ($data['lembur_menit'] ?? 0),
+            'terlambat_kali' => (int) ($data['terlambat_kali'] ?? $data['terlambat'] ?? 0),
+            'terlambat_menit' => (int) ($data['terlambat_menit'] ?? 0),
+            'ijin_pulang_awal' => (int) ($data['ijin_pulang_awal'] ?? $data['ijin_pulang_cepat'] ?? 0),
+            'ijin_tidak_masuk' => (int) ($data['ijin_tidak_masuk'] ?? 0),
+            'no_checkin_or_checkout' => (int) ($data['no_checkin_or_checkout'] ?? $data['no_check_in_or_out'] ?? 0),
+            'no_checkin_and_checkout' => (int) ($data['no_checkin_and_checkout'] ?? $data['no_check_in_and_out'] ?? 0),
+            'cuti' => (int) ($data['cuti'] ?? 0),
+            'kehadiran_lainnya' => (int) ($data['kehadiran_lainnya'] ?? 0),
+            'total_diterima' => $this->cleanRupiah($data['total_diterima'] ?? $data['nominal_transfer'] ?? $data['thp'] ?? 0),
+        ];
+    }
+
     public function store(array $data)
     {
-        return DB::transaction(function () use ($data) {
-            // 1. Create or update Kehadiran record first
-            $kehadiran = Kehadiran::updateOrCreate(
-                [
-                    'id_karyawan' => $data['id_karyawan'],
-                    'bulan' => $data['bulan'],
-                    'tahun' => $data['tahun']
-                ],
-                [
-                    'cuti' => $data['cuti'] ?? 0,
-                    'lembur' => $data['lembur_kali'] ?? 0, // lembur count
-                    'lembur_menit' => $data['lembur_menit'] ?? 0, // lembur count
-                    'terlambat' => $data['terlambat'] ?? 0,
-                    'terlambat_menit' => $data['terlambat_menit'] ?? 0,
-                    'ijin_pulang_cepat' => $data['ijin_pulang_cepat'] ?? 0,
-                    'ijin_tidak_masuk' => $data['ijin_tidak_masuk'] ?? 0,
-                    'no_check_in_or_out' => $data['no_check_in_or_out'] ?? 0,
-                    'no_check_in_and_out' => $data['no_check_in_and_out'] ?? 0,
-                ]
-            );
-
-            // 2. Set id_kehadiran in the slip gaji data
-            $data['id_kehadiran'] = $kehadiran->id_kehadiran;
-
-            // map bpjstk to bpjs_tk and lembur to nominal_lembur
-            $data['bpjs_tk'] = $data['bpjstk'] ?? $data['bpjs_tk'] ?? 0;
-            $data['bpjs_kesehatan'] = $data['bpjsk'] ?? $data['bpjs_kesehatan'] ?? 0;
-            $data['nominal_lembur'] = $data['lembur'] ?? $data['nominal_lembur'] ?? 0;
-
-            $data['t_operasional'] = $data['t_operasional'] ?? $data['t__operasional'] ?? $data['t_ operasional'] ?? 0;
-
-            // 3. Store the slip gaji
-            return $this->slipGajiRepository->create($data);
-        });
+        $slipData = $this->mapInputToSlipData($data);
+        return $this->slipGajiRepository->create($slipData);
     }
 
     public function update($id, array $data)
     {
-        return DB::transaction(function () use ($id, $data) {
-            $slip = $this->findById($id);
-
-            // 1. Update the Kehadiran record
-            $kehadiran = Kehadiran::updateOrCreate(
-                [
-                    'id_karyawan' => $data['id_karyawan'] ?? $slip->id_karyawan,
-                    'bulan' => $data['bulan'] ?? $slip->bulan,
-                    'tahun' => $data['tahun'] ?? $slip->tahun
-                ],
-                [
-                    'cuti' => $data['cuti'] ?? 0,
-                    'lembur' => $data['lembur_kali'] ?? 0,
-                    'lembur_menit' => $data['lembur_menit'] ?? 0,
-                    'terlambat' => $data['terlambat'] ?? 0,
-                    'terlambat_menit' => $data['terlambat_menit'] ?? 0,
-                    'ijin_pulang_cepat' => $data['ijin_pulang_cepat'] ?? 0,
-                    'ijin_tidak_masuk' => $data['ijin_tidak_masuk'] ?? 0,
-                    'no_check_in_or_out' => $data['no_check_in_or_out'] ?? 0,
-                    'no_check_in_and_out' => $data['no_check_in_and_out'] ?? 0,
-                ]
-            );
-
-            // 2. Set id_kehadiran
-            $data['id_kehadiran'] = $kehadiran->id_kehadiran;
-
-            // map bpjstk to bpjs_tk and lembur to nominal_lembur
-            $data['bpjs_tk'] = $data['bpjstk'] ?? $data['bpjs_tk'] ?? 0;
-            $data['bpjs_kesehatan'] = $data['bpjsk'] ?? $data['bpjs_kesehatan'] ?? 0;
-            $data['nominal_lembur'] = $data['lembur'] ?? $data['nominal_lembur'] ?? 0;
-
-            $data['t_operasional'] = $data['t_operasional'] ?? $data['t__operasional'] ?? $data['t_ operasional'] ?? 0;
-
-            // 3. Update the slip gaji
-            return $this->slipGajiRepository->update($id, $data);
-        });
+        $slipData = $this->mapInputToSlipData($data);
+        return $this->slipGajiRepository->update($id, $slipData);
     }
 
     public function delete($id)
@@ -129,7 +118,7 @@ class SlipGajiService
     public function generatePdf($id)
     {
         $slip = $this->findById($id);
-        $terbilang = $this->terbilang($slip->nominal_transfer) . ' Rupiah';
+        $terbilang = $this->terbilang($slip->total_diterima) . ' Rupiah';
 
         return Pdf::loadView('pages.slip-gaji.slip_gaji_export', compact('slip', 'terbilang'))
             ->setPaper('a4', 'portrait');

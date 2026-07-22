@@ -35,10 +35,9 @@ class SlipGajiController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'bulan' => 'required|integer|between:1,12',
-            'tahun' => 'required|integer',
-            'gaji_pokok' => 'required|numeric|min:0',
-            'nominal_transfer' => 'required|numeric',
+            'bulan' => 'required',
+            'tahun' => 'required',
+            'gaji_pokok' => 'required',
             'id_karyawan' => [
                 'required',
                 'exists:tb_karyawan,id_karyawan',
@@ -57,7 +56,7 @@ class SlipGajiController extends Controller
 
         $this->slipGajiService->store($request->all());
 
-        return redirect()->route('slip-gaji.index')->with('success', 'Slip Gaji created successfully.');
+        return redirect()->route('slip-gaji.index')->with('success', 'Slip Gaji berhasil disimpan.');
     }
 
     public function edit($id)
@@ -80,10 +79,9 @@ class SlipGajiController extends Controller
                             ->where('tahun', $request->tahun);
                     }),
             ],
-            'bulan' => 'required|integer|between:1,12',
-            'tahun' => 'required|integer',
-            'gaji_pokok' => 'required|numeric|min:0',
-            'nominal_transfer' => 'required|numeric',
+            'bulan' => 'required',
+            'tahun' => 'required',
+            'gaji_pokok' => 'required',
         ], [
             'id_karyawan.unique' => 'Slip gaji untuk pegawai, bulan, dan tahun yang dipilih sudah ada.',
         ]);
@@ -94,7 +92,7 @@ class SlipGajiController extends Controller
 
         $this->slipGajiService->update($id, $request->all());
 
-        return redirect()->route('slip-gaji.index')->with('success', 'Slip Gaji updated successfully.');
+        return redirect()->route('slip-gaji.index')->with('success', 'Slip Gaji berhasil diperbarui.');
     }
 
     public function getKaryawanDetails($id, Request $request)
