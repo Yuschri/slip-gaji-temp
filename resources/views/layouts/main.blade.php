@@ -121,7 +121,7 @@
                                     style="display: none;">
                                     @csrf
                                 </form>
-                                <a href="#!" class="">
+                                <!-- <a href="#!" class="">
 
                                     <span> Inbox</span>
                                 </a>
@@ -136,7 +136,7 @@
                                 <a href="#!" class="">
 
                                     <span> Account Settings</span>
-                                </a>
+                                </a> -->
                             </div>
 
                         </div>

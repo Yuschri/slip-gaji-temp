@@ -250,6 +250,28 @@
                             </div>
                         </div>
 
+                        {{-- Section Status Resign --}}
+                        <div class="row g-3 mb-4 border-top pt-3 mt-2">
+                            <div class="col-md-5">
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" name="is_resign" id="is_resign"
+                                        value="1" {{ old('is_resign') ? 'checked' : '' }}>
+                                    <label class="form-check-label fw-bold text-danger" for="is_resign">
+                                        <i class="ti ti-user-minus me-1"></i> Slip Gaji Karyawan Resign
+                                    </label>
+                                </div>
+                                <div class="form-text text-muted">Centang jika ini adalah pembuatan slip gaji untuk karyawan
+                                    yang resign.</div>
+                            </div>
+                            <div class="col-md-4" id="col_tanggal_resign"
+                                style="{{ old('is_resign') ? '' : 'display:none;' }}">
+                                <label class="form-label fw-semibold text-danger">Tanggal Terakhir Bekerja / Resign <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" name="tanggal_resign" id="tanggal_resign"
+                                    class="form-control border-danger" value="{{ old('tanggal_resign') }}">
+                            </div>
+                        </div>
+
                         <div class="d-flex justify-content-end mt-3">
                             <button type="button" class="btn btn-primary btn-next-tab" data-next="tab-pendapatan-tab">
                                 Selanjutnya <i class="ti ti-arrow-right ms-1"></i>
@@ -692,6 +714,17 @@
 
                     {{-- ========== TAB 5: RINGKASAN & KALKULASI AKHIR ========== --}}
                     <div class="tab-pane fade" id="tab-ringkasan" role="tabpanel" aria-labelledby="tab-ringkasan-tab">
+
+                        <!-- RESIGN PRORATA BREAKDOWN ALERT -->
+                        <div id="resign_info_container" class="alert alert-warning border border-warning shadow-sm mb-4"
+                            style="display: none;">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="ti ti-user-minus text-warning fs-4 me-2"></i>
+                                <h6 class="mb-0 fw-bold text-dark">Rincian Perhitungan Pro-Rata Gaji Karyawan Resign</h6>
+                            </div>
+                            <div id="resign_detail_breakdown"></div>
+                        </div>
+
                         <div class="row g-4 mb-4">
                             <div class="col-md-4">
                                 <div class="summary-card summary-card-income">
@@ -780,78 +813,78 @@
                             </div>
                         </div>
                         {{-- ===== PANEL: GAJI TERAKHIR (RESIGN) ===== --}}
-                        <div class="card border-warning mt-4" id="panelResign">
-                            <div class="card-header bg-warning bg-opacity-10 text-warning d-flex align-items-center gap-2">
-                                <i class="ti ti-user-minus fs-5"></i>
-                                <strong>Hitung Gaji Terakhir (Resign)</strong>
-                                <span class="ms-auto badge bg-warning text-dark">Opsional</span>
-                            </div>
-                            <div class="card-body">
-                                <p class="text-muted small mb-3">Gunakan kalkulator ini untuk menghitung gaji terakhir
-                                    karyawan yang resign, berdasarkan tanggal resign dan periode cut-off.</p>
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <label class="form-label">Tanggal Resign</label>
-                                        <input type="date" id="resign_tanggal_resign" class="form-control">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">THP Full (Otomatis)</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">Rp</span>
-                                            <input type="text" id="resign_thp_full" class="form-control bg-light" readonly
-                                                placeholder="0">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 d-flex align-items-end">
-                                        <button type="button" id="btnHitungResign" class="btn btn-warning w-100">
-                                            <i class="ti ti-calculator me-1"></i> Hitung Gaji Resign
-                                        </button>
-                                    </div>
+                        <!-- <div class="card border-warning mt-4" id="panelResign">
+                                <div class="card-header bg-warning bg-opacity-10 text-warning d-flex align-items-center gap-2">
+                                    <i class="ti ti-user-minus fs-5"></i>
+                                    <strong>Hitung Gaji Terakhir (Resign)</strong>
+                                    <span class="ms-auto badge bg-warning text-dark">Opsional</span>
                                 </div>
-                                <div id="resignResult" class="mt-3" style="display:none">
-                                    <hr>
+                                <div class="card-body">
+                                    <p class="text-muted small mb-3">Gunakan kalkulator ini untuk menghitung gaji terakhir
+                                        karyawan yang resign, berdasarkan tanggal resign dan periode cut-off.</p>
                                     <div class="row g-3">
                                         <div class="col-md-4">
-                                            <label class="form-label text-muted">Periode</label>
-                                            <input type="text" id="resign_info_periode" class="form-control bg-light"
-                                                readonly>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label class="form-label text-muted">Total Hari</label>
-                                            <input type="text" id="resign_info_total_hari" class="form-control bg-light"
-                                                readonly>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label class="form-label text-muted">Hari Kerja</label>
-                                            <input type="text" id="resign_info_hari_kerja" class="form-control bg-light"
-                                                readonly>
+                                            <label class="form-label">Tanggal Resign</label>
+                                            <input type="date" id="resign_tanggal_resign" class="form-control">
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="form-label text-muted">Akhir Training</label>
-                                            <input type="text" id="resign_info_akhir_training" class="form-control bg-light"
-                                                readonly>
+                                            <label class="form-label">THP Full (Otomatis)</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">Rp</span>
+                                                <input type="text" id="resign_thp_full" class="form-control bg-light" readonly
+                                                    placeholder="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 d-flex align-items-end">
+                                            <button type="button" id="btnHitungResign" class="btn btn-warning w-100">
+                                                <i class="ti ti-calculator me-1"></i> Hitung Gaji Resign
+                                            </button>
                                         </div>
                                     </div>
-                                    <div class="row g-3 mt-1">
-                                        <div class="col-md-4">
-                                            <label class="form-label text-muted">Skenario</label>
-                                            <input type="text" id="resign_info_skenario"
-                                                class="form-control bg-light fw-bold" readonly>
+                                    <div id="resignResult" class="mt-3" style="display:none">
+                                        <hr>
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <label class="form-label text-muted">Periode</label>
+                                                <input type="text" id="resign_info_periode" class="form-control bg-light"
+                                                    readonly>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label text-muted">Total Hari</label>
+                                                <input type="text" id="resign_info_total_hari" class="form-control bg-light"
+                                                    readonly>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label text-muted">Hari Kerja</label>
+                                                <input type="text" id="resign_info_hari_kerja" class="form-control bg-light"
+                                                    readonly>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label text-muted">Akhir Training</label>
+                                                <input type="text" id="resign_info_akhir_training" class="form-control bg-light"
+                                                    readonly>
+                                            </div>
                                         </div>
-                                        <div class="col-md-8">
-                                            <label class="form-label fw-semibold text-warning">Gaji Terakhir
-                                                (Resign)</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text border-warning">Rp</span>
-                                                <input type="text" id="resign_gaji_result"
-                                                    class="form-control fw-bold fs-5 border-warning text-warning" readonly
-                                                    placeholder="0">
+                                        <div class="row g-3 mt-1">
+                                            <div class="col-md-4">
+                                                <label class="form-label text-muted">Skenario</label>
+                                                <input type="text" id="resign_info_skenario"
+                                                    class="form-control bg-light fw-bold" readonly>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label class="form-label fw-semibold text-warning">Gaji Terakhir
+                                                    (Resign)</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text border-warning">Rp</span>
+                                                    <input type="text" id="resign_gaji_result"
+                                                        class="form-control fw-bold fs-5 border-warning text-warning" readonly
+                                                        placeholder="0">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </div> -->
                         {{-- ===== END PANEL RESIGN ===== --}}
                     </div>
 
@@ -1343,6 +1376,138 @@
                 }
             }
 
+            // ==================== KALKULASI PRO-RATA GAJI RESIGN ====================
+            function calculateResignProrata() {
+                var isResign = $('#is_resign').is(':checked');
+                if (!isResign) {
+                    $('#resign_info_container').slideUp(200);
+                    return null;
+                }
+
+                var tglResignStr = $('#tanggal_resign').val();
+                if (!tglResignStr) {
+                    $('#resign_info_container').slideDown(200);
+                    $('#resign_detail_breakdown').html('<div class="text-danger fst-italic py-1"><i class="ti ti-alert-circle me-1"></i>Harap isi Tanggal Terakhir Bekerja / Resign pada Tab Data Karyawan.</div>');
+                    return null;
+                }
+
+                var tglMasukStr = window._karyawanTanggalMasuk || null;
+                if (!tglMasukStr || tglMasukStr === '-') {
+                    $('#resign_info_container').slideDown(200);
+                    $('#resign_detail_breakdown').html('<div class="text-danger fst-italic py-1"><i class="ti ti-alert-circle me-1"></i>Data tanggal masuk karyawan tidak ditemukan.</div>');
+                    return null;
+                }
+
+                var bulan = parseInt($('#bulan').val()) || new Date().getMonth() + 1;
+                var tahun = parseInt($('#tahun').val()) || new Date().getFullYear();
+                var cutoff = window._cutoffDate || 21;
+
+                var gaji = getRawValue('#gaji_pokok');
+                var t_pengalaman = getRawValue('#t_pengalaman_kerja');
+                var t_jabatan = getRawValue('#t_jabatan');
+                var t_profesi = getRawValue('#t_profesi');
+                var t_hadir = getRawValue('#t_kehadiran');
+                var t_kinerja = getRawValue('#t_kinerja');
+                var t_hari_raya = getRawValue('#t_hari_raya');
+                var t_operasional = getRawValue('#t_operasional');
+                var fee_beautician = getRawValue('#fee_beautician');
+                var lembur = getRawValue('#nominal_lembur');
+                var lain = getRawValue('#lain_lain');
+
+                var thpFull = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja +
+                    t_hari_raya + t_operasional + fee_beautician + lembur + lain;
+
+                var tglMasuk = new Date(tglMasukStr);
+                var tglResign = new Date(tglResignStr);
+
+                var akhirTraining = new Date(tglMasuk);
+                akhirTraining.setMonth(akhirTraining.getMonth() + 3);
+                akhirTraining.setDate(akhirTraining.getDate() - 1);
+
+                var periodeAkhir = new Date(tahun, bulan - 1, cutoff);
+                var periodeAwalTmp = new Date(tahun, bulan - 1, cutoff);
+                periodeAwalTmp.setMonth(periodeAwalTmp.getMonth() - 1);
+                periodeAwalTmp.setDate(periodeAwalTmp.getDate() + 1);
+                var periodeAwal = periodeAwalTmp;
+
+                var selisihHari = function (a, b) {
+                    return Math.round((b - a) / (1000 * 60 * 60 * 24));
+                };
+
+                var totalHariPeriode = selisihHari(periodeAwal, periodeAkhir) + 1;
+
+                var tglMulaiHitung = tglMasuk > periodeAwal ? new Date(tglMasuk) : new Date(periodeAwal);
+                var tglAkhirHitung = tglResign < periodeAkhir ? new Date(tglResign) : new Date(periodeAkhir);
+
+                var hariKerjaTotal = selisihHari(tglMulaiHitung, tglAkhirHitung) + 1;
+                if (hariKerjaTotal < 0 || tglMasuk > periodeAkhir || tglResign < periodeAwal) {
+                    hariKerjaTotal = 0;
+                }
+
+                var gajiResign = 0;
+                var skenarioText = '';
+
+                if (tglMasuk > periodeAkhir || tglResign < periodeAwal || hariKerjaTotal <= 0) {
+                    gajiResign = 0;
+                    skenarioText = 'Belum mulai / sudah selesai bekerja pada periode ini';
+                } else if (akhirTraining >= tglMulaiHitung && akhirTraining < tglAkhirHitung) {
+                    var hariTraining = selisihHari(tglMulaiHitung, akhirTraining) + 1;
+                    var gajiTraining = (hariTraining / totalHariPeriode) * 0.8 * thpFull;
+
+                    var tglMulaiLulus = new Date(akhirTraining);
+                    tglMulaiLulus.setDate(tglMulaiLulus.getDate() + 1);
+                    var hariLulus = selisihHari(tglMulaiLulus, tglAkhirHitung) + 1;
+                    var gajiLulus = (hariLulus / totalHariPeriode) * 1.0 * thpFull;
+
+                    gajiResign = gajiTraining + gajiLulus;
+                    skenarioText = 'Skenario A — Masa Transisi (Training ' + hariTraining + ' hari [80%] + Lulus ' + hariLulus + ' hari [100%])';
+                } else if (tglAkhirHitung <= akhirTraining) {
+                    gajiResign = (hariKerjaTotal / totalHariPeriode) * 0.8 * thpFull;
+                    skenarioText = 'Skenario B — Masa Training (' + hariKerjaTotal + '/' + totalHariPeriode + ' hari [80%])';
+                } else {
+                    gajiResign = (hariKerjaTotal / totalHariPeriode) * 1.0 * thpFull;
+                    skenarioText = 'Skenario C — Lulus Training (' + hariKerjaTotal + '/' + totalHariPeriode + ' hari [100%])';
+                }
+
+                gajiResign = Math.round(gajiResign);
+
+                var formatDateStr = function (d) {
+                    if (!d || isNaN(d)) return '-';
+                    var yyyy = d.getFullYear();
+                    var mm = String(d.getMonth() + 1).padStart(2, '0');
+                    var dd = String(d.getDate()).padStart(2, '0');
+                    return dd + '/' + mm + '/' + yyyy;
+                };
+
+                var detailHtml = '<div class="row g-2 text-start" style="font-size: 0.82rem;">' +
+                    '<div class="col-md-4"><span class="text-muted">Tanggal Resign:</span> <strong class="text-dark">' + formatDateStr(tglResign) + '</strong></div>' +
+                    '<div class="col-md-4"><span class="text-muted">Periode Payroll:</span> <strong class="text-dark">' + formatDateStr(periodeAwal) + ' s/d ' + formatDateStr(periodeAkhir) + ' (' + totalHariPeriode + ' hari)</strong></div>' +
+                    '<div class="col-md-4"><span class="text-muted">Hari Kerja Efektif:</span> <strong class="text-dark">' + hariKerjaTotal + ' hari</strong></div>' +
+                    '<div class="col-md-4"><span class="text-muted">Akhir Training:</span> <strong class="text-dark">' + formatDateStr(akhirTraining) + '</strong></div>' +
+                    '<div class="col-md-8"><span class="text-muted">Status Skenario:</span> <strong class="text-warning">' + skenarioText + '</strong></div>' +
+                    '<div class="col-12 border-top pt-2 mt-1 d-flex justify-content-between align-items-center"><span class="fw-bold text-dark fs-6">Hasil Gaji Resign (Pro-rata):</span> <span class="fw-bold text-success fs-5">Rp ' + formatRupiah(gajiResign) + '</span></div>' +
+                    '</div>';
+
+                $('#resign_detail_breakdown').html(detailHtml);
+                $('#resign_info_container').slideDown(200);
+
+                return gajiResign;
+            }
+
+            $('#is_resign').on('change', function () {
+                if ($(this).is(':checked')) {
+                    $('#col_tanggal_resign').slideDown(200);
+                } else {
+                    $('#col_tanggal_resign').slideUp(200);
+                    $('#resign_info_container').slideUp(200);
+                }
+                calculateReceipt();
+            });
+
+            $('#tanggal_resign').on('change input', function () {
+                calculateReceipt();
+            });
+
             // ==================== RECEIPT CALCULATION ====================
             function calculateReceipt() {
                 var gaji = getRawValue('#gaji_pokok');
@@ -1392,6 +1557,18 @@
                     var percentage = parseFloat($('#prosentase_gaji').val());
                     if (isNaN(percentage) || percentage <= 0) percentage = 100;
                     totalReceipts = thpFull * (percentage / 100);
+                }
+
+                // --- Jika Karyawan RESIGN ---
+                if ($('#is_resign').is(':checked')) {
+                    var resGaji = calculateResignProrata();
+                    if (resGaji !== null) {
+                        totalReceipts = resGaji;
+                        var pctResign = thpFull > 0 ? Math.round((totalReceipts / thpFull) * 100 * 100) / 100 : 100;
+                        $('#prosentase_gaji').val(pctResign);
+                    }
+                } else {
+                    $('#resign_info_container').slideUp(200);
                 }
 
                 $('#calculated_penerimaan').val(Math.round(totalReceipts).toLocaleString('id-ID', {

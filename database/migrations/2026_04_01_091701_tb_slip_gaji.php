@@ -47,6 +47,8 @@ return new class extends Migration {
             $table->integer('cuti')->default(0);
             $table->integer('kehadiran_lainnya')->default(0);
             $table->decimal('total_diterima', 15, 2)->default(0);
+            $table->boolean('is_resign')->default(false);
+            $table->date('tanggal_resign')->nullable();
             $table->timestamps();
         });
     }

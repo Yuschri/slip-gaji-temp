@@ -179,11 +179,20 @@
         $kopBase64 = file_exists($kopPath) ? base64_encode(file_get_contents($kopPath)) : null;
 
         $bulanIndo = [
-            1 => 'JANUARI', 2 => 'FEBRUARI', 3 => 'MARET', 4 => 'APRIL',
-            5 => 'MEI', 6 => 'JUNI', 7 => 'JULI', 8 => 'AGUSTUS',
-            9 => 'SEPTEMBER', 10 => 'OKTOBER', 11 => 'NOPEMBER', 12 => 'DESEMBER'
+            1 => 'JANUARI',
+            2 => 'FEBRUARI',
+            3 => 'MARET',
+            4 => 'APRIL',
+            5 => 'MEI',
+            6 => 'JUNI',
+            7 => 'JULI',
+            8 => 'AGUSTUS',
+            9 => 'SEPTEMBER',
+            10 => 'OKTOBER',
+            11 => 'NOPEMBER',
+            12 => 'DESEMBER'
         ];
-        $namaBulan = $bulanIndo[(int)$slip->bulan] ?? strtoupper(date('F', mktime(0, 0, 0, (int)$slip->bulan, 10)));
+        $namaBulan = $bulanIndo[(int) $slip->bulan] ?? strtoupper(date('F', mktime(0, 0, 0, (int) $slip->bulan, 10)));
     @endphp
 
     <!-- HEADER / KOP SURAT -->
@@ -200,7 +209,8 @@
                 <td style="vertical-align: middle; padding-left: 10px;">
                     <div class="header-title">PT. Doa Niat Yakin {{ $klinikName }}</div>
                     <div class="header-sub">Jl. Mulyosari Raya, No. 310, Kec. Mulyorejo, Kota Surabaya, 60113</div>
-                    <div class="header-sub">tlp: (031) 359 54121 / 0851 1368 32311 &nbsp;&nbsp; website: www.dnyskincare.com</div>
+                    <div class="header-sub">tlp: (031) 359 54121 / 0851 1368 32311 &nbsp;&nbsp; website: www.dnyskincare.com
+                    </div>
                 </td>
             @endif
         </tr>
@@ -218,7 +228,9 @@
         <tr>
             <td class="info-label">JABATAN</td>
             <td class="info-sep">:</td>
-            <td class="info-val">{{ strtoupper(($slip->karyawan && $slip->karyawan->jabatan) ? $slip->karyawan->jabatan->nama_jabatan : ($slip->divisi ?: '-')) }}</td>
+            <td class="info-val">
+                {{ strtoupper(($slip->karyawan && $slip->karyawan->jabatan) ? $slip->karyawan->jabatan->nama_jabatan : ($slip->divisi ?: '-')) }}
+            </td>
         </tr>
         <tr>
             <td class="info-label">PERIODE</td>
@@ -268,6 +280,11 @@
                         <td>T. KINERJA</td>
                         <td class="col-rp">: Rp.</td>
                         <td class="col-val">{{ number_format($slip->t_kinerja, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <td>T. HARI RAYA</td>
+                        <td class="col-rp">: Rp.</td>
+                        <td class="col-val">{{ number_format($slip->t_hari_raya, 0, ',', '.') }}</td>
                     </tr>
                     <tr>
                         <td>NOMINAL LEMBUR</td>
@@ -390,7 +407,9 @@
     <div class="signature-box">
         <div>Sidoarjo, {{ date('d') }} {{ $namaBulan }} {{ $slip->tahun }}</div>
         <div style="margin-top: 5px;">Penerima,</div>
-        <div style="margin-top: 55px; font-weight: bold;">( {{ strtoupper($slip->karyawan ? $slip->karyawan->nama_karyawan : '') }} )</div>
+        <div style="margin-top: 55px; font-weight: bold;">(
+            {{ strtoupper($slip->karyawan ? $slip->karyawan->nama_karyawan : '') }} )
+        </div>
     </div>
 
     <!-- DISCLAIMER KERAHASIAAN -->

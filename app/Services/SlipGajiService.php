@@ -90,19 +90,35 @@ class SlipGajiService
             'cuti' => (int) ($data['cuti'] ?? 0),
             'kehadiran_lainnya' => (int) ($data['kehadiran_lainnya'] ?? 0),
             'total_diterima' => $this->cleanRupiah($data['total_diterima'] ?? $data['nominal_transfer'] ?? $data['thp'] ?? 0),
+            'is_resign' => !empty($data['is_resign']),
+            'tanggal_resign' => !empty($data['tanggal_resign']) ? $data['tanggal_resign'] : null,
         ];
     }
 
     public function store(array $data)
     {
         $slipData = $this->mapInputToSlipData($data);
-        return $this->slipGajiRepository->create($slipData);
+        $slip = $this->slipGajiRepository->create($slipData);
+
+        if (!empty($slipData['is_resign']) && !empty($slipData['id_karyawan'])) {
+            \App\Models\Karyawan::where('id_karyawan', $slipData['id_karyawan'])
+                ->update(['is_active' => false]);
+        }
+
+        return $slip;
     }
 
     public function update($id, array $data)
     {
         $slipData = $this->mapInputToSlipData($data);
-        return $this->slipGajiRepository->update($id, $slipData);
+        $slip = $this->slipGajiRepository->update($id, $slipData);
+
+        if (!empty($slipData['is_resign']) && !empty($slipData['id_karyawan'])) {
+            \App\Models\Karyawan::where('id_karyawan', $slipData['id_karyawan'])
+                ->update(['is_active' => false]);
+        }
+
+        return $slip;
     }
 
     public function delete($id)

@@ -48,6 +48,8 @@ class SlipGaji extends Model
         'cuti',
         'kehadiran_lainnya',
         'total_diterima',
+        'is_resign',
+        'tanggal_resign',
     ];
 
     protected $casts = [
@@ -83,6 +85,8 @@ class SlipGaji extends Model
         'cuti' => 'integer',
         'kehadiran_lainnya' => 'integer',
         'total_diterima' => 'decimal:2',
+        'is_resign' => 'boolean',
+        'tanggal_resign' => 'date',
     ];
 
     // --- Relationships ---

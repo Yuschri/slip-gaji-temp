@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [KaryawanController::class, 'index'])->name('index');
         Route::get('/create', [KaryawanController::class, 'create'])->name('create');
         Route::post('/store', [KaryawanController::class, 'store'])->name('store');
+        Route::get('/template-excel', [KaryawanController::class, 'downloadTemplate'])->name('template-excel');
+        Route::post('/import-excel', [KaryawanController::class, 'importExcel'])->name('import-excel');
         Route::get('/{id}', [KaryawanController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [KaryawanController::class, 'edit'])->name('edit');
         Route::post('/{id}/update', [KaryawanController::class, 'update'])->name('update');

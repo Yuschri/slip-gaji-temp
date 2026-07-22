@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\KaryawanTemplateExport;
+use App\Imports\KaryawanImport;
 use App\Repositories\KaryawanRepository;
 use App\Repositories\DivisiRepository;
 use App\Repositories\JabatanRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KaryawanController extends Controller
 {
@@ -254,5 +257,48 @@ class KaryawanController extends Controller
         $this->karyawanRepository->updateOrCreatePph21($id, $pphData);
 
         return redirect()->route('karyawan.show', $id)->with('success', 'Data PPh 21 karyawan berhasil disimpan.');
+    }
+
+    /**
+     * Download Excel template for bulk karyawan import.
+     */
+    public function downloadTemplate()
+    {
+        return Excel::download(new KaryawanTemplateExport(), 'Template_Import_Karyawan.xlsx');
+    }
+
+    /**
+     * Import karyawan data from uploaded Excel file.
+     */
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'file_import' => 'required|file|mimes:xlsx,xls|max:5120',
+        ], [
+            'file_import.required' => 'File Excel wajib dipilih.',
+            'file_import.mimes'    => 'File harus berformat .xlsx atau .xls.',
+            'file_import.max'      => 'Ukuran file maksimal 5 MB.',
+        ]);
+
+        try {
+            $import = new KaryawanImport();
+            Excel::import($import, $request->file('file_import'));
+
+            $message = "Import selesai. {$import->imported} karyawan berhasil diimport.";
+            if ($import->skipped > 0) {
+                $message .= " {$import->skipped} baris dilewati.";
+            }
+            if (!empty($import->errors)) {
+                $errorText = implode(' | ', array_slice($import->errors, 0, 5));
+                return redirect()->route('karyawan.index')
+                    ->with('success', $message)
+                    ->with('import_errors', $import->errors);
+            }
+
+            return redirect()->route('karyawan.index')->with('success', $message);
+        } catch (\Throwable $e) {
+            return redirect()->route('karyawan.index')
+                ->with('error', 'Gagal import: ' . $e->getMessage());
+        }
     }
 }
