@@ -1,24 +1,24 @@
 @extends('layouts.main')
 
 @push('styles')
-<style>
-    .btn-success {
-    --bs-btn-color: #fff;
-    --bs-btn-bg: #198754;
-    --bs-btn-border-color: #198754;
-    --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #157347;
-    --bs-btn-hover-border-color: #146c43;
-    --bs-btn-focus-shadow-rgb: 60, 153, 110;
-    --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #146c43;
-    --bs-btn-active-border-color: #13653f;
-    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-    --bs-btn-disabled-color: #fff;
-    --bs-btn-disabled-bg: #198754;
-    --bs-btn-disabled-border-color: #198754;
-}
-</style>
+    <style>
+        .btn-success {
+            --bs-btn-color: #fff;
+            --bs-btn-bg: #198754;
+            --bs-btn-border-color: #198754;
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: #157347;
+            --bs-btn-hover-border-color: #146c43;
+            --bs-btn-focus-shadow-rgb: 60, 153, 110;
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: #146c43;
+            --bs-btn-active-border-color: #13653f;
+            --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+            --bs-btn-disabled-color: #fff;
+            --bs-btn-disabled-bg: #198754;
+            --bs-btn-disabled-border-color: #198754;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -121,8 +121,8 @@
                                     <td>{{ $slip->klinik }}</td>
                                     <td>Rp {{ number_format($slip->nominal_transfer, 0, ',', '.') }}</td>
                                     <td>
-                                        <form action="{{ route('slip-gaji.broadcast-single', $slip->id_slip) }}" method="POST"
-                                            class="d-inline">
+                                        <form action="{{ route('slip-gaji.broadcast-single', $slip->id_slip) }}"
+                                            method="POST" class="d-inline">
                                             @csrf
                                             <button type="submit" class="btn btn-sm btn-outline-info" title="Broadcast WA"
                                                 onclick="return confirm('Send WhatsApp broadcast to {{ $slip->nama_karyawan }}?')">
@@ -193,9 +193,15 @@
                         </div>
                         <div class="mb-3">
                             <label for="file" class="form-label">File Excel</label>
-                            <input type="file" name="file" id="file" class="form-control" required accept=".xlsx,.xls,.csv">
-                            <small class="text-muted">Download template: <a href="{{ asset('template_slip.xlsx') }}"
-                                    download>template_slip.xlsx</a></small>
+                            <input type="file" name="file" id="file" class="form-control" required
+                                accept=".xlsx,.xls,.csv">
+                            <div class="d-flex align-items-center gap-2 mt-2">
+                                <a href="{{ asset('template_kehadiran_penggajian.xlsx') }}"
+                                    class="btn btn-sm btn-primary" download>
+                                    <i class="bi bi-download"></i> Download Template
+                                </a>
+                                <small class="text-muted">Unduh format file Excel (.xlsx)</small>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -210,29 +216,39 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             var table = $('#slipGajiTable').DataTable();
 
-            $('#klinikFilter').on('change', function () {
+            $('#klinikFilter').on('change', function() {
                 var val = this.value;
                 table.column(3).search(val).draw();
                 $('#klinikHidden').val(val);
             });
 
-            $('#bulanFilter').on('change', function () {
+            $('#bulanFilter').on('change', function() {
                 var val = this.value;
                 // column 1 is "Bulan / Tahun"
                 table.column(1).search(val).draw();
 
                 // Get month index (1-12) if needed for backend
                 var monthMap = {
-                    'January': 1, 'February': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6,
-                    'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12
+                    'January': 1,
+                    'February': 2,
+                    'March': 3,
+                    'April': 4,
+                    'May': 5,
+                    'June': 6,
+                    'July': 7,
+                    'August': 8,
+                    'September': 9,
+                    'October': 10,
+                    'November': 11,
+                    'December': 12
                 };
                 $('#bulanHidden').val(val ? monthMap[val] : '');
             });
 
-            $('#tahunFilter').on('change', function () {
+            $('#tahunFilter').on('change', function() {
                 var val = this.value;
                 table.column(1).search(val).draw();
                 $('#tahunHidden').val(val);
