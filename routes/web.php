@@ -15,6 +15,7 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'slip-gaji', 'as' => 'slip-gaji.'], function () {
         Route::get('/', [SlipGajiController::class, 'index'])->name('index');
         Route::get('/create', [SlipGajiController::class, 'create'])->name('create');
+        Route::get('/template-excel', [SlipGajiController::class, 'downloadTemplate'])->name('template-excel');
         Route::get('/karyawan-details/{id}', [SlipGajiController::class, 'getKaryawanDetails'])->name('karyawan-details');
         Route::get('/calculate-pph21', [SlipGajiController::class, 'calculatePph21'])->name('calculate-pph21');
         Route::get('/calculate-gaji-resign', [SlipGajiController::class, 'calculateGajiResign'])->name('calculate-gaji-resign');

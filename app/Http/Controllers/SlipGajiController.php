@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SlipGajiTemplateExport;
 use App\Services\SlipGajiService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SlipGajiController extends Controller
 {
@@ -304,17 +306,37 @@ class SlipGajiController extends Controller
     public function import(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv',
+            'file' => 'required|file|mimes:xlsx|max:5120',
             'bulan' => 'required|integer|between:1,12',
             'tahun' => 'required|integer',
+        ], [
+            'file.required' => 'File Excel wajib dipilih.',
+            'file.mimes' => 'File harus berformat .xlsx.',
+            'file.max' => 'Ukuran file maksimal 5 MB.',
         ]);
 
         try {
-            $this->slipGajiService->import($request->file('file'), $request->bulan, $request->tahun);
-            return redirect()->route('slip-gaji.index')->with('success', 'Slip Gaji imported successfully.');
+            $import = $this->slipGajiService->import($request->file('file'), $request->bulan, $request->tahun);
+
+            $message = "Import selesai. {$import->imported} slip gaji berhasil diproses.";
+            if ($import->skipped > 0) {
+                $message .= " {$import->skipped} baris dilewati.";
+            }
+
+            $redirect = redirect()->route('slip-gaji.index')->with('success', $message);
+            if (!empty($import->errors)) {
+                $redirect->with('import_errors', $import->errors);
+            }
+
+            return $redirect;
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error importing Slip Gaji: ' . $e->getMessage());
         }
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new SlipGajiTemplateExport(), 'Template_Import_Slip_Gaji.xlsx');
     }
 
     public function exportPdf($id)

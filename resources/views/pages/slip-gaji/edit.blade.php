@@ -821,7 +821,7 @@
                         </div>
 
                         {{-- ===== PANEL: GAJI TERAKHIR (RESIGN) ===== --}}
-                        <div class="card border-warning mt-4" id="panelResign">
+                        {{-- <div class="card border-warning mt-4" id="panelResign">
                             <div class="card-header bg-warning bg-opacity-10 text-warning d-flex align-items-center gap-2">
                                 <i class="ti ti-user-minus fs-5"></i>
                                 <strong>Hitung Gaji Terakhir (Resign)</strong>
@@ -892,7 +892,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- ===== END PANEL RESIGN ===== --}}
                     </div>
 

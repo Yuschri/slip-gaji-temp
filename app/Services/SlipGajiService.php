@@ -128,7 +128,10 @@ class SlipGajiService
 
     public function import($file, $bulan, $tahun)
     {
-        return Excel::import(new SlipGajiImport($bulan, $tahun), $file);
+        $import = new SlipGajiImport($bulan, $tahun);
+        Excel::import($import, $file);
+
+        return $import;
     }
 
     public function generatePdf($id)

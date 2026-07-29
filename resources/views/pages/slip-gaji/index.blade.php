@@ -30,8 +30,11 @@
                         <h1 class="fs-3 mb-1">Slip Gaji</h1>
                         <p class="mb-0">Mengelola dan mengimpor slip gaji karyawan</p>
                     </div>
-                    <div>
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importModal">
+                    <div class="d-flex gap-2 flex-wrap justify-content-end">
+                        <a href="{{ route('slip-gaji.template-excel') }}" class="btn btn-success">
+                            <i class="ti ti-download me-1"></i> Download Template
+                        </a>
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#importModal">
                             <i class="ti ti-file-import"></i> Impor data dari Excel
                         </button>
                         <a href="{{ route('slip-gaji.create') }}" class="btn btn-primary">Tambah Manual</a>
@@ -50,6 +53,18 @@
         @if (session('error'))
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if (session('import_errors'))
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong><i class="ti ti-alert-triangle me-1"></i> Beberapa baris gagal diimport:</strong>
+                <ul class="mb-0 mt-2">
+                    @foreach (session('import_errors') as $err)
+                        <li style="font-size: 0.85rem;">{{ $err }}</li>
+                    @endforeach
+                </ul>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
@@ -193,9 +208,11 @@
                         </div>
                         <div class="mb-3">
                             <label for="file" class="form-label">File Excel</label>
-                            <input type="file" name="file" id="file" class="form-control" required accept=".xlsx,.xls,.csv">
-                            <small class="text-muted">Download template: <a href="{{ asset('template_slip.xlsx') }}"
-                                    download>template_slip.xlsx</a></small>
+                            <input type="file" name="file" id="file" class="form-control" required accept=".xlsx">
+                            <small class="text-muted d-block mt-1">
+                                Wajib gunakan file <strong>.xlsx</strong> dari tombol <strong>Download Template</strong>.
+                                Baris ke-5 adalah contoh pengisian dan bisa dihapus sebelum import.
+                            </small>
                         </div>
                     </div>
                     <div class="modal-footer">
