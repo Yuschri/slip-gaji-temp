@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Karyawan;
 
 class SlipGajiController extends Controller
 {
@@ -30,7 +31,7 @@ class SlipGajiController extends Controller
 
     public function create()
     {
-        $karyawans = \App\Models\Karyawan::orderBy('nama_karyawan')->get();
+        $karyawans = Karyawan::orderBy('nama_karyawan')->get();
         return view('pages.slip-gaji.create', compact('karyawans'));
     }
 
@@ -64,7 +65,7 @@ class SlipGajiController extends Controller
     public function edit($id)
     {
         $slip = $this->slipGajiService->findById($id);
-        $karyawans = \App\Models\Karyawan::orderBy('nama_karyawan')->get();
+        $karyawans = Karyawan::orderBy('nama_karyawan')->get();
         return view('pages.slip-gaji.edit', compact('slip', 'karyawans'));
     }
 
@@ -102,7 +103,7 @@ class SlipGajiController extends Controller
         $bulan = $request->input('bulan');
         $tahun = $request->input('tahun');
 
-        $karyawan = \App\Models\Karyawan::with(['divisi', 'jabatan', 'gaji', 'potongan', 'bpjstk', 'bpjsk', 'pph21'])->find($id);
+        $karyawan = Karyawan::with(['divisi', 'jabatan', 'gaji', 'potongan', 'bpjstk', 'bpjsk', 'pph21'])->find($id);
 
         if (!$karyawan) {
             return response()->json(['error' => 'Karyawan not found'], 404);

@@ -1124,10 +1124,12 @@
             }
 
             function updateFinalTransfer(totalGajiVal, pph21Value, totalDeductions) {
-                var netTransfer = totalGajiVal - pph21Value;
+                var bpjstkTotal = getRawValue('#bpjstk_total') || getRawValue('#bpjstk');
+                var bpjskPremi = getRawValue('#bpjsk_premi') || getRawValue('#bpjsk');
+                var netTransfer = totalGajiVal - pph21Value - bpjstkTotal - bpjskPremi;
                 if (netTransfer < 0) netTransfer = 0;
                 $('#nominal_transfer').val(formatRupiah(netTransfer));
-                $('#thp').val(totalGajiVal);
+                $('#thp').val(netTransfer);
 
                 var subtotalPotongan = totalDeductions + pph21Value;
                 $('#calculated_potongan').val(subtotalPotongan.toLocaleString('id-ID', {
@@ -1243,20 +1245,6 @@
                     thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
                         '<span class="text-secondary">Potongan Langsung</span>' +
                         '<span class="fw-semibold text-danger">- Rp ' + formatRupiah(totalDeductions) + '</span>' +
-                        '</div>';
-                }
-
-                if (bpjstk_total > 0) {
-                    thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
-                        '<span class="text-secondary">BPJS TK (Perusahaan)</span>' +
-                        '<span class="fw-semibold text-success">+ Rp ' + formatRupiah(bpjstk_total) + '</span>' +
-                        '</div>';
-                }
-
-                if (bpjsk_premi > 0) {
-                    thpHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
-                        '<span class="text-secondary">BPJS Kes (Perusahaan)</span>' +
-                        '<span class="fw-semibold text-success">+ Rp ' + formatRupiah(bpjsk_premi) + '</span>' +
                         '</div>';
                 }
 

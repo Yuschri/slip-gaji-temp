@@ -156,7 +156,11 @@ class SlipGajiImport implements ToCollection, WithStartRow, SkipsEmptyRows
 
                     $kategoriPph21 = $karyawan->pph21->kategori ?? null;
                     $pph21 = $this->calculatePph21($kategoriPph21, $totalGaji);
-                    $totalDiterima = max(0, $totalGaji - $pph21);
+
+                    // Nominal transfer mengikuti perhitungan form:
+                    // base saat ini - PPh21 - BPJS perusahaan (TK + Kes).
+                    $nominalTransfer = $totalGaji - $pph21 - $bpjstkPerusahaan - $bpjskPerusahaan;
+                    $totalDiterima = max(0, $nominalTransfer);
 
                     Kehadiran::updateOrCreate(
                         [
