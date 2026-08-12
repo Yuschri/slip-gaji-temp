@@ -1126,7 +1126,7 @@
             function updateFinalTransfer(totalGajiVal, pph21Value, totalDeductions) {
                 var bpjstkTotal = getRawValue('#bpjstk_total') || getRawValue('#bpjstk');
                 var bpjskPremi = getRawValue('#bpjsk_premi') || getRawValue('#bpjsk');
-                var netTransfer = totalGajiVal - pph21Value - bpjstkTotal - bpjskPremi;
+                var netTransfer = totalGajiVal - totalDeductions - pph21Value - bpjstkTotal - bpjskPremi;
                 if (netTransfer < 0) netTransfer = 0;
                 $('#nominal_transfer').val(formatRupiah(netTransfer));
                 $('#thp').val(netTransfer);
@@ -1153,23 +1153,25 @@
                 var lembur = getRawValue('#nominal_lembur');
                 var lain = getRawValue('#lain_lain');
 
-                var thpFull = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja + t_hari_raya + t_operasional + fee_beautician + lembur + lain;
-
                 var totalCalcPenerimaan = getRawValue('#calculated_penerimaan');
-                var factor = thpFull > 0 ? (totalCalcPenerimaan / thpFull) : 1;
+                var prorataBase = gaji + t_jabatan + t_profesi + t_hadir + t_kinerja + t_operasional;
+                var nonProrata = t_pengalaman + t_hari_raya + fee_beautician + lembur + lain;
+                var prorataNominal = totalCalcPenerimaan - nonProrata;
+                if (prorataNominal < 0) prorataNominal = 0;
+                var factor = prorataBase > 0 ? (prorataNominal / prorataBase) : 1;
 
                 var penerimaanItems = [
-                    { label: 'Gaji Pokok', val: gaji },
-                    { label: 'T. Pengalaman Kerja', val: t_pengalaman },
-                    { label: 'T. Jabatan', val: t_jabatan },
-                    { label: 'T. Profesi', val: t_profesi },
-                    { label: 'T. Operasional', val: t_operasional },
-                    { label: 'T. Kehadiran', val: t_hadir },
-                    { label: 'T. Kinerja', val: t_kinerja },
-                    { label: 'T. Hari Raya', val: t_hari_raya },
-                    { label: 'Fee Beautician', val: fee_beautician },
-                    { label: 'Nominal Lembur', val: lembur },
-                    { label: 'Lain-lain', val: lain }
+                    { label: 'Gaji Pokok', val: gaji, isProrata: true },
+                    { label: 'T. Pengalaman Kerja', val: t_pengalaman, isProrata: false },
+                    { label: 'T. Jabatan', val: t_jabatan, isProrata: true },
+                    { label: 'T. Profesi', val: t_profesi, isProrata: true },
+                    { label: 'T. Operasional', val: t_operasional, isProrata: true },
+                    { label: 'T. Kehadiran', val: t_hadir, isProrata: true },
+                    { label: 'T. Kinerja', val: t_kinerja, isProrata: true },
+                    { label: 'T. Hari Raya', val: t_hari_raya, isProrata: false },
+                    { label: 'Fee Beautician', val: fee_beautician, isProrata: false },
+                    { label: 'Nominal Lembur', val: lembur, isProrata: false },
+                    { label: 'Lain-lain', val: lain, isProrata: false }
                 ];
 
                 var penerimaanHtml = '';
@@ -1178,7 +1180,7 @@
                 penerimaanItems.forEach(function (item) {
                     if (item.val > 0) {
                         activePenerimaanCount++;
-                        var adjustedVal = Math.round(item.val * factor);
+                        var adjustedVal = item.isProrata ? Math.round(item.val * factor) : Math.round(item.val);
                         penerimaanHtml += '<div class="d-flex justify-content-between align-items-center py-1 border-bottom border-light text-start">' +
                             '<span class="text-secondary">' + item.label + '</span>' +
                             '<span class="fw-semibold text-dark">Rp ' + formatRupiah(adjustedVal) + '</span>' +
@@ -1291,7 +1293,7 @@
                 var jht_tk = getRawValue('#bpjstk_iuran_jht_tk');
                 var tg_karyawan = getRawValue('#bpjsk_tg_karyawan');
 
-                var totalGaji = totalReceipts - totalDeductions + bpjstk_total + bpjsk_premi - jht_tk - tg_karyawan;
+                var totalGaji = totalReceipts + bpjstk_total + bpjsk_premi - jht_tk - tg_karyawan;
                 if (totalGaji < 0) totalGaji = 0;
                 calculatePph21(totalGaji, totalDeductions);
             });
@@ -1377,8 +1379,8 @@
                 var lembur = getRawValue('#nominal_lembur');
                 var lain = getRawValue('#lain_lain');
 
-                var thpFull = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja +
-                    t_hari_raya + t_operasional + fee_beautician + lembur + lain;
+                var prorataBase = gaji + t_jabatan + t_profesi + t_hadir + t_kinerja + t_operasional;
+                var nonProrata = t_pengalaman + t_hari_raya + fee_beautician + lembur + lain;
 
                 var tglMasuk = new Date(tglMasukStr);
                 var tglResign = new Date(tglResignStr);
@@ -1415,24 +1417,24 @@
                     skenarioText = 'Belum mulai / sudah selesai bekerja pada periode ini';
                 } else if (akhirTraining >= tglMulaiHitung && akhirTraining < tglAkhirHitung) {
                     var hariTraining = selisihHari(tglMulaiHitung, akhirTraining) + 1;
-                    var gajiTraining = (hariTraining / totalHariPeriode) * 0.8 * thpFull;
+                    var gajiTraining = (hariTraining / totalHariPeriode) * 0.8 * prorataBase;
 
                     var tglMulaiLulus = new Date(akhirTraining);
                     tglMulaiLulus.setDate(tglMulaiLulus.getDate() + 1);
                     var hariLulus = selisihHari(tglMulaiLulus, tglAkhirHitung) + 1;
-                    var gajiLulus = (hariLulus / totalHariPeriode) * 1.0 * thpFull;
+                    var gajiLulus = (hariLulus / totalHariPeriode) * 1.0 * prorataBase;
 
                     gajiResign = gajiTraining + gajiLulus;
                     skenarioText = 'Skenario A — Masa Transisi (Training ' + hariTraining + ' hari [80%] + Lulus ' + hariLulus + ' hari [100%])';
                 } else if (tglAkhirHitung <= akhirTraining) {
-                    gajiResign = (hariKerjaTotal / totalHariPeriode) * 0.8 * thpFull;
+                    gajiResign = (hariKerjaTotal / totalHariPeriode) * 0.8 * prorataBase;
                     skenarioText = 'Skenario B — Masa Training (' + hariKerjaTotal + '/' + totalHariPeriode + ' hari [80%])';
                 } else {
-                    gajiResign = (hariKerjaTotal / totalHariPeriode) * 1.0 * thpFull;
+                    gajiResign = (hariKerjaTotal / totalHariPeriode) * 1.0 * prorataBase;
                     skenarioText = 'Skenario C — Lulus Training (' + hariKerjaTotal + '/' + totalHariPeriode + ' hari [100%])';
                 }
 
-                gajiResign = Math.round(gajiResign);
+                gajiResign = Math.round(gajiResign + nonProrata);
 
                 var formatDateStr = function (d) {
                     if (!d || isNaN(d)) return '-';
@@ -1485,10 +1487,10 @@
                 var lembur = getRawValue('#nominal_lembur');
                 var lain = getRawValue('#lain_lain');
 
-                var thpFull = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja +
-                    t_hari_raya + t_operasional + fee_beautician + lembur + lain;
+                var prorataBase = gaji + t_jabatan + t_profesi + t_hadir + t_kinerja + t_operasional;
+                var nonProrata = t_pengalaman + t_hari_raya + fee_beautician + lembur + lain;
 
-                var totalReceipts = thpFull;
+                var totalReceipts = prorataBase + nonProrata;
 
                 var bulan = parseInt($('#bulan').val()) || new Date().getMonth() + 1;
                 var tahun = parseInt($('#tahun').val()) || new Date().getFullYear();
@@ -1506,14 +1508,16 @@
                 if (tglMasukStr && tglMasukStr !== '-' && akhirTrainStr) {
                     var tglMasuk = new Date(tglMasukStr);
                     var akhirTraining = new Date(akhirTrainStr);
-                    totalReceipts = hitungGajiPerPeriode(tglMasuk, akhirTraining, periodeAwal, periodeAkhir, thpFull);
+                    var prorataNominal = hitungGajiPerPeriode(tglMasuk, akhirTraining, periodeAwal, periodeAkhir, prorataBase);
+                    totalReceipts = prorataNominal + nonProrata;
 
-                    var pct = thpFull > 0 ? Math.round((totalReceipts / thpFull) * 100 * 100) / 100 : 100;
+                    var pct = prorataBase > 0 ? Math.round((prorataNominal / prorataBase) * 100 * 100) / 100 : 100;
                     $('#prosentase_gaji').val(pct);
                 } else {
                     var percentage = parseFloat($('#prosentase_gaji').val());
                     if (isNaN(percentage) || percentage <= 0) percentage = 100;
-                    totalReceipts = thpFull * (percentage / 100);
+                    var prorataNominal = prorataBase * (percentage / 100);
+                    totalReceipts = prorataNominal + nonProrata;
                 }
 
                 // --- Jika Karyawan RESIGN ---
@@ -1521,7 +1525,8 @@
                     var resGaji = calculateResignProrata();
                     if (resGaji !== null) {
                         totalReceipts = resGaji;
-                        var pctResign = thpFull > 0 ? Math.round((totalReceipts / thpFull) * 100 * 100) / 100 : 100;
+                        var prorataNominalResign = totalReceipts - nonProrata;
+                        var pctResign = prorataBase > 0 ? Math.round((prorataNominalResign / prorataBase) * 100 * 100) / 100 : 100;
                         $('#prosentase_gaji').val(pctResign);
                     }
                 } else {
@@ -1549,7 +1554,7 @@
                 var jht_tk = getRawValue('#bpjstk_iuran_jht_tk');
                 var tg_karyawan = getRawValue('#bpjsk_tg_karyawan');
 
-                var totalGaji = Math.round(totalReceipts) - totalDeductions + bpjstk_total + bpjsk_premi - jht_tk - tg_karyawan;
+                var totalGaji = Math.round(totalReceipts) + bpjstk_total + bpjsk_premi - jht_tk - tg_karyawan;
                 if (totalGaji < 0) totalGaji = 0;
 
                 $('#bpjstk').val(bpjstk_total);
@@ -1580,10 +1585,9 @@
                 var fee = getRawValue('#fee_beautician');
                 var lembur = getRawValue('#nominal_lembur');
                 var lain = getRawValue('#lain_lain');
-                var thpFull = gaji + t_pengalaman + t_jabatan + t_profesi + t_hadir + t_kinerja +
-                    t_hari_raya + t_operasional + fee + lembur + lain;
-                $('#resign_thp_full').val(formatRupiah(thpFull));
-                return thpFull;
+                var prorataBase = gaji + t_jabatan + t_profesi + t_hadir + t_kinerja + t_operasional;
+                $('#resign_thp_full').val(formatRupiah(prorataBase));
+                return prorataBase;
             }
 
             $(document).on('input change', '.entry-calc, #prosentase_gaji', syncResignThpFull);

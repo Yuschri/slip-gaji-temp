@@ -100,16 +100,21 @@
                         @endforeach
                     </select>
                 </div>
-                <form action="{{ route('slip-gaji.broadcast-bulk') }}" method="POST" id="broadcastBulkForm">
-                    @csrf
-                    <input type="hidden" name="klinik" id="klinikHidden">
-                    <input type="hidden" name="bulan" id="bulanHidden">
-                    <input type="hidden" name="tahun" id="tahunHidden">
-                    <button type="submit" class="btn btn-info text-white"
-                        onclick="return confirm('Broadcast ke semua data yang difilter?')">
-                        <i class="ti ti-brand-whatsapp"></i> Broadcast data yang difilter
-                    </button>
-                </form>
+                <div class="d-flex gap-2 flex-wrap">
+                    <form action="{{ route('slip-gaji.broadcast-bulk') }}" method="POST" id="broadcastBulkForm">
+                        @csrf
+                        <input type="hidden" name="klinik" id="klinikHidden">
+                        <input type="hidden" name="bulan" id="bulanHidden">
+                        <input type="hidden" name="tahun" id="tahunHidden">
+                        <button type="submit" class="btn btn-info text-white"
+                            onclick="return confirm('Broadcast ke semua data yang difilter?')">
+                            <i class="ti ti-brand-whatsapp"></i> Broadcast data yang difilter
+                        </button>
+                    </form>
+                    <a href="#" id="exportExcelBtn" class="btn btn-success">
+                        <i class="ti ti-file-type-xls"></i> Export Excel
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -253,6 +258,26 @@
                 var val = this.value;
                 table.column(1).search(val).draw();
                 $('#tahunHidden').val(val);
+            });
+
+            $('#exportExcelBtn').on('click', function (e) {
+                e.preventDefault();
+
+                var klinik = $('#klinikFilter').val();
+                var bulan = $('#bulanFilter').val();
+                var tahun = $('#tahunFilter').val();
+
+                var monthMap = {
+                    'January': 1, 'February': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6,
+                    'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12
+                };
+
+                var url = new URL('{{ route('slip-gaji.export-excel') }}', window.location.origin);
+                if (klinik) url.searchParams.set('klinik', klinik);
+                if (bulan) url.searchParams.set('bulan', monthMap[bulan] ? monthMap[bulan] : bulan);
+                if (tahun) url.searchParams.set('tahun', tahun);
+
+                window.location.href = url.toString();
             });
         });
     </script>

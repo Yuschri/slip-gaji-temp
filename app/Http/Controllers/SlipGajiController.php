@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SlipGajiExport;
 use App\Exports\SlipGajiTemplateExport;
 use App\Services\SlipGajiService;
 use Illuminate\Http\Request;
@@ -338,6 +339,244 @@ class SlipGajiController extends Controller
     public function downloadTemplate()
     {
         return Excel::download(new SlipGajiTemplateExport(), 'Template_Import_Slip_Gaji.xlsx');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $klinik = $request->input('klinik');
+        $bulan = $request->input('bulan');
+        $tahun = $request->input('tahun');
+
+        if ($bulan && !is_numeric($bulan)) {
+            $monthMap = [
+                'January' => 1, 'February' => 2, 'March' => 3, 'April' => 4, 'May' => 5, 'June' => 6,
+                'July' => 7, 'August' => 8, 'September' => 9, 'October' => 10, 'November' => 11, 'December' => 12,
+            ];
+            $bulan = $monthMap[$bulan] ?? null;
+        }
+
+        $query = \App\Models\SlipGaji::query()
+            ->with(['karyawan.divisi', 'karyawan.jabatan'])
+            ->orderBy('tahun', 'desc')
+            ->orderBy('bulan', 'desc');
+
+        if ($klinik) {
+            $query->whereHas('karyawan', function ($q) use ($klinik) {
+                $q->where('cabang', 'like', '%' . $klinik . '%');
+            });
+        }
+
+        if ($bulan) {
+            $query->where('bulan', $bulan);
+        }
+
+        if ($tahun) {
+            $query->where('tahun', $tahun);
+        }
+
+        $slips = $query->get();
+
+        $rows = [];
+        foreach ($slips as $index => $slip) {
+            $tanggalMasuk = $slip->karyawan && $slip->karyawan->tanggal_masuk
+                ? \Carbon\Carbon::parse($slip->karyawan->tanggal_masuk)
+                : null;
+
+            $thp = (float) $slip->gaji_pokok
+                + (float) $slip->t_jabatan
+                + (float) $slip->t_profesi
+                + (float) $slip->t_kehadiran
+                + (float) $slip->t_kinerja;
+
+            $prosentaseValue = $this->calculateProrataNominalForExport($slip);
+
+            $tanggalAcuan = $slip->created_at
+                ? \Carbon\Carbon::parse($slip->created_at)
+                : \Carbon\Carbon::create((int) $slip->tahun, (int) $slip->bulan, 1)->endOfMonth();
+            $jmlHariGabung = $tanggalMasuk
+                ? max(0, $tanggalMasuk->startOfDay()->diffInDays($tanggalAcuan->copy()->startOfDay()))
+                : 0;
+
+            $rows[] = [
+                $index + 1,
+                $slip->nip,
+                $slip->no_wa,
+                $slip->nama_karyawan,
+                $tanggalMasuk ? $tanggalMasuk->format('Y-m-d') : '',
+                $slip->divisi,
+                $slip->nomor_rekening,
+                (float) $thp,
+                (float) $slip->gaji_pokok,
+                (float) $slip->t_jabatan,
+                (float) $slip->t_profesi,
+                (float) $slip->t_kehadiran,
+                (float) $slip->t_kinerja,
+                (float) $prosentaseValue,
+                (int) $jmlHariGabung,
+                (float) $slip->nominal_lembur,
+                (float) $slip->fee_beautician,
+                (float) $slip->punishment,
+                (float) $slip->bpjstk_karyawan,
+                (float) $slip->bpjsk_karyawan,
+                (float) $slip->pph21,
+                (float) $slip->sedekah_rombongan,
+                (float) $slip->potongan_lainnya,
+                (float) $slip->total_diterima,
+                (int) $slip->lembur_kali,
+                (int) $slip->lembur_menit,
+                (int) $slip->terlambat_kali,
+                (int) $slip->terlambat_menit,
+                (int) $slip->ijin_pulang_awal,
+                (int) $slip->ijin_tidak_masuk,
+                (int) $slip->no_checkin_or_checkout,
+                (int) $slip->no_checkin_and_checkout,
+                (int) $slip->cuti,
+                (int) $slip->kehadiran_lainnya,
+            ];
+        }
+
+        $filterLabel = 'Filter: ';
+        $filterParts = [];
+        if ($klinik) $filterParts[] = 'Klinik ' . $klinik;
+        if ($bulan) $filterParts[] = 'Bulan ' . date('F', mktime(0, 0, 0, $bulan, 10));
+        if ($tahun) $filterParts[] = 'Tahun ' . $tahun;
+        $filterLabel .= $filterParts ? implode(' | ', $filterParts) : 'Semua data';
+
+        $filename = 'Slip_Gaji_' . now()->format('Ymd_His') . '.xlsx';
+
+        return Excel::download(new SlipGajiExport($rows, $filterLabel), $filename);
+    }
+
+    /**
+     * Mirror create.blade.php prorata logic for export display column "PROSENTASE GAJI".
+     */
+    private function calculateProrataNominalForExport(\App\Models\SlipGaji $slip): float
+    {
+        $karyawan = $slip->karyawan;
+
+        $prorataBase = (float) $slip->gaji_pokok
+            + (float) $slip->t_pengalaman_kerja
+            + (float) $slip->t_jabatan
+            + (float) $slip->t_profesi
+            + (float) $slip->t_kehadiran
+            + (float) $slip->t_kinerja
+            + (float) $slip->t_operasional;
+
+        if ($prorataBase <= 0) {
+            return 0;
+        }
+
+        if (!$karyawan || empty($karyawan->tanggal_masuk)) {
+            return round((float) $prorataBase, 2);
+        }
+
+        $cutoff = (int) ($karyawan->periode_cut_off ?? 21);
+        if (!in_array($cutoff, [15, 21], true)) {
+            $cutoff = 21;
+        }
+
+        $tglMasuk = \Carbon\Carbon::parse($karyawan->tanggal_masuk)->startOfDay();
+        $akhirTraining = $tglMasuk->copy()->addMonths(3)->subDay();
+
+        $periodeAkhir = \Carbon\Carbon::create((int) $slip->tahun, (int) $slip->bulan, $cutoff)->startOfDay();
+        $periodeAwal = $periodeAkhir->copy()->subMonthNoOverflow()->addDay();
+
+        $prorataNominal = $this->hitungGajiPerPeriodeForExport(
+            $tglMasuk,
+            $akhirTraining,
+            $periodeAwal,
+            $periodeAkhir,
+            $prorataBase
+        );
+
+        if (!empty($slip->is_resign) && !empty($slip->tanggal_resign)) {
+            $tglResign = \Carbon\Carbon::parse($slip->tanggal_resign)->startOfDay();
+            $prorataNominal = $this->hitungGajiResignProrataForExport(
+                $tglMasuk,
+                $tglResign,
+                $akhirTraining,
+                $periodeAwal,
+                $periodeAkhir,
+                $prorataBase
+            );
+        }
+
+        return round($prorataNominal, 2);
+    }
+
+    private function hitungGajiPerPeriodeForExport(
+        \Carbon\Carbon $tglMasuk,
+        \Carbon\Carbon $akhirTraining,
+        \Carbon\Carbon $periodeAwal,
+        \Carbon\Carbon $periodeAkhir,
+        float $thpFull
+    ): float {
+        $totalHariPeriode = $periodeAwal->diffInDays($periodeAkhir) + 1;
+
+        if ($tglMasuk->gt($periodeAkhir)) {
+            return 0;
+        }
+
+        $tglMulaiHitung = $tglMasuk->gt($periodeAwal) ? $tglMasuk->copy() : $periodeAwal->copy();
+
+        if ($akhirTraining->gte($tglMulaiHitung) && $akhirTraining->lt($periodeAkhir)) {
+            $hariTraining = $tglMulaiHitung->diffInDays($akhirTraining) + 1;
+            $gajiTraining = ($hariTraining / $totalHariPeriode) * 0.8 * $thpFull;
+
+            $tglMulaiLulus = $akhirTraining->copy()->addDay();
+            $hariLulus = $tglMulaiLulus->diffInDays($periodeAkhir) + 1;
+            $gajiLulus = ($hariLulus / $totalHariPeriode) * $thpFull;
+
+            return $gajiTraining + $gajiLulus;
+        }
+
+        $hariKerja = $tglMulaiHitung->diffInDays($periodeAkhir) + 1;
+
+        if ($periodeAkhir->lte($akhirTraining)) {
+            return ($hariKerja / $totalHariPeriode) * 0.8 * $thpFull;
+        }
+
+        return ($hariKerja / $totalHariPeriode) * $thpFull;
+    }
+
+    private function hitungGajiResignProrataForExport(
+        \Carbon\Carbon $tglMasuk,
+        \Carbon\Carbon $tglResign,
+        \Carbon\Carbon $akhirTraining,
+        \Carbon\Carbon $periodeAwal,
+        \Carbon\Carbon $periodeAkhir,
+        float $thpFull
+    ): float {
+        $totalHariPeriode = $periodeAwal->diffInDays($periodeAkhir) + 1;
+
+        if ($tglMasuk->gt($periodeAkhir) || $tglResign->lt($periodeAwal)) {
+            return 0;
+        }
+
+        $tglMulaiHitung = $tglMasuk->gt($periodeAwal) ? $tglMasuk->copy() : $periodeAwal->copy();
+        $tglAkhirHitung = $tglResign->lt($periodeAkhir) ? $tglResign->copy() : $periodeAkhir->copy();
+
+        $hariKerjaTotal = $tglMulaiHitung->diffInDays($tglAkhirHitung) + 1;
+        if ($hariKerjaTotal <= 0) {
+            return 0;
+        }
+
+        if ($akhirTraining->gte($tglMulaiHitung) && $akhirTraining->lt($tglAkhirHitung)) {
+            $hariTraining = $tglMulaiHitung->diffInDays($akhirTraining) + 1;
+            $gajiTraining = ($hariTraining / $totalHariPeriode) * 0.8 * $thpFull;
+
+            $tglMulaiLulus = $akhirTraining->copy()->addDay();
+            $hariLulus = $tglMulaiLulus->diffInDays($tglAkhirHitung) + 1;
+            $gajiLulus = ($hariLulus / $totalHariPeriode) * $thpFull;
+
+            return $gajiTraining + $gajiLulus;
+        }
+
+        if ($tglAkhirHitung->lte($akhirTraining)) {
+            return ($hariKerjaTotal / $totalHariPeriode) * 0.8 * $thpFull;
+        }
+
+        return ($hariKerjaTotal / $totalHariPeriode) * $thpFull;
     }
 
     public function exportPdf($id)

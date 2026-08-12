@@ -78,13 +78,8 @@
 
                     <div class="col-md-4">
                         <label class="form-label">NIK</label>
-                        <input type="text" name="nik" class="form-control" placeholder="Enter NIK" required
+                        <input type="text" name="nik" class="form-control" placeholder="NIK"
                             value="{{ old('nik', $karyawan->nik) }}">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Beban BPJS</label>
-                        <input type="text" name="beban_bpjs" class="form-control" placeholder="Enter BPJS burden"
-                            value="{{ old('beban_bpjs', $karyawan->beban_bpjs) }}">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Cabang <span class="text-danger">*</span></label>
@@ -99,6 +94,25 @@
                             <option value="Klinik Mojokerto" {{ old('cabang', $karyawan->cabang) == 'Klinik Mojokerto' ? 'selected' : '' }}>Klinik Mojokerto</option>
                             <option value="Klinik Madiun" {{ old('cabang', $karyawan->cabang) == 'Klinik Madiun' ? 'selected' : '' }}>Klinik Madiun</option>
                         </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Nomor Rekening</label>
+                        <input type="text" name="nomor_rekening" class="form-control" placeholder="Nomor Rekening"
+                            value="{{ old('nomor_rekening', $karyawan->nomor_rekening) }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Nomor WhatsApp</label>
+                        <input type="text" name="no_wa" class="form-control" placeholder="Nomor WhatsApp"
+                            value="{{ old('no_wa', $karyawan->no_wa) }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Periode Cut Off <span class="text-danger">*</span></label>
+                        <select name="periode_cut_off" class="form-select" required>
+                            <option value="">-- Pilih Tanggal Cut Off --</option>
+                            <option value="15" {{ old('periode_cut_off', $karyawan->periode_cut_off) == '15' ? 'selected' : '' }}>Tanggal 15</option>
+                            <option value="21" {{ old('periode_cut_off', $karyawan->periode_cut_off) == '21' ? 'selected' : '' }}>Tanggal 21</option>
+                        </select>
+                        <div class="form-text">Tanggal akhir periode penggajian setiap bulan.</div>
                     </div>
                 </div>
 

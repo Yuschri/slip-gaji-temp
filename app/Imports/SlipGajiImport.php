@@ -121,14 +121,15 @@ class SlipGajiImport implements ToCollection, WithStartRow, SkipsEmptyRows
                     $bpjstkKaryawan = (float) ($karyawan->bpjstk->tenaga_kerja ?? 0);
                     $bpjskKaryawan = (float) ($karyawan->bpjsk->tanggungan_karyawan ?? 0);
 
-                    $thpFull = $gajiPokok
+                    $prorataBase = $gajiPokok
                         + $tPengalamanKerja
                         + $tJabatan
                         + $tProfesi
                         + $tKehadiran
                         + $tKinerja
-                        + $tHariRaya
-                        + $tOperasional
+                        + $tOperasional;
+
+                    $nonProrata = $tHariRaya
                         + $feeBeautician
                         + $nominalLembur
                         + $pendapatanLainnya;
@@ -137,14 +138,13 @@ class SlipGajiImport implements ToCollection, WithStartRow, SkipsEmptyRows
                         $this->hitungGajiPerPeriode(
                             $karyawan->tanggal_masuk,
                             $karyawan->periode_cut_off ?? 21,
-                            $thpFull
-                        )
+                            $prorataBase
+                        ) + $nonProrata
                     );
 
                     $totalPotonganLangsung = $punishment + $sedekahRombongan + $potonganLainnya;
 
                     $totalGaji = $subtotalPenerimaan
-                        - $totalPotonganLangsung
                         + $bpjstkPerusahaan
                         + $bpjskPerusahaan
                         - $bpjstkKaryawan
@@ -158,8 +158,8 @@ class SlipGajiImport implements ToCollection, WithStartRow, SkipsEmptyRows
                     $pph21 = $this->calculatePph21($kategoriPph21, $totalGaji);
 
                     // Nominal transfer mengikuti perhitungan form:
-                    // base saat ini - PPh21 - BPJS perusahaan (TK + Kes).
-                    $nominalTransfer = $totalGaji - $pph21 - $bpjstkPerusahaan - $bpjskPerusahaan;
+                    // base saat ini - potongan langsung - PPh21 - BPJS perusahaan (TK + Kes).
+                    $nominalTransfer = $totalGaji - $totalPotonganLangsung - $pph21 - $bpjstkPerusahaan - $bpjskPerusahaan;
                     $totalDiterima = max(0, $nominalTransfer);
 
                     Kehadiran::updateOrCreate(

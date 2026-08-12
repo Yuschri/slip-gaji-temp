@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/update', [SlipGajiController::class, 'update'])->name('update');
         Route::delete('/{id}/destroy', [SlipGajiController::class, 'destroy'])->name('destroy');
         Route::post('/import', [SlipGajiController::class, 'import'])->name('import');
+        Route::get('/export-excel', [SlipGajiController::class, 'exportExcel'])->name('export-excel');
         Route::get('/{id}/export-pdf', [SlipGajiController::class, 'exportPdf'])->name('export-pdf');
         Route::get('/{id}/view-pdf', [SlipGajiController::class, 'viewPdf'])->name('view-pdf');
         Route::post('/{id}/broadcast', [SlipGajiController::class, 'broadcastSingle'])->name('broadcast-single');
