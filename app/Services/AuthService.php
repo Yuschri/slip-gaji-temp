@@ -34,7 +34,7 @@ class AuthService
         }
 
         $roles = $user->roles->pluck('nama_role')->toArray();
-        $allowedRoles = ['Super Admin', 'Manager Finance'];
+        $allowedRoles = ['Super Admin', 'Administrator', 'Finance'];
 
         $hasAllowedRole = false;
         foreach ($roles as $role) {
