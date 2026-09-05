@@ -24,6 +24,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/update', [SlipGajiController::class, 'update'])->name('update');
         Route::delete('/{id}/destroy', [SlipGajiController::class, 'destroy'])->name('destroy');
         Route::post('/import', [SlipGajiController::class, 'import'])->name('import');
+        Route::post('/check-lembur-duplicate', [SlipGajiController::class, 'checkLemburDuplicate'])->name('check-lembur-duplicate');
+        Route::post('/import-lembur', [SlipGajiController::class, 'importLembur'])->name('import-lembur');
+        Route::post('/check-bpjstk-duplicate', [SlipGajiController::class, 'checkBpjstkDuplicate'])->name('check-bpjstk-duplicate');
+        Route::post('/import-bpjstk-pdf', [SlipGajiController::class, 'importBpjstkPdf'])->name('import-bpjstk-pdf');
         Route::get('/export-excel', [SlipGajiController::class, 'exportExcel'])->name('export-excel');
         Route::get('/{id}/export-pdf', [SlipGajiController::class, 'exportPdf'])->name('export-pdf');
         Route::get('/{id}/view-pdf', [SlipGajiController::class, 'viewPdf'])->name('view-pdf');

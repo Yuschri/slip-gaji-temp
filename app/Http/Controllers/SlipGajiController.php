@@ -15,11 +15,19 @@ class SlipGajiController extends Controller
 {
     protected $slipGajiService;
     protected $qontakService;
+    protected $lemburImportService;
+    protected $bpjstkImportService;
 
-    public function __construct(SlipGajiService $slipGajiService, \App\Services\QontakService $qontakService)
-    {
+    public function __construct(
+        SlipGajiService $slipGajiService,
+        \App\Services\QontakService $qontakService,
+        \App\Services\LemburImportService $lemburImportService,
+        \App\Services\BpjstkImportService $bpjstkImportService
+    ) {
         $this->slipGajiService = $slipGajiService;
         $this->qontakService = $qontakService;
+        $this->lemburImportService = $lemburImportService;
+        $this->bpjstkImportService = $bpjstkImportService;
     }
 
     public function index()
@@ -333,6 +341,154 @@ class SlipGajiController extends Controller
             return $redirect;
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error importing Slip Gaji: ' . $e->getMessage());
+        }
+    }
+
+    public function checkLemburDuplicate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|file|mimes:xlsx|max:5120',
+            'bulan' => 'required|integer|between:1,12',
+            'tahun' => 'required|integer',
+        ], [
+            'file.required' => 'File Excel lembur wajib dipilih.',
+            'file.mimes' => 'File harus berformat .xlsx.',
+            'file.max' => 'Ukuran file maksimal 5 MB.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 422);
+        }
+
+        try {
+            $result = $this->lemburImportService->checkDuplicates(
+                $request->file('file'),
+                $request->bulan,
+                $request->tahun
+            );
+
+            return response()->json([
+                'success' => true,
+                'has_duplicates' => $result['has_duplicates'],
+                'duplicates' => $result['duplicates'],
+                'count' => $result['count'],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memeriksa file Excel lembur: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function importLembur(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx|max:5120',
+            'bulan' => 'required|integer|between:1,12',
+            'tahun' => 'required|integer',
+        ], [
+            'file.required' => 'File Excel lembur wajib dipilih.',
+            'file.mimes' => 'File harus berformat .xlsx.',
+            'file.max' => 'Ukuran file maksimal 5 MB.',
+        ]);
+
+        $overwrite = $request->boolean('overwrite', false);
+
+        try {
+            $result = $this->lemburImportService->processImport(
+                $request->file('file'),
+                $request->bulan,
+                $request->tahun,
+                $overwrite
+            );
+
+            if ($result['failed_count'] > 0 && !empty($result['error_file']) && file_exists($result['error_file'])) {
+                $filename = 'Hasil_Import_Lembur_Gagal_' . date('Ymd_His') . '.xlsx';
+                return response()->download($result['error_file'], $filename)->deleteFileAfterSend(true);
+            }
+
+            $message = "Import Lembur berhasil! {$result['success_count']} slip gaji berhasil diproses.";
+            return redirect()->route('slip-gaji.index')->with('success', $message);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error import lembur: ' . $e->getMessage());
+        }
+    }
+
+    public function checkBpjstkDuplicate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|file|mimes:pdf|max:10240',
+            'bulan' => 'required|integer|between:1,12',
+            'tahun' => 'required|integer',
+        ], [
+            'file.required' => 'File PDF BPJSTK wajib dipilih.',
+            'file.mimes' => 'File harus berformat .pdf.',
+            'file.max' => 'Ukuran file maksimal 10 MB.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 422);
+        }
+
+        try {
+            $result = $this->bpjstkImportService->checkDuplicates(
+                $request->file('file'),
+                $request->bulan,
+                $request->tahun
+            );
+
+            return response()->json([
+                'success' => true,
+                'has_duplicates' => $result['has_duplicates'],
+                'duplicates' => $result['duplicates'],
+                'count' => $result['count'],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memeriksa file PDF BPJSTK: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function importBpjstkPdf(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:pdf|max:10240',
+            'bulan' => 'required|integer|between:1,12',
+            'tahun' => 'required|integer',
+        ], [
+            'file.required' => 'File PDF BPJSTK wajib dipilih.',
+            'file.mimes' => 'File harus berformat .pdf.',
+            'file.max' => 'Ukuran file maksimal 10 MB.',
+        ]);
+
+        $overwrite = $request->boolean('overwrite', false);
+
+        try {
+            $result = $this->bpjstkImportService->processImport(
+                $request->file('file'),
+                $request->bulan,
+                $request->tahun,
+                $overwrite
+            );
+
+            if ($result['failed_count'] > 0 && !empty($result['error_file']) && file_exists($result['error_file'])) {
+                $filename = 'Hasil_Import_BPJSTK_Gagal_' . date('Ymd_His') . '.pdf';
+                return response()->download($result['error_file'], $filename)->deleteFileAfterSend(true);
+            }
+
+            $message = "Import PDF BPJSTK berhasil! {$result['success_count']} data BPJSTK karyawan berhasil diproses.";
+            return redirect()->route('slip-gaji.index')->with('success', $message);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error import PDF BPJSTK: ' . $e->getMessage());
         }
     }
 
